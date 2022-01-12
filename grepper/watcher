@@ -1,0 +1,18 @@
+#!/usr/bin/env bash
+# dpw@piedmont
+# 2021.08.08
+#
+# Style Guide Reference: https://google.github.io/styleguide/shellguide.html
+#
+
+# set -eu
+
+while true 
+do 
+  inotifywait -r -e modify src 
+
+  clear
+  date
+
+  cargo test 
+done
