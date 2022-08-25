@@ -13,12 +13,15 @@ pub fn fizz_buzz(n: i32) -> Vec<String> {
     let mut i: i32 = 1;
     
     while i <= n {
-        if i % 3 == 0 && i % 5 == 0 {
-            results.push("FizzBuzz".to_string());
-        } else if i % 3 == 0 {
-            results.push("Fizz".to_string());
-        } else if i % 5 == 0 {
-            results.push("Buzz".to_string());
+        let mod5 = i % 5 == 0;
+        let mod3 = i % 3 == 0;
+
+        if mod3 && mod5 {
+            results.push(String::from("FizzBuzz"));
+        } else if mod3 {
+            results.push(String::from("Fizz"));
+        } else if mod5 {
+            results.push(String::from("Buzz"));
         } else {
             results.push(i.to_string());
         }
