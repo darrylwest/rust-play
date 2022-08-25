@@ -6,13 +6,13 @@ use rand::Rng;
 use std::cmp::Ordering;
 
 fn main() {
-  let low = 1;
-  let high = 100;
+  const LOW: u32 = 1;
+  const HIGH: u32 = 100;
 
-  println!("Guess the number between {low} and {high}...");
+  println!("Guess the number between {LOW} and {HIGH}...");
 
 
-  let secret_number = rand::thread_rng().gen_range(low..=high);
+  let secret_number = rand::thread_rng().gen_range(LOW..=HIGH);
 
   // println!("Secret number is {secret_number}.");
 
