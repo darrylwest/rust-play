@@ -3,8 +3,8 @@
 fn main() {
     let results = fizz_buzz(20);
 
-    for str in results {
-        println!("{}", str);
+    for (i, str) in results.iter().enumerate() {
+        println!("{}: {}", i + 1, str);
     }
 }
 
