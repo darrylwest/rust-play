@@ -17,11 +17,11 @@ pub fn fizz_buzz(n: i32) -> Vec<String> {
         let mod3 = i % 3 == 0;
 
         if mod3 && mod5 {
-            results.push(String::from("FizzBuzz"));
+            results.push("FizzBuzz".into());
         } else if mod3 {
-            results.push(String::from("Fizz"));
+            results.push("Fizz".into());
         } else if mod5 {
-            results.push(String::from("Buzz"));
+            results.push("Buzz".into());
         } else {
             results.push(i.to_string());
         }
