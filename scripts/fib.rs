@@ -33,13 +33,13 @@ fn fib_memo(n: u64, memo: &mut HashMap<u64, u64>) -> u64 {
 // fib defined as Fn = Fn-1 + Fn-2; sequence is 0, 1, 1, 2, 3, 5, 8, 13, 34, 55, 89, 144, ...
 //
 fn fib_standard(n: u64) -> u64 {
-    match n {
-        0 => 0,
-        1 => 1,
-        _ => {
-            let mut a = 0;
-            let mut b = 1;
+    let mut a = 0;
+    let mut b = 1;
 
+    match n {
+        0 => a,
+        1 => b,
+        _ => {
             for _ in 1..n {
                 let old = a;
                 a = b;
