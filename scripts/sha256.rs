@@ -2,11 +2,10 @@
 // cargo-deps: sha256
 
 use sha256::digest_file;
-use std::path::Path;
 use std::env;
+use std::path::Path;
 
 fn main() {
-
     let count = env::args().len();
     if count == 1 {
         eprintln!("!Error: Use: sha256 file [file ...]");

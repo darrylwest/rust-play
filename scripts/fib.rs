@@ -1,7 +1,7 @@
 #!/usr/bin/env rust-script
 
-use std::io;
 use std::collections::HashMap;
+use std::io;
 
 /*
 fn fib_recurse(n: u64) -> u64 {
@@ -27,7 +27,6 @@ fn fib_memo(n: u64, memo: &mut HashMap<u64, u64>) -> u64 {
     memo.insert(n, v);
     v
 }
-
 
 //
 // fib defined as Fn = Fn-1 + Fn-2; sequence is 0, 1, 1, 2, 3, 5, 8, 13, 34, 55, 89, 144, ...
@@ -77,4 +76,3 @@ fn main() {
         println!("memo: {}", fib_memo(n, &mut memo));
     }
 }
-

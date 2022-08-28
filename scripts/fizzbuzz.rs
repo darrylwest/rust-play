@@ -11,7 +11,7 @@ fn main() {
 pub fn fizz_buzz(n: i32) -> Vec<String> {
     let mut results: Vec<String> = Vec::with_capacity(n as usize);
     let mut i: i32 = 1;
-    
+
     while i <= n {
         let mod5 = i % 5 == 0;
         let mod3 = i % 3 == 0;
@@ -28,6 +28,6 @@ pub fn fizz_buzz(n: i32) -> Vec<String> {
 
         i = i + 1;
     }
-    
+
     results
 }

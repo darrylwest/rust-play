@@ -6,7 +6,7 @@ use std::env;
 
 fn base36_bytes(size: usize) -> Vec<u8> {
     let mut rng = rand::thread_rng();
-    let mut results = vec![0u8;0];
+    let mut results = vec![0u8; 0];
 
     for _ in 0..size {
         results.push(rng.gen_range(0..36));
@@ -18,12 +18,11 @@ fn base36_bytes(size: usize) -> Vec<u8> {
 fn main() {
     let args: Vec<String> = env::args().collect();
 
-    let count:usize = if args.len() > 1 {
+    let count: usize = if args.len() > 1 {
         args[1].parse().unwrap()
     } else {
         32
     };
-
 
     let bytes = base36_bytes(count);
 

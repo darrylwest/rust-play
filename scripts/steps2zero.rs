@@ -1,9 +1,9 @@
 #!/usr/bin/env rust-script
 
 fn main() {
-    println!("{}", number_of_steps(14)); 
-    println!("{}", number_of_steps(8)); 
-    println!("{}", number_of_steps(123)); 
+    println!("{}", number_of_steps(14));
+    println!("{}", number_of_steps(8));
+    println!("{}", number_of_steps(123));
 }
 
 pub fn number_of_steps(num: i32) -> i32 {

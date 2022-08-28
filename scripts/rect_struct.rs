@@ -24,9 +24,5 @@ impl Rectangle {
 fn main() {
     let rect = Rectangle::new(30, 50);
 
-    println!(
-        "Rectangle area is {:?} square pixels.", 
-        rect.area()
-    );
+    println!("Rectangle area is {:?} square pixels.", rect.area());
 }
-
