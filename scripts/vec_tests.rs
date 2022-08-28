@@ -1,25 +1,60 @@
 #!/usr/bin/env rust-script
 // cargo-deps: rand
 
+fn string_tests() {
+    let mut s1 = String::from("foo");
+    let s2 = "bar";
+    s1.push('-');
+    s1.push_str(s2);
+
+    println!("s1 {}, s2 {}", s1, s2);
+
+    for c in s1.chars() {
+        print!("{} ", c);
+    }
+    println!("");
+
+    for b in s1.bytes() {
+        print!("{} ", b);
+    }
+    println!("");
+}
+
 fn main() {
     let printr = |x| print!("{}, ", x);
 
-    let mut v = vec![1, 2, 3, 4, 5];
+    { // new scope
+        let mut v = vec![1, 2, 3, 4, 5];
 
-    let first = match v.get(0) {
-      None => 1,
-      Some(i) => *i,
-    };
+        let first = match v.get(0) {
+          None => 1,
+          Some(i) => *i,
+        };
 
-    println!("First: {:?}", first);
+        println!("First: {:?}", first);
 
-    v.push(6);
-    v.insert(0, 7);
+        v.push(6);
+        v.insert(0, 7);
 
-    println!("The list: {:?}", v);
-    println!("Original First: {:?}", first);
+        println!("The list: {:?}", v);
+        println!("Original First: {:?}", first);
 
-    print!("reverse and filtered evens: ");
-    v.into_iter().rev().filter(|x| x % 2 == 0).for_each(|x| printr(x) );
-    println!("");
+        print!("reverse and filtered evens: ");
+        v.into_iter().rev().filter(|x| x % 2 == 0).for_each(|x| printr(x) );
+        println!("");
+    }
+
+    { // new scope
+        println!("Modify a vector in place...");
+        let mut v = vec![100, 32, 57];
+        for i in &mut v {
+            print!("{}, ", i);
+            *i += 50;
+        }
+        println!(" + 50 = ");
+        v.into_iter().for_each(|x| printr(x) );
+        println!("");
+    }
+
+    string_tests();
 }
