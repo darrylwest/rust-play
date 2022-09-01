@@ -15,8 +15,8 @@ impl Rectangle {
 
     fn new(width: u32, height: u32) -> Self {
         Self {
-            width: width,
-            height: height,
+            width,
+            height,
         }
     }
 }
