@@ -7,7 +7,7 @@ use clap::Parser;
 ///
 
 #[derive(Parser, Debug)]
-#[clap(author, version, about, long_about = None)]
+#[clap(author, version, about, long_about = None)] // Read from `Cargo.toml`
 struct Args {
     #[clap(short, long, value_parser)]
     input_file: Option<String>,
