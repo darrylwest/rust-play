@@ -1,7 +1,6 @@
 use clap::Parser;
 use std::fs::File;
-use std::env;
-use std::io::{self, Read, Write, Result};
+use std::io::{self, BufReader, BufWriter, Read, Write, Result};
 
 ///
 /// Test with `yes | pipe_viewer | head -n 100000`
@@ -17,26 +16,24 @@ struct Args {
     output_file: Option<String>,
 }
 
-const CHUNK_SIZE: usize = 16 * 1024;
+const CSZ: usize = 16 * 1024;
 
 fn main() -> Result<()> {
     let args = Args::parse();
 
-
     let mut reader: Box<dyn Read> = match args.input_file {
-        Some(infile) => Box::new(File::open(infile).unwrap()),
+        Some(infile) => Box::new(File::open(infile)?),
         _ => Box::new(io::stdin()),
     };
 
-    if let Some(outfile) = args.output_file {
-        println!("output: {}", outfile);
-    }
+    let mut writer: Box<dyn Write> = match args.output_file {
+        Some(outfile) => Box::new(File::create(outfile)?),
+        _ => Box::new(io::stdout()),
+    };
 
-
-    let verbose = !env::var("PV_VERBOSE").unwrap_or_default().is_empty();
 
     let mut total_bytes = 0;
-    let mut buffer = [0; CHUNK_SIZE];
+    let mut buffer = [0; CSZ];
 
     loop {
         let byte_count = match reader.read(&mut buffer) {
@@ -47,9 +44,7 @@ fn main() -> Result<()> {
 
         total_bytes += byte_count;
 
-        if verbose {
-            io::stdout().write_all(&buffer[..byte_count])?;
-        }
+        writer.write_all(&buffer[..byte_count])?;
 
         eprint!("\rTotal Byte Count: {}", total_bytes);
     }
