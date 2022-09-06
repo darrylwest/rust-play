@@ -5,8 +5,8 @@ use std::thread;
 
 fn main() -> Result<()> {
 
-    let infile = "";
-    let outfile = "";
+    let infile = "./tests/test-data.dat";
+    let outfile = "/tmp/test-junk.dat";
     let silent = false;
 
     let (stats_tx, stats_rx) = unbounded();
