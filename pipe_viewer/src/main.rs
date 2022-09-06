@@ -23,12 +23,12 @@ fn main() -> Result<()> {
 
     let mut reader: Box<dyn Read> = match args.input_file {
         Some(infile) => Box::new(BufReader::new(File::open(infile)?)),
-        _ => Box::new(io::stdin()),
+        _ => Box::new(BufReader::new(io::stdin())),
     };
 
     let mut writer: Box<dyn Write> = match args.output_file {
         Some(outfile) => Box::new(BufWriter::new(File::create(outfile)?)),
-        _ => Box::new(io::stdout()),
+        _ => Box::new(BufWriter::new(io::stdout())),
     };
 
 
