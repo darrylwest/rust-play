@@ -1,4 +1,8 @@
-use clap::Parser;
+
+
+pub const CHUNK_SIZE: usize = 16 * 1024;
+
+use pipe_viewer::{args::Config};
 use std::fs::File;
 use std::io::{self, BufReader, BufWriter, Read, Write, Result};
 
@@ -6,34 +10,25 @@ use std::io::{self, BufReader, BufWriter, Read, Write, Result};
 /// Test with `yes | pipe_viewer | head -n 100000`
 ///
 
-#[derive(Parser, Debug)]
-#[clap(author, version, about, long_about = None)] // Read from `Cargo.toml`
-struct Args {
-    #[clap(short, long, value_parser)]
-    input_file: Option<String>,
-
-    #[clap(short, long, value_parser)]
-    output_file: Option<String>,
-}
-
-const CSZ: usize = 16 * 1024;
 
 fn main() -> Result<()> {
-    let args = Args::parse();
 
-    let mut reader: Box<dyn Read> = match args.input_file {
-        Some(infile) => Box::new(BufReader::new(File::open(infile)?)),
-        _ => Box::new(BufReader::new(io::stdin())),
+    let config = Config::parse();
+
+    let mut reader: Box<dyn Read> = if let Some(infile) = config.infile {
+        Box::new(BufReader::new(File::open(infile.to_string())?))
+    } else {
+        Box::new(BufReader::new(io::stdin()))
     };
 
-    let mut writer: Box<dyn Write> = match args.output_file {
-        Some(outfile) => Box::new(BufWriter::new(File::create(outfile)?)),
-        _ => Box::new(BufWriter::new(io::stdout())),
+    let mut writer: Box<dyn Write> = if let Some(outfile) = config.outfile {
+        Box::new(BufWriter::new(File::create(outfile)?))
+    } else {
+        Box::new(BufWriter::new(io::stdout()))
     };
-
 
     let mut total_bytes = 0;
-    let mut buffer = [0; CSZ];
+    let mut buffer = [0; crate::CHUNK_SIZE];
 
     loop {
         let byte_count = match reader.read(&mut buffer) {
