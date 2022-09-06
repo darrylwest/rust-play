@@ -1,6 +1,7 @@
+use clap::Parser;
+use std::fs::File;
 use std::env;
 use std::io::{self, Read, Write, Result};
-use clap::Parser;
 
 ///
 /// Test with `yes | pipe_viewer | head -n 100000`
@@ -21,13 +22,16 @@ const CHUNK_SIZE: usize = 16 * 1024;
 fn main() -> Result<()> {
     let args = Args::parse();
 
-    if let Some(infile) = args.input_file {
-        println!("input: {}", infile );
-    }
+
+    let mut reader: Box<dyn Read> = match args.input_file {
+        Some(infile) => Box::new(File::open(infile).unwrap()),
+        _ => Box::new(io::stdin()),
+    };
 
     if let Some(outfile) = args.output_file {
         println!("output: {}", outfile);
     }
+
 
     let verbose = !env::var("PV_VERBOSE").unwrap_or_default().is_empty();
 
@@ -35,7 +39,7 @@ fn main() -> Result<()> {
     let mut buffer = [0; CHUNK_SIZE];
 
     loop {
-        let byte_count = match io::stdin().read(&mut buffer) {
+        let byte_count = match reader.read(&mut buffer) {
             Ok(0) => break,
             Ok(x) => x,
             Err(_) => break,

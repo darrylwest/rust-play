@@ -9,3 +9,4 @@ description = "View pipe stats while pipeline is being processed"
 
 [dependencies]
 clap = { version = "3.2.20", features = ["derive"] }
+anyhow = "1.0"
