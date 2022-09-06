@@ -1,20 +1,22 @@
 use crossbeam::channel::{bounded, unbounded};
-use pipe_viewer::{read, stats, write};
+use pipe_viewer::{args::Config, read, stats, write};
 use std::io::Result;
 use std::thread;
 
 fn main() -> Result<()> {
+    let config = Config::new();
+    println!("{:?}", &config);
 
-    let infile = "./tests/test-data.dat";
+    let infile = "test/test-data.dat";
     let outfile = "/tmp/test-junk.dat";
-    let silent = false;
+    let silent: bool = false;
 
     let (stats_tx, stats_rx) = unbounded();
     let (write_tx, write_rx) = bounded(1024);
 
-    let read_handle = thread::spawn(move || read::read_loop(&infile, stats_tx, write_tx));
+    let read_handle = thread::spawn(move || read::read_loop(infile, stats_tx, write_tx));
     let stats_handle = thread::spawn(move || stats::stats_loop(silent, stats_rx));
-    let write_handle = thread::spawn(move || write::write_loop(&outfile, write_rx));
+    let write_handle = thread::spawn(move || write::write_loop(outfile, write_rx));
 
     // crash if any threads have crashed
     // `.join()` returns a `thread::Result<io::Result<()>>`

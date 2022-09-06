@@ -1,9 +1,8 @@
-use clap::{Parser};
+use clap::Parser;
 
-#[derive(Parser)]
+#[derive(Debug, Parser)]
 #[clap(author, version, about, long_about = None)]
-struct Config {
-
+pub struct Config {
     #[clap(short, long, value_parser)]
     input_file: Option<String>,
 
@@ -12,13 +11,10 @@ struct Config {
 
     #[clap(short, long, value_parser)]
     silent: bool,
-
-    #[clap(short, long, value_parser)]
-    debug: u8,
 }
 
-pub struct Args {
-    pub infile: String,
-    pub outfile: String,
-    pub silent: bool,
+impl Config {
+    pub fn new() -> Self {
+        Config::parse()
+    }
 }
