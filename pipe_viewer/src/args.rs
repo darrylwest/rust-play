@@ -20,13 +20,10 @@ impl Config {
     pub fn parse() -> Self {
         let args = Args::parse();
 
-        let config = Config {
+        Config {
             infile: args.input_file,
             outfile: args.output_file,
             silent: false,
-        };
-
-        config
+        }
     }
 }
-

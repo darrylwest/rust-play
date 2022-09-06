@@ -1,7 +1,6 @@
-
-use pipe_viewer::{args::Config};
+use pipe_viewer::args::Config;
 use std::fs::File;
-use std::io::{self, BufReader, BufWriter, Read, Write, Result};
+use std::io::{self, BufReader, BufWriter, Read, Result, Write};
 
 ///
 /// Test with `yes | pipe_viewer | head -n 100000`
@@ -10,11 +9,10 @@ use std::io::{self, BufReader, BufWriter, Read, Write, Result};
 pub const CHUNK_SIZE: usize = 16 * 1024;
 
 fn main() -> Result<()> {
-
     let config = Config::parse();
 
     let mut reader: Box<dyn Read> = if let Some(infile) = config.infile {
-        Box::new(BufReader::new(File::open(infile.to_string())?))
+        Box::new(BufReader::new(File::open(infile)?))
     } else {
         Box::new(BufReader::new(io::stdin()))
     };
