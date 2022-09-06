@@ -11,19 +11,23 @@ struct Args {
 }
 
 pub struct Config {
-    pub infile: Option<String>,
     pub outfile: Option<String>,
+    pub infile: Option<String>,
     pub silent: bool,
 }
 
 impl Config {
+    pub fn new(outfile: Option<String>, infile: Option<String>, silent: bool) -> Self {
+        Self {
+            outfile,
+            infile,
+            silent,
+        }
+    }
+
     pub fn parse() -> Self {
         let args = Args::parse();
 
-        Config {
-            infile: args.input_file,
-            outfile: args.output_file,
-            silent: false,
-        }
+        Config::new(args.output_file, args.input_file, false)
     }
 }
