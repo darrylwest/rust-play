@@ -1,7 +1,4 @@
 
-
-pub const CHUNK_SIZE: usize = 16 * 1024;
-
 use pipe_viewer::{args::Config};
 use std::fs::File;
 use std::io::{self, BufReader, BufWriter, Read, Write, Result};
@@ -10,6 +7,7 @@ use std::io::{self, BufReader, BufWriter, Read, Write, Result};
 /// Test with `yes | pipe_viewer | head -n 100000`
 ///
 
+pub const CHUNK_SIZE: usize = 16 * 1024;
 
 fn main() -> Result<()> {
 
