@@ -1,46 +1,31 @@
-use pipe_viewer::args::Config;
-use std::fs::File;
-use std::io::{self, BufReader, BufWriter, Read, Result, Write};
-
-///
-/// Test with `yes | pipe_viewer | head -n 100000`
-///
-
-pub const CHUNK_SIZE: usize = 16 * 1024;
+use crossbeam::channel::{bounded, unbounded};
+use pipe_viewer::{read, stats, write};
+use std::io::Result;
+use std::thread;
 
 fn main() -> Result<()> {
-    let config = Config::parse();
 
-    let mut reader: Box<dyn Read> = if let Some(infile) = config.infile {
-        Box::new(BufReader::new(File::open(infile)?))
-    } else {
-        Box::new(BufReader::new(io::stdin()))
-    };
+    let infile = "";
+    let outfile = "";
+    let silent = false;
 
-    let mut writer: Box<dyn Write> = if let Some(outfile) = config.outfile {
-        Box::new(BufWriter::new(File::create(outfile)?))
-    } else {
-        Box::new(BufWriter::new(io::stdout()))
-    };
+    let (stats_tx, stats_rx) = unbounded();
+    let (write_tx, write_rx) = bounded(1024);
 
-    let mut total_bytes = 0;
-    let mut buffer = [0; crate::CHUNK_SIZE];
+    let read_handle = thread::spawn(move || read::read_loop(&infile, stats_tx, write_tx));
+    let stats_handle = thread::spawn(move || stats::stats_loop(silent, stats_rx));
+    let write_handle = thread::spawn(move || write::write_loop(&outfile, write_rx));
 
-    loop {
-        let byte_count = match reader.read(&mut buffer) {
-            Ok(0) => break,
-            Ok(x) => x,
-            Err(_) => break,
-        };
+    // crash if any threads have crashed
+    // `.join()` returns a `thread::Result<io::Result<()>>`
+    let read_io_result = read_handle.join().unwrap();
+    let stats_io_result = stats_handle.join().unwrap();
+    let write_io_result = write_handle.join().unwrap();
 
-        total_bytes += byte_count;
-
-        writer.write_all(&buffer[..byte_count])?;
-
-        eprint!("\rTotal Byte Count: {}", total_bytes);
-    }
-
-    eprintln!("\rTotal Byte Count: {}", total_bytes);
+    // Return an error if any threads returned an error
+    read_io_result?;
+    stats_io_result?;
+    write_io_result?;
 
     Ok(())
 }

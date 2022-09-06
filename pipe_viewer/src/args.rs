@@ -1,33 +1,24 @@
-use clap::Parser;
+use clap::{Parser};
 
-#[derive(Parser, Debug)]
-#[clap(author, version, about, long_about = None)] // Read from `Cargo.toml`
-struct Args {
+#[derive(Parser)]
+#[clap(author, version, about, long_about = None)]
+struct Config {
+
     #[clap(short, long, value_parser)]
     input_file: Option<String>,
 
     #[clap(short, long, value_parser)]
     output_file: Option<String>,
+
+    #[clap(short, long, value_parser)]
+    silent: bool,
+
+    #[clap(short, long, value_parser)]
+    debug: u8,
 }
 
-pub struct Config {
-    pub outfile: Option<String>,
-    pub infile: Option<String>,
+pub struct Args {
+    pub infile: String,
+    pub outfile: String,
     pub silent: bool,
-}
-
-impl Config {
-    pub fn new(outfile: Option<String>, infile: Option<String>, silent: bool) -> Self {
-        Self {
-            outfile,
-            infile,
-            silent,
-        }
-    }
-
-    pub fn parse() -> Self {
-        let args = Args::parse();
-
-        Config::new(args.output_file, args.input_file, false)
-    }
 }
