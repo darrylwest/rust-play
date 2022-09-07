@@ -22,7 +22,7 @@ impl Config {
         if let Some(s) = self.input_file.as_ref() {
             String::from(s)
         } else {
-            "".to_string()
+            String::new()
         }
     }
 
@@ -30,7 +30,7 @@ impl Config {
         if let Some(s) = self.output_file.as_ref() {
             String::from(s)
         } else {
-            "".to_string()
+            String::new()
         }
     }
 }

@@ -5,9 +5,8 @@ use std::thread;
 
 fn main() -> Result<()> {
     let config = Config::new();
-    println!("{:?}", &config);
 
-    let silent: bool = false;
+    let silent: bool = config.silent;
     let infile: String = config.input_file();
     let outfile: String = config.output_file();
 
