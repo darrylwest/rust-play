@@ -1,6 +1,6 @@
 # Pipe Viewer
 
-This code originated from the training video [Hands On System Programming with Rust]() and has been enhanced to add:
+This code originated from the training video [Hands On System Programming with Rust](https://www.udemy.com/course/hands-on-systems-programming-with-rust/) and has been enhanced to add:
 
 * configuration struct as parsed from cli
 * macro based cli parsing

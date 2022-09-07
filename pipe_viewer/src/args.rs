@@ -19,10 +19,18 @@ impl Config {
     }
 
     pub fn input_file(&self) -> String {
-        "tests/text-file.txt".to_string()
+        if let Some(s) = self.input_file.as_ref() {
+            String::from(s)
+        } else {
+            "".to_string()
+        }
     }
 
     pub fn output_file(&self) -> String {
-        "tests/text-file.out".to_string()
+        if let Some(s) = self.output_file.as_ref() {
+            String::from(s)
+        } else {
+            "".to_string()
+        }
     }
 }
