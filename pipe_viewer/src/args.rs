@@ -1,4 +1,5 @@
 use clap::Parser;
+use log::*;
 
 #[derive(Debug, Parser)]
 #[clap(author, version, about, long_about = None)]
@@ -20,16 +21,20 @@ impl Config {
 
     pub fn input_file(&self) -> String {
         if let Some(s) = self.input_file.as_ref() {
+            info!("Read input from {}", s);
             String::from(s)
         } else {
+            info!("Read from stdin");
             String::new()
         }
     }
 
     pub fn output_file(&self) -> String {
         if let Some(s) = self.output_file.as_ref() {
+            info!("Write output to {}", s);
             String::from(s)
         } else {
+            info!("Write output to stdout");
             String::new()
         }
     }

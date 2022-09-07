@@ -4,6 +4,7 @@ use std::io::Result;
 use std::thread;
 
 fn main() -> Result<()> {
+    env_logger::init(); // TODO replace this with a custom logger init
     let config = Config::new();
 
     let silent: bool = config.silent;
@@ -14,14 +15,12 @@ fn main() -> Result<()> {
     let (write_tx, write_rx) = bounded(1024);
 
     let read_handle = thread::spawn(move || {
-        println!("read from to {}", &infile);
         read::read_loop(&infile, stats_tx, write_tx)
     });
 
     let stats_handle = thread::spawn(move || stats::stats_loop(silent, stats_rx));
 
     let write_handle = thread::spawn(move || {
-        println!("write to {}", &outfile);
         write::write_loop(&outfile, write_rx)
     });
 
