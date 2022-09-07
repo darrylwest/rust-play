@@ -4,13 +4,13 @@ use clap::Parser;
 #[clap(author, version, about, long_about = None)]
 pub struct Config {
     #[clap(short, long, value_parser)]
-    input_file: Option<String>,
+    pub input_file: Option<String>,
 
     #[clap(short, long, value_parser)]
-    output_file: Option<String>,
+    pub output_file: Option<String>,
 
     #[clap(short, long, value_parser)]
-    silent: bool,
+    pub silent: bool,
 }
 
 impl Config {
