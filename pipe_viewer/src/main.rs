@@ -8,8 +8,8 @@ fn main() -> Result<()> {
     println!("{:?}", &config);
 
     let silent: bool = false;
-    let infile = "tests/text-file.txt".to_string();
-    let outfile = "tests/text-file.out".to_string();
+    let infile: String = config.input_file();
+    let outfile: String = config.output_file();
 
     let (stats_tx, stats_rx) = unbounded();
     let (write_tx, write_rx) = bounded(1024);
