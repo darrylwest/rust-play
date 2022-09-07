@@ -2,9 +2,10 @@ use crossbeam::channel::{bounded, unbounded};
 use pipe_viewer::{args::Config, read, stats, write};
 use std::io::Result;
 use std::thread;
+use log::info;
 
 fn main() -> Result<()> {
-    env_logger::init(); // TODO replace this with a custom logger init
+    env_logger::init();
     let config = Config::new();
 
     let silent: bool = config.silent;
@@ -34,6 +35,8 @@ fn main() -> Result<()> {
     read_io_result?;
     stats_io_result?;
     write_io_result?;
+
+    info!("PipeViewer completed...");
 
     Ok(())
 }

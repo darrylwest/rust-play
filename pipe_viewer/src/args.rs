@@ -16,7 +16,10 @@ pub struct Config {
 
 impl Config {
     pub fn new() -> Self {
-        Config::parse()
+        let config = Config::parse();
+        info!("Parse the command line args into Config...");
+        info!("Config: {:?}", config);
+        config
     }
 
     pub fn input_file(&self) -> String {
