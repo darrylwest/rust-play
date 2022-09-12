@@ -21,6 +21,14 @@ fn string_tests() {
 }
 
 fn main() {
+    {
+        let a = 5;
+        let b = 3;
+
+        println!("my test number: {}", a-- - --b);
+
+    }
+
     let printr = |x| print!("{}, ", x);
 
     {
