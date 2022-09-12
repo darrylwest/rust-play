@@ -1,5 +1,5 @@
 #!/usr/bin/env rust-script
-// cargo-deps: rand
+// cargo-deps: itertools
 
 fn string_tests() {
     let mut s1 = String::from("foo");
@@ -19,6 +19,7 @@ fn string_tests() {
     }
     println!("");
 }
+
 
 fn main() {
     {
@@ -70,4 +71,15 @@ fn main() {
     }
 
     string_tests();
+
+    {
+        let value = itertools::fold(&[1., 2., 3.], 0., |a, &b| f32::max(a, b));
+
+        println!("max of 1, 2 3 is {}", value);
+
+        let value = itertools::fold(&[1., 2., 3.], 0., |a, &b| a + b);
+
+        println!("sum of 1, 2 3 is {}", value);
+    }
+
 }
