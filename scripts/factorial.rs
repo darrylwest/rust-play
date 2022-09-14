@@ -1,13 +1,11 @@
 #!/usr/bin/env rust-script
 // cargo-deps: rand
 
+
+fn factorial(n: u128) -> u128 {
+    (1..n+1).product()
+}
+
 fn main() {
-    let mut result: f64 = 1.0;
-
-    for n in (2..21).rev() {
-        result = result * (n as f64);
-        println!("{}:{}", n, result);
-    }
-
-    println!("result: {}", result);
+    println!("result: {}", factorial(20));
 }
