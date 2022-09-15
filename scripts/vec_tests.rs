@@ -54,6 +54,7 @@ fn main() {
             .rev()
             .filter(|x| x % 2 == 0)
             .for_each(|x| printr(x));
+
         println!("");
     }
 
