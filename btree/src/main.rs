@@ -36,16 +36,16 @@ impl<T: Ord> BinaryTree<T> {
     fn traverse(&self) {
         match *self {
             BinaryTree::NonEmpty(ref node) => {
-                node.left.traverse(list);
-                node.right.traverse(list);
+                node.left.traverse();
+                node.right.traverse();
             },
-            BinaryTree::Empty => node.element;
+            BinaryTree::Empty => (),
         }
     }
 }
 
 fn main() {
-    let list = vec![6, 7, 3, 2, 5];
+    let list = vec![4, 6, 7, 3, 2, 5];
 
     let mut root: BinaryTree<u8> = BinaryTree::Empty;
 
@@ -53,7 +53,7 @@ fn main() {
         root.add(x);
     }
 
-    // println!("{:#?}", root);
+    println!("{:#?}", root);
 
     root.traverse();
 
