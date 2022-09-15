@@ -23,16 +23,19 @@ impl<T: Ord> BinaryTree<T> {
                 }
             }
         }
-                    
     }
+}
 
-    fn traverse(&self) {
+impl<T: Clone> BinaryTree<T> {
+    fn walk(&self) -> Vec<T> {
         match *self {
-            BinaryTree::NonEmpty(ref node) => {
-                node.left.traverse();
-                node.right.traverse();
+            BinaryTree::Empty => vec![],
+            BinaryTree::NonEmpty(ref boxed) => {
+                let mut result = boxed.left.walk();
+                result.push(boxed.element.clone());
+                result.extend(boxed.right.walk());
+                result
             },
-            BinaryTree::Empty => (),
         }
     }
 }
@@ -45,7 +48,8 @@ struct TreeNode<T> {
 }
 
 fn main() {
-    let list = vec![4, 6, 7, 3, 2, 5];
+    let list = vec![4, 6, 9, 7, 3, 2, 5];
+    println!("original: {:?}", &list);
 
     let mut root: BinaryTree<u8> = BinaryTree::Empty;
 
@@ -53,8 +57,8 @@ fn main() {
         root.add(x);
     }
 
-    println!("{:#?}", root);
 
-    root.traverse();
+    let sorted = root.walk();
+    println!("sorted: {:?}", &sorted);
 
 }
