@@ -52,7 +52,7 @@ mod tests {
     use super::*;
 
     #[test]
-    fn test_sort() {
+    fn test_u8() {
         let list = vec![4, 6, 9, 7, 3, 2, 5];
         // println!("original: {:?}", &list);
 
@@ -64,6 +64,20 @@ mod tests {
 
         let sorted = root.walk();
         assert_eq!(sorted, vec![2, 3, 4, 5, 6, 7, 9]);
+        assert_eq!(sorted.len(), list.len());
+    }
+
+    #[test]
+    fn test_string() {
+        let list = vec!["fee", "fi", "fo", "fum"];
+        let mut root = BinaryTree::Empty;
+
+        for s in &list {
+            root.add(*s);
+        }
+
+        let sorted = root.walk();
+        assert_eq!(sorted, list);
         assert_eq!(sorted.len(), list.len());
     }
 }
