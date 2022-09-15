@@ -5,13 +5,6 @@ enum BinaryTree<T> {
     NonEmpty(Box<TreeNode<T>>)
 }
 
-#[derive(Debug)]
-struct TreeNode<T> {
-    element: T,
-    left: BinaryTree<T>,
-    right: BinaryTree<T>,
-}
-
 impl<T: Ord> BinaryTree<T> {
     fn add(&mut self, value: T) {
         match *self {
@@ -42,6 +35,13 @@ impl<T: Ord> BinaryTree<T> {
             BinaryTree::Empty => (),
         }
     }
+}
+
+#[derive(Debug)]
+struct TreeNode<T> {
+    element: T,
+    left: BinaryTree<T>,
+    right: BinaryTree<T>,
 }
 
 fn main() {
