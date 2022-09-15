@@ -52,17 +52,18 @@ mod tests {
     use super::*;
 
     #[test]
-    fn test_build() {
+    fn test_sort() {
         let list = vec![4, 6, 9, 7, 3, 2, 5];
         // println!("original: {:?}", &list);
 
         let mut root: BinaryTree<u8> = BinaryTree::Empty;
 
-        for x in list {
-            root.add(x);
+        for x in &list {
+            root.add(*x);
         }
 
         let sorted = root.walk();
         assert_eq!(sorted, vec![2, 3, 4, 5, 6, 7, 9]);
+        assert_eq!(sorted.len(), list.len());
     }
 }
