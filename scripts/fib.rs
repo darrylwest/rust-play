@@ -50,6 +50,17 @@ fn fib_standard(n: u64) -> u64 {
     }
 }
 
+// let v = fib_iter().take(20).collect::<Vec<_>>();
+//
+fn fib_iter() -> impl Iterator<Item=u64> {
+    let mut state = (0, 1);
+
+    std::iter::from_fn(move || {
+        state = (state.1, state.0 + state.1);
+        Some(state.0)
+    })
+}
+
 fn main() {
     println!("Fibonacci generator(s)");
     println!("Type \"quit\" to end the program");
@@ -74,5 +85,8 @@ fn main() {
 
         let mut memo = HashMap::new();
         println!("memo: {}", fib_memo(n, &mut memo));
+
+        let v = fib_iter().take(n as usize).collect::<Vec<_>>();
+        println!("iter: {:?}", v);
     }
 }
