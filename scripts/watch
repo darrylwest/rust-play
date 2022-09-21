@@ -1,0 +1,10 @@
+#!/usr/bin/env bash
+# dpw@Darryls-iMac.localdomain
+# 2022-09-21 13:56:16
+#
+
+set -eu
+
+FILE=domain_key.rs
+
+watchexec -d 500 -c -e rs ./$FILE
