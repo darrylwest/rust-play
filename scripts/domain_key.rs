@@ -23,10 +23,7 @@ fn now() -> NaiveDateTime {
 
 fn generate_random() -> u64 {
     let mut rng = thread_rng();
-    // (MIN_64 as f64, MAX_64 as f64)
-    let n: u64 = rng.gen();
-
-    n
+    rng.gen_range(MIN_64..MAX_64)
 }
 
 // fn shard_key() { }
@@ -50,8 +47,8 @@ fn to_base62(number: u64) -> String{
     result.iter().rev().collect::<String>()
 }
 
-fn show(ts: u64, b62: String) {
-    println!("n: {} -> {} : {}", ts, b62, b62.len());
+fn show(label: &str, ts: u64, b62: String) {
+    println!("{:18}:{} -> {} : {}", label, ts, b62, b62.len());
 }
 
 fn test_micros(dt: NaiveDateTime) -> u64 {
@@ -69,24 +66,23 @@ fn main() {
     let ts: u64 = test_micros(now);
     let tmax: u64 = test_micros(fut);
     
-    show(ts, to_base62(ts));
-    show(tmax, to_base62(tmax));
+    show("micros now", ts, to_base62(ts));
+    show("micros max date", tmax, to_base62(tmax));
 
     let ts: u64 = test_nanos(now);
     let tmax: u64 = test_nanos(fut);
     
-    show(ts, to_base62(ts));
-    show(tmax, to_base62(tmax));
+    show("nanos now", ts, to_base62(ts));
+    show("nanos max date", tmax, to_base62(tmax));
 
+    show("min u64", MIN_64, to_base62(MIN_64));
+    show("max u64", MAX_64, to_base62(MAX_64));
 
-    show(MIN_64, to_base62(MIN_64));
-    show(MAX_64, to_base62(MAX_64));
+    // println!("max - min range   :{}", MAX_64 - MIN_64);
 
-    println!("max - min range: {}", MAX_64 - MIN_64);
-
-    println!("random generation...");
+    println!("\nrandom generation between {} and {} always generates 9 base62 chars", MIN_64, MAX_64);
 
     let n = generate_random();
-    show(n, to_base62(n));
+    show("random", n, to_base62(n));
 }
 
