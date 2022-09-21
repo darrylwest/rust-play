@@ -1,6 +1,6 @@
 #!/usr/bin/env rust-script
 
-fn create_adder() -> Box<dyn Fn(i32, i32) -> i32> {
+fn create_adder() -> Box<dyn FnOnce(i32, i32) -> i32> {
     Box::new(|x, y| x + y)
 }
 

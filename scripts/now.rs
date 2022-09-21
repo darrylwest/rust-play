@@ -8,8 +8,12 @@ fn main() {
 
     println!(
         "{} {:x} {}",
-        utc.timestamp(),
-        utc.timestamp(),
+        utc.timestamp_micros(),
+        utc.timestamp_micros(),
         utc.to_rfc3339()
     );
+
+    let key = format!("{:X}", Utc::now().timestamp_micros());
+
+    println!("key: {} length: {}", key, key.len());
 }
