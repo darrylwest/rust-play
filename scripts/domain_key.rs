@@ -2,7 +2,7 @@
 // cargo-deps: rand, chrono
 
 // use std::env;
-// use rand::prelude::*;
+use rand::{Rng, thread_rng};
 use chrono::Utc;
 use chrono::naive::{NaiveDate, NaiveDateTime};
 
@@ -13,8 +13,20 @@ const ALPHA: [char; 62] = [
     'v', 'w', 'x', 'y', 'z'
 ];
 
+const MAX_64: u64 = 13535000000000000; 
+const MIN_64: u64 = 218400000000000;
+// delta = 13_316_600_000_000_000 
+
 fn now() -> NaiveDateTime {
     Utc::now().naive_utc()
+}
+
+fn generate_random() -> u64 {
+    let mut rng = thread_rng();
+    // (MIN_64 as f64, MAX_64 as f64)
+    let n: u64 = rng.gen();
+
+    n
 }
 
 // fn shard_key() { }
@@ -39,7 +51,7 @@ fn to_base62(number: u64) -> String{
 }
 
 fn show(ts: u64, b62: String) {
-    println!("ts: {} -> {} : {}", ts, b62, b62.len());
+    println!("n: {} -> {} : {}", ts, b62, b62.len());
 }
 
 fn test_micros(dt: NaiveDateTime) -> u64 {
@@ -65,5 +77,16 @@ fn main() {
     
     show(ts, to_base62(ts));
     show(tmax, to_base62(tmax));
+
+
+    show(MIN_64, to_base62(MIN_64));
+    show(MAX_64, to_base62(MAX_64));
+
+    println!("max - min range: {}", MAX_64 - MIN_64);
+
+    println!("random generation...");
+
+    let n = generate_random();
+    show(n, to_base62(n));
 }
 
