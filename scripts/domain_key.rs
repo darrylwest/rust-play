@@ -42,12 +42,26 @@ fn show(ts: u64, b62: String) {
     println!("ts: {} -> {} : {}", ts, b62, b62.len());
 }
 
+fn test_micros(dt: NaiveDateTime) -> u64 {
+    dt.timestamp_micros() as u64
+}
+
+fn test_nanos(dt: NaiveDateTime) -> u64 {
+    dt.timestamp_nanos() as u64
+}
+
 fn main() {
     let now = now();
     let fut = NaiveDate::from_ymd(2350, 1, 1).and_hms(0, 0, 0);
     
-    let ts: u64 = now.timestamp_micros() as u64;
-    let tmax: u64 = fut.timestamp_micros() as u64;
+    let ts: u64 = test_micros(now);
+    let tmax: u64 = test_micros(fut);
+    
+    show(ts, to_base62(ts));
+    show(tmax, to_base62(tmax));
+
+    let ts: u64 = test_nanos(now);
+    let tmax: u64 = test_nanos(fut);
     
     show(ts, to_base62(ts));
     show(tmax, to_base62(tmax));
