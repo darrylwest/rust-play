@@ -16,6 +16,16 @@ impl Model {
     }
 }
 
+/*
+ *
+ * Tests
+ *
+ * single model & list of models
+ * write map to file
+ * read map from file
+
+ */
+
 fn main() {
     log4rs::init_file("config/rolling.yaml", Default::default()).unwrap();
 
@@ -26,6 +36,11 @@ fn main() {
     let mut map: HashMap<String, Model> = HashMap::with_capacity(count);
     let list = create_models(count);
 
+    let model: &Model = &list[0];
+
+    info!("model: {:?}", model);
+    let key = model.id.to_string();
+
     for m in &list {
         let id = m.id.to_string();
         let model = m.copy();
@@ -33,17 +48,34 @@ fn main() {
         map.insert(id.to_string(), model);
     }
 
-    info!("map: {:?}", &map);
+    info!("map: {:?}", map);
 
     let keys: Vec<String> = map.clone().into_keys().collect();
     info!("keys: {:?}", keys);
+
 
     let values: Vec<Model> = map.clone().into_values().collect();
     info!("vals: {:?}", values);
 
     info!("sizes: map: {}, list: {}", map.len(), list.len());
 
+    if let Some(m) = map.get(&key) {
+        info!("get: {:?}", m);
+    } else {
+        panic!("could not get from map");
+    }
+
+    let new_model = Model { id: key.to_string(), name: "new value".to_string() };
+
+    if let Some(old) = map.insert(key, new_model) {
+        info!("old: {:?}", old);
+    } else {
+        panic!("could not update map");
+    }
+        
     info!("clone: {:?}", &map);
+
+
 }
 
 fn create_models(count: usize) -> Vec<Model> {

@@ -5,5 +5,5 @@
 
 set -eu
 
-watchexec -d 500 -c -e rs cargo run
+watchexec -d 500 -c -e rs -w src/ cargo run
 
