@@ -1,37 +1,43 @@
-use hashbrown::HashMap;
+
 use log::info;
+use hash_tests::{Database, Person};
+use anyhow::Result;
 
-#[derive(Debug, Clone)]
-struct Model {
-    id: String,
-    name: String,
-}
-
-impl Model {
-    fn copy(&self) -> Model {
-        Model {
-            id: self.id.to_string(),
-            name: self.name.to_string(),
-        }
-    }
-}
-
-/*
- *
- * Tests
- *
- * single model & list of models
- * write map to file
- * read map from file
-
- */
-
-fn main() {
+fn main() -> Result<()> {
     log4rs::init_file("config/rolling.yaml", Default::default()).unwrap();
 
     info!("hash tests");
 
     let count: usize = 6;
+
+    let mut db = Database::init();
+    let list = create_models(count);
+
+    for person in &list {
+        let value = person.email.as_bytes().to_vec();
+        let _ = db.put(&person.id, &value);
+    }
+
+    info!("list: {:?}", &list);
+
+    Ok(())
+}
+
+fn create_models(count: usize) -> Vec<Person> {
+    let mut list: Vec<Person> = Vec::with_capacity(count);
+
+    for _idx in 1..=count {
+        list.push(Person::random());
+    }
+        
+    list
+}
+
+
+/*
+fn get_values(map: &HashMap<String, Model>) -> Vec<Model> {
+    map.clone().into_values().collect()
+}
 
     let mut map: HashMap<String, Model> = HashMap::with_capacity(count);
     let list = create_models(count);
@@ -54,7 +60,7 @@ fn main() {
     info!("keys: {:?}", keys);
 
 
-    let values: Vec<Model> = map.clone().into_values().collect();
+    let values = get_values(&map);
     info!("vals: {:?}", values);
 
     info!("sizes: map: {}, list: {}", map.len(), list.len());
@@ -65,7 +71,7 @@ fn main() {
         panic!("could not get from map");
     }
 
-    let new_model = Model { id: key.to_string(), name: "new value".to_string() };
+    let new_model = Model::new(&key, &"new value".to_string());
 
     if let Some(old) = map.insert(key, new_model) {
         info!("old: {:?}", old);
@@ -74,19 +80,4 @@ fn main() {
     }
         
     info!("clone: {:?}", &map);
-
-
-}
-
-fn create_models(count: usize) -> Vec<Model> {
-    let mut list: Vec<Model> = Vec::with_capacity(count);
-    for idx in 1..=count {
-        list.push(Model {
-            id: format!("{}", idx + 100),
-            name: format!("me-{}", idx),
-        });
-    }
-        
-    list
-}
-
+*/
