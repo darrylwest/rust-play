@@ -34,12 +34,12 @@ fn to_base62(number: u64) -> String{
     let mut result: Vec<char> = Vec::with_capacity(30);
 
     loop {
-        let r = (n % radix) as usize ;
-        result.push(ALPHA[r]);
+        let idx = (n % radix) as usize ;
+        result.push(ALPHA[idx]);
         
         n /= radix;
         
-        if n <= 0 {
+        if n < radix {
             break;
         }
     }

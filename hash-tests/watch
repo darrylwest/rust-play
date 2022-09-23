@@ -1,0 +1,9 @@
+#!/usr/bin/env bash
+# dpw@Darryls-iMac.localdomain
+# 2022-09-23 14:24:49
+#
+
+set -eu
+
+watchexec -d 500 -c -e rs cargo fmt && cargo run
+
