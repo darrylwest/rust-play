@@ -21,12 +21,16 @@ fn main() -> Result<()> {
     info!("list: {:?}", &list);
 
     info!("keys: {:?}", db.keys());
-    let values: Vec<String> = db.values().into_iter().map(|v| String::from_utf8(v).unwrap() ).collect();
+    let values: Vec<String> = db
+        .values()
+        .into_iter()
+        .map(|v| String::from_utf8(v).unwrap())
+        .collect();
     for v in values {
         info!("{}", v);
     }
 
-    let filename = "log/mydb.json";
+    let filename = "data/mydb.data";
     let buf = File::create(filename)?;
     let values = db.values();
 
