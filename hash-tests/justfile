@@ -1,0 +1,40 @@
+alias t := test
+alias ta := test-all
+alias b := build
+alias rel := release
+
+# run the standard tests
+test:
+    clear
+    cargo test
+
+# run the standard tests + clippy and fmt
+test-all:
+    clear
+    cargo test && cargo fmt && cargo clippy
+
+# build the debug target
+build:
+    clear
+    cargo build
+
+# build the docs
+docs:
+    cargo doc --no-deps --open
+
+# run the debug app
+run:
+    clear && cargo run
+
+# build the release
+release:
+    clear
+    cargo build --release && clear && cargo run --release
+
+# watch the current folders and run tests when a file is changed
+watch:
+    watchexec -d 500 -c -e rs cargo test && cargo fmt && cargo clippy && cargo run
+
+# merge the develop branch to main
+merge:
+    git push && git checkout main && git pull && git merge develop && git push && git checkout develop

@@ -1,13 +1,13 @@
-
-
-use log::{debug,info};
-use serde::{Serialize, Deserialize};
-use hashbrown::HashMap;
 use anyhow::Result;
+use hashbrown::HashMap;
+use log::{debug, info};
 use rand::Rng;
+use serde::{Deserialize, Serialize};
+
+pub type Data = Vec<u8>;
 
 pub struct Database {
-    db: HashMap<String, Vec<u8>>,
+    db: HashMap<String, Data>,
 }
 
 impl Database {
@@ -19,32 +19,32 @@ impl Database {
         Database { db }
     }
 
-    pub fn put(&mut self, key: &str, value: &Vec<u8>) -> Result<String> {
+    pub fn put(&mut self, key: &str, value: &str) -> Result<String> {
         debug!("put item for key: {}", key);
 
         let k = key.to_string();
-        let v = value.clone();
+        let v = Vec::from(value.as_bytes());
         let _ = self.db.insert(k, v);
 
         Ok(key.to_string())
     }
 
-    pub fn get(&self, key: &str) -> Option<Vec<u8>> {
+    pub fn get(&self, key: &str) -> Option<&Data> {
         debug!("get item for key: {}", key);
 
-        if let Some(v) = self.db.get(key) {
-            Some(v.to_vec())
-        } else {
-            None
-        }
+        self.db.get(key)
     }
 
     pub fn len(&self) -> usize {
         self.db.len()
     }
 
+    pub fn is_empty(&self) -> bool {
+        self.db.is_empty()
+    }
+
     pub fn keys(&self) -> Vec<String> {
-        let mut result: Vec::<String> = Vec::with_capacity(self.db.len());
+        let mut result: Vec<String> = Vec::with_capacity(self.db.len());
 
         for key in self.db.keys() {
             result.push(String::from(key));
@@ -53,16 +53,15 @@ impl Database {
         result
     }
 
-    pub fn values(&self) -> Vec<Vec<u8>> {
-        let mut result: Vec<Vec<u8>> = Vec::with_capacity(self.db.len());
+    pub fn values(&self) -> Vec<Data> {
+        let mut result: Vec<Data> = Vec::with_capacity(self.db.len());
 
         for value in self.db.values() {
-            result.push(value.to_vec());
+            result.push(value.clone());
         }
 
         result
     }
-
 }
 
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
@@ -76,8 +75,8 @@ pub enum Status {
 pub struct Person {
     pub id: String,
     pub version: u64,
-    pub email: String, // unique index required
-    pub phones: Vec<String>,     // possible empty list
+    pub email: String,       // unique index required
+    pub phones: Vec<String>, // possible empty list
     pub status: Status,
 }
 
@@ -112,6 +111,18 @@ impl Person {
         }
     }
 
+    pub fn from_json(json: &str) -> Self {
+        let person: Self = serde_json::from_str(json).unwrap();
+
+        person
+    }
+
+    pub fn to_json(&self) -> Result<Data> {
+        let json = serde_json::to_vec(self)?;
+
+        Ok(json)
+    }
+
     pub fn random() -> Person {
         let mut rng = rand::thread_rng();
         let n = rng.gen_range(100_000..=999_999);
@@ -121,6 +132,15 @@ impl Person {
         Person::new(&id, &email)
     }
 
+    pub fn create_models(count: usize) -> Vec<Person> {
+        let mut list: Vec<Person> = Vec::with_capacity(count);
+
+        for _idx in 1..=count {
+            list.push(Person::random());
+        }
+
+        list
+    }
 }
 
 #[cfg(test)]
@@ -133,5 +153,14 @@ mod tests {
 
         assert!(p.id.len() > 3);
         assert!(p.email.starts_with(&p.id));
+    }
+
+    #[test]
+    fn to_json() {
+        let p = Person::random();
+
+        let json = p.to_json().expect("should encode to json");
+
+        assert!(json.len() > 5);
     }
 }
