@@ -1,4 +1,3 @@
-
 use anyhow::Result;
 use hashbrown::HashMap;
 use log::{debug, info};
@@ -9,21 +8,22 @@ pub type Data = Vec<u8>;
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct Config {
-    dbsize: usize,
-    dbfilename: String,
+    pub dbsize: usize,
+    pub dbfilename: String,
 }
 
 impl Default for Config {
     fn default() -> Self {
         Config {
             dbsize: 10_000,
-            dbfilename: "data/default.data".to_string(),
+            dbfilename: "data/person.data".to_string(),
         }
     }
 }
 
 pub struct Database {
     db: HashMap<String, Data>,
+    pub config: Config,
 }
 
 impl Database {
@@ -34,7 +34,7 @@ impl Database {
 
         // read data from config.filename
 
-        Database { db }
+        Database { db, config }
     }
 
     pub fn put(&mut self, key: &str, value: Data) -> Result<String> {

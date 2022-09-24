@@ -1,5 +1,5 @@
 use anyhow::Result;
-use hash_tests::{Database, Person, Config};
+use hash_tests::{Config, Database, Person};
 use log::info;
 use std::fs::File;
 
@@ -25,7 +25,7 @@ fn main() -> Result<()> {
     let values: Vec<Person> = db
         .values()
         .into_iter()
-        .map(|v| Person::from_json(v) )
+        .map(Person::from_json)
         .collect();
 
     for v in &values {
@@ -34,14 +34,12 @@ fn main() -> Result<()> {
 
     info!("values: {:?}", values);
 
-    let filename = "data/mydb.data";
+    let filename = "data/person-list.json";
     let buf = File::create(filename)?;
 
     serde_json::to_writer(buf, &values)?;
 
     let reader = File::open(filename)?;
-    // let content = std::fs::read_to_string(filename)?;
-    // info!("json: {}", content);
     let parsed: Vec<Person> = serde_json::from_reader(reader)?;
 
     info!("parsed: {:?}", parsed);
