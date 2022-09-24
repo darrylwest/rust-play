@@ -1,5 +1,5 @@
 use anyhow::Result;
-use hash_tests::{Database, Person};
+use hash_tests::{Database, Person, Config};
 use log::info;
 use std::fs::File;
 
@@ -11,34 +11,37 @@ fn main() -> Result<()> {
     let count: usize = 6;
 
     let list = Person::create_models(count);
-    let mut db = Database::init();
+    let config = Config::default();
+    let mut db = Database::init(config);
 
     for person in &list {
-        let json = serde_json::to_string(person)?;
-        let _ = db.put(&person.id, &json);
+        let json = serde_json::to_vec(person)?;
+        let _ = db.put(&person.id, json);
     }
 
     info!("list: {:?}", &list);
 
     info!("keys: {:?}", db.keys());
-    let values: Vec<String> = db
+    let values: Vec<Person> = db
         .values()
         .into_iter()
-        .map(|v| String::from_utf8(v).unwrap())
+        .map(|v| Person::from_json(v) )
         .collect();
-    for v in values {
-        info!("{}", v);
+
+    for v in &values {
+        info!("{:?}", v);
     }
 
     let filename = "data/mydb.data";
     let buf = File::create(filename)?;
-    let values = db.values();
 
     serde_json::to_writer(buf, &values)?;
 
-    // let fin = File::open(filename)?;
-    // let data = serde_json::from_reader(fin)?;
-    // info!("{:?}", data);
+    // let content = std::fs::read_to_string(filename)?;
+    // info!("json: {}", content);
+    // let values = serde_json::from_str(&content)?;
+
+    info!("values: {:?}", values);
 
     Ok(())
 }

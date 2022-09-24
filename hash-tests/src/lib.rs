@@ -1,3 +1,4 @@
+
 use anyhow::Result;
 use hashbrown::HashMap;
 use log::{debug, info};
@@ -6,25 +7,41 @@ use serde::{Deserialize, Serialize};
 
 pub type Data = Vec<u8>;
 
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct Config {
+    dbsize: usize,
+    dbfilename: String,
+}
+
+impl Default for Config {
+    fn default() -> Self {
+        Config {
+            dbsize: 10_000,
+            dbfilename: "data/default.data".to_string(),
+        }
+    }
+}
+
 pub struct Database {
     db: HashMap<String, Data>,
 }
 
 impl Database {
-    pub fn init() -> Database {
+    pub fn init(config: Config) -> Database {
         info!("initialize the database");
 
-        let db = HashMap::with_capacity(10_000);
+        let db = HashMap::with_capacity(config.dbsize);
+
+        // read data from config.filename
 
         Database { db }
     }
 
-    pub fn put(&mut self, key: &str, value: &str) -> Result<String> {
+    pub fn put(&mut self, key: &str, value: Data) -> Result<String> {
         debug!("put item for key: {}", key);
 
         let k = key.to_string();
-        let v = Vec::from(value.as_bytes());
-        let _ = self.db.insert(k, v);
+        let _ = self.db.insert(k, value);
 
         Ok(key.to_string())
     }
@@ -111,8 +128,9 @@ impl Person {
         }
     }
 
-    pub fn from_json(json: &str) -> Self {
-        let person: Self = serde_json::from_str(json).unwrap();
+    pub fn from_json(json: Data) -> Self {
+        let s = String::from_utf8(json).unwrap();
+        let person: Self = serde_json::from_str(&s).unwrap();
 
         person
     }
