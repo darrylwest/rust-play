@@ -40,5 +40,8 @@ fn main() -> Result<()> {
 
     info!("parsed: {:?}", parsed);
 
+    info!("save to db.data");
+    db.save("data/db-backup.json")?;
+
     Ok(())
 }

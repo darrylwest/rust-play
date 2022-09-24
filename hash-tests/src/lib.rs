@@ -3,21 +3,19 @@ use hashbrown::HashMap;
 use log::{debug, info};
 use rand::Rng;
 use serde::{Deserialize, Serialize};
+use std::fs::File;
+use std::io::{BufWriter, Write};
 
 pub type Data = Vec<u8>;
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct Config {
     pub dbsize: usize,
-    pub dbfilename: String,
 }
 
 impl Default for Config {
     fn default() -> Self {
-        Config {
-            dbsize: 10_000,
-            dbfilename: "data/person.data".to_string(),
-        }
+        Config { dbsize: 10_000 }
     }
 }
 
@@ -78,6 +76,27 @@ impl Database {
         }
 
         result
+    }
+
+    // saves as a well-formed json for any type...
+    // TODO: refactor to channels to enable saving on a separate thread...
+    pub fn save(&self, filename: &str) -> Result<()> {
+        info!("write all data to file: {}", filename);
+
+        let file = File::create(filename)?;
+        let mut writer = BufWriter::new(file);
+
+        writer.write_all(b"[")?;
+        for (idx, value) in self.db.values().enumerate() {
+            if idx > 0 {
+                writer.write_all(b",")?;
+            }
+            writer.write_all(value)?;
+        }
+        writer.write_all(b"]")?;
+
+        // self.db.serialize(serde_json::Serializer::new(writer))?
+        Ok(())
     }
 }
 
