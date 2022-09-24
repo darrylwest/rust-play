@@ -5,6 +5,6 @@
 
 set -eu
 
-FILE=domain_key.rs
+FILE=trait_tests.rs
 
 watchexec -d 500 -c -e rs ./$FILE
