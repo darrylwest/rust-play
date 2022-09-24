@@ -22,11 +22,7 @@ fn main() -> Result<()> {
     info!("list: {:?}", &list);
 
     info!("keys: {:?}", db.keys());
-    let values: Vec<Person> = db
-        .values()
-        .into_iter()
-        .map(Person::from_json)
-        .collect();
+    let values: Vec<Person> = db.values().into_iter().map(Person::from_json).collect();
 
     for v in &values {
         info!("{:?}", v);
