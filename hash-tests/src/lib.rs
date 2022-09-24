@@ -3,12 +3,9 @@ use hashbrown::HashMap;
 use log::{debug, info};
 use rand::Rng;
 use serde::{Deserialize, Serialize};
-use std::fs::File;
-use std::io::{BufWriter, Write};
 
 pub type Data = Vec<u8>;
 
-#[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct Config {
     pub dbsize: usize,
 }
@@ -19,9 +16,9 @@ impl Default for Config {
     }
 }
 
+#[derive(Debug, Clone)]
 pub struct Database {
     db: HashMap<String, Data>,
-    pub config: Config,
 }
 
 impl Database {
@@ -32,7 +29,7 @@ impl Database {
 
         // read data from config.filename
 
-        Database { db, config }
+        Database { db }
     }
 
     pub fn put(&mut self, key: &str, value: Data) -> Result<String> {
@@ -59,44 +56,15 @@ impl Database {
     }
 
     pub fn keys(&self) -> Vec<String> {
-        let mut result: Vec<String> = Vec::with_capacity(self.db.len());
-
-        for key in self.db.keys() {
-            result.push(String::from(key));
-        }
+        let result: Vec<String> = self.db.clone().into_keys().collect();
 
         result
     }
 
     pub fn values(&self) -> Vec<Data> {
-        let mut result: Vec<Data> = Vec::with_capacity(self.db.len());
-
-        for value in self.db.values() {
-            result.push(value.clone());
-        }
+        let result: Vec<Data> = self.db.clone().into_values().collect();
 
         result
-    }
-
-    // saves as a well-formed json for any type...
-    // TODO: refactor to channels to enable saving on a separate thread...
-    pub fn save(&self, filename: &str) -> Result<()> {
-        info!("write all data to file: {}", filename);
-
-        let file = File::create(filename)?;
-        let mut writer = BufWriter::new(file);
-
-        writer.write_all(b"[")?;
-        for (idx, value) in self.db.values().enumerate() {
-            if idx > 0 {
-                writer.write_all(b",")?;
-            }
-            writer.write_all(value)?;
-        }
-        writer.write_all(b"]")?;
-
-        // self.db.serialize(serde_json::Serializer::new(writer))?
-        Ok(())
     }
 }
 
