@@ -32,16 +32,19 @@ fn main() -> Result<()> {
         info!("{:?}", v);
     }
 
+    info!("values: {:?}", values);
+
     let filename = "data/mydb.data";
     let buf = File::create(filename)?;
 
     serde_json::to_writer(buf, &values)?;
 
+    let reader = File::open(filename)?;
     // let content = std::fs::read_to_string(filename)?;
     // info!("json: {}", content);
-    // let values = serde_json::from_str(&content)?;
+    let parsed: Vec<Person> = serde_json::from_reader(reader)?;
 
-    info!("values: {:?}", values);
+    info!("parsed: {:?}", parsed);
 
     Ok(())
 }
