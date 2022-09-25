@@ -3,6 +3,7 @@ use hashbrown::HashMap;
 use log::{debug, info};
 use rand::Rng;
 use serde::{Deserialize, Serialize};
+use std::fs::File;
 
 pub type Data = Vec<u8>;
 
@@ -65,6 +66,17 @@ impl Database {
         let result: Vec<Data> = self.db.clone().into_values().collect();
 
         result
+    }
+
+    pub fn save(&self, filename: &str) -> Result<()> {
+        let writer = File::create(filename)?;
+        let mut serializer = serde_json::Serializer::new(writer);
+
+        self.db
+            .serialize(&mut serializer)
+            .expect("should write to file");
+
+        Ok(())
     }
 }
 

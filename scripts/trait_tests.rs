@@ -5,6 +5,15 @@
 use std::io::Write;
 use std::fs::File;
 
+fn dot_product<const N: usize>(a: [f64; N], b: [f64; N]) -> f64 {
+    let mut sum = 0f64;
+    for i in 0..N {
+        sum += a[i] * b[i];
+    }
+
+    sum
+}
+
 pub fn say_hi<W: Write>(out: &mut W) -> std::io::Result<()>  {
     let _ = out.write(b"hello with more text\n");
     out.flush()
@@ -36,4 +45,7 @@ fn main() {
 
     let mut fout = File::create("/tmp/hello.txt").unwrap();
     write_bytes(&mut fout);
+
+    let n = dot_product([0.2, 1.3, 0.3], [3.3, 2.0, 4.0]);
+    println!("n {}", n);
 }
