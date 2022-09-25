@@ -78,6 +78,11 @@ impl Database {
 
         Ok(())
     }
+
+    pub fn restore_from(&self, _filename: &str) -> Result<()> {
+        // not implemented yet
+        Ok(())
+    }
 }
 
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
