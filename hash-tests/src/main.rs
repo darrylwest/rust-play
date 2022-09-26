@@ -40,7 +40,7 @@ fn main() -> Result<()> {
 
     info!("parsed: {:?}", parsed);
 
-    let filename = "data/db.json";
+    let filename = "data/db.data";
     info!("save db to file: {}", filename);
     db.save(filename)?;
 
