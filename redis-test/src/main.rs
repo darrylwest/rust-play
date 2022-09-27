@@ -1,5 +1,4 @@
 
-use std::sync::Arc;
 
 use tokio::net::{TcpListener, TcpStream};
 use mini_redis::{Connection, Frame};
@@ -10,17 +9,44 @@ async fn main() {
 
     loop {
         let (socket, _) = listener.accept().await.unwrap();
-        process(socket).await;
+
+        println!("new connection: {:?}", socket);
+
+        // creates a green thread or a task using 64 bytes of overhead...
+        tokio::spawn(async move {
+            process(socket).await;
+        });
     }
 }
 
 async fn process(socket: TcpStream) {
+    use mini_redis::Command::{self, Get, Set};
+    use std::collections::HashMap;
+
+    let mut db = HashMap::new();
+
     let mut connection = Connection::new(socket);
 
-    if let Some(frame) = connection.read_frame().await.unwrap() {
-        println!("frame: {:?}", frame);
+    while let Some(frame) = connection.read_frame().await.unwrap() {
+        let response = match Command::from_frame(frame).unwrap() {
+            Set(cmd) => {
+                println!("cmd: {:?}", cmd);
+                db.insert(cmd.key().to_string(), cmd.value().to_vec());
+                println!("db: {:?}", db.clone());
 
-        let response = Frame::Error("unimplemented".to_string());
+                Frame::Simple("OK".to_string())
+            }
+            Get(cmd) => {
+                println!("cmd: {:?}", cmd);
+                if let Some(value) = db.get(cmd.key()) {
+                    Frame::Bulk(value.clone().into())
+                } else {
+                    Frame::Null
+                }
+            }
+            cmd => panic!("unimplemented command: {:?}", cmd),
+        };
+
         connection.write_frame(&response).await.unwrap();
     }
 }
