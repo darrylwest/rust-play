@@ -1,3 +1,5 @@
+// creates a mini kv server using components from mini_redis for connection and frames
+// uses arc/mutex to control concurrency
 
 use tokio::net::{TcpListener, TcpStream};
 use mini_redis::{Connection, Frame};
@@ -21,7 +23,6 @@ async fn main() {
     let listener = TcpListener::bind(host).await.unwrap();
 
     println!("listening on {}", host);
-    
 
     // TODO replace HashMap with dash map
     let db = Arc::new(Mutex::new(HashMap::new()));
