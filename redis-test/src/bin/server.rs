@@ -5,6 +5,8 @@ use mini_redis::{Connection, Frame};
 use bytes::Bytes;
 use std::collections::HashMap;
 
+// use tracing::instrument;
+
 // TODO consider using parking_log::Mutex ...
 use std::sync::{Arc, Mutex};
 
@@ -12,10 +14,14 @@ type Db = Arc<Mutex<HashMap<String, Bytes>>>;
 
 #[tokio::main]
 async fn main() {
+    let subscriber = tracing_subscriber::FmtSubscriber::new();
+    let _ = tracing::subscriber::set_global_default(subscriber);
+
     let host = "127.0.0.1:6379";
     let listener = TcpListener::bind(host).await.unwrap();
 
     println!("listening on {}", host);
+    
 
     // TODO replace HashMap with dash map
     let db = Arc::new(Mutex::new(HashMap::new()));
@@ -33,6 +39,7 @@ async fn main() {
     }
 }
 
+#[tracing::instrument]
 async fn process(socket: TcpStream, db: Db) {
     use mini_redis::Command::{self, Get, Set};
 

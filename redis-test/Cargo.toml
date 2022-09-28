@@ -9,3 +9,5 @@ edition = "2021"
 tokio = { version = "1", features = ["full"] }
 mini-redis = "0.4"
 bytes = "1"
+tracing = "0.1"
+tracing-subscriber = "0.3"
