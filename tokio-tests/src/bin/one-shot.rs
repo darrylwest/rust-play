@@ -1,15 +1,13 @@
-
 use tokio::sync::oneshot;
 
 fn do_work() {
-    use std::time::Duration;
     use std::thread;
+    use std::time::Duration;
 
     for n in 1..=9 {
         println!("{} - working...", n);
         thread::sleep(Duration::from_millis(250));
     }
-
 }
 
 async fn sender(tx: oneshot::Sender<String>, msg: String) {
@@ -28,7 +26,7 @@ async fn manager() {
     tokio::spawn(async move {
         sender(tx, msg).await;
     });
-    
+
     waiter(rx).await;
 }
 

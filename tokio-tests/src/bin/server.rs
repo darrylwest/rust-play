@@ -1,8 +1,8 @@
 // creates a mini kv server using components from mini_redis for connection and frames
 // uses arc/mutex to control concurrency
 
-use tokio::net::{TcpListener, TcpStream};
 use mini_redis::{Connection, Frame};
+use tokio::net::{TcpListener, TcpStream};
 
 use bytes::Bytes;
 use std::collections::HashMap;

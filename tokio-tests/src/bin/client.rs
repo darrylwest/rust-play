@@ -1,6 +1,5 @@
-
-use mini_redis::client;
 use bytes::Bytes;
+use mini_redis::client;
 use tokio::sync::{mpsc, oneshot};
 
 #[derive(Debug)]
@@ -63,7 +62,7 @@ async fn main() {
     });
 
     let t2 = tokio::spawn(async move {
-        let (resp_tx, resp_rx) = oneshot::channel(); 
+        let (resp_tx, resp_rx) = oneshot::channel();
         let cmd = Command::Set {
             key: "foo".to_string(),
             val: "bar".into(),
@@ -83,5 +82,4 @@ async fn main() {
     t2.await.unwrap();
 
     manager.await.unwrap();
-
 }
