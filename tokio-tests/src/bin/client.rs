@@ -25,6 +25,7 @@ async fn main() {
     let tx2 = tx.clone();
 
     let host = "127.0.0.1:6379";
+    // let host = "127.0.0.1:26399";
 
     let manager = tokio::spawn(async move {
         let mut client = client::connect(host).await.unwrap();
