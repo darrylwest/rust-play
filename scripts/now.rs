@@ -49,6 +49,7 @@ fn main() {
     chrono_test();
     stdtime_test();
 
-    println!("\nNano Second NOTE: this works in linux but osx only shows 000 for nanos\n");
+    println!("\nNano Second NOTE: this works in linux but osx only shows 000 for nanos.");
+    println!("There is a fix in cpp if you want to ffi it in: ~/raincity/c-projects/cpp-utils/datetime\n");
 }
 
