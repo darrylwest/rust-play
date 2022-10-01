@@ -61,7 +61,7 @@ fn test_nanos(dt: NaiveDateTime) -> u64 {
 
 fn main() {
     let now = now();
-    let fut = NaiveDate::from_ymd(2350, 1, 1).and_hms(0, 0, 0);
+    let fut = NaiveDate::from_ymd(2390, 1, 1).and_hms(0, 0, 0);
     
     let ts: u64 = test_micros(now);
     let tmax: u64 = test_micros(fut);
