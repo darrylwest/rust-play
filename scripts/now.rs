@@ -48,5 +48,7 @@ fn stdtime_test() {
 fn main() {
     chrono_test();
     stdtime_test();
+
+    println!("\nNano Second NOTE: this works in linux but osx only shows 000 for nanos\n");
 }
 
