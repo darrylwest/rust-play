@@ -13,8 +13,8 @@ const ALPHA: [char; 62] = [
     'v', 'w', 'x', 'y', 'z'
 ];
 
-const MAX_64: u64 = 13535000000000000; 
-const MIN_64: u64 = 218400000000000;
+const MAX_64: u64 = 3521614000000;
+const MIN_64: u64 = 56810000000;
 // delta = 13_316_600_000_000_000 
 
 fn now() -> NaiveDateTime {
@@ -39,7 +39,7 @@ fn to_base62(number: u64) -> String{
         
         n /= radix;
         
-        if n < radix {
+        if n == 0 {
             break;
         }
     }
@@ -78,9 +78,8 @@ fn main() {
     show("min u64", MIN_64, to_base62(MIN_64));
     show("max u64", MAX_64, to_base62(MAX_64));
 
-    // println!("max - min range   :{}", MAX_64 - MIN_64);
-
-    println!("\nrandom generation between {} and {} always generates 9 base62 chars", MIN_64, MAX_64);
+    println!("\nrandom generation between {} and {} always generates 7 base62 chars", MIN_64, MAX_64);
+    println!("max - min range: {}", MAX_64 - MIN_64);
 
     let n = generate_random();
     show("random", n, to_base62(n));
