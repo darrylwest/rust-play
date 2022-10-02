@@ -51,23 +51,20 @@ fn decode_digit(digit: u8) -> u8 {
     }
 }
 
-fn from_base62(b62: &String) -> u64 {
+fn from_base62(b62: &str) -> u64 {
     let radix = 62_u64;
     let mut result = 0_u64;
-    let mut p = 0_u32;
 
-    for ch in b62.chars().rev() {
+    for (p, ch) in b62.chars().rev().enumerate() {
         let n = decode_digit(ch as u8) as u64;
 
         assert!(n < radix);
 
-        let q = radix.pow(p);
+        let q = radix.pow(p as u32);
         assert!(q > 0);
         result += n * q;
 
         println!("ch: {} n: {} result: {} q: {} p: {}", ch, n, result, q, p);
-
-        p += 1;
     }
 
     result
