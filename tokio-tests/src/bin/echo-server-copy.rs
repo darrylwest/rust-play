@@ -23,7 +23,14 @@ async fn main() -> io::Result<()> {
             break;
         }
 
-        println!("got {:?}", &buf[..n]);
+        // println!("got {:?}", &buf[..n]);
+
+        let s = match std::str::from_utf8(&buf) {
+            Ok(v) => v,
+            Err(e) => panic!("invalid utf-8: {}", e),
+        };
+
+        println!("{}", s);
     }
 
     Ok(())
