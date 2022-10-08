@@ -19,7 +19,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
         tokio::spawn(async move {
             let cid = id.clone();
 
-            // In a loop, read data from the socket and write the data back.
+            // read data from the socket; parse the command; return a response
             loop {
                 let mut buf = [0; 1024];
                 let n = match socket.read(&mut buf).await {
@@ -34,6 +34,10 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
 
                         if buf[..n] == b"ping\r\n"[..] {
                             println!("pong");
+                            buf[0] = 80_u8;
+                            buf[1] = 79_u8;
+                            buf[2] = 78_u8;
+                            buf[3] = 71_u8;
                         }
 
                         n
