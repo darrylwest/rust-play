@@ -21,26 +21,22 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
 
             // read data from the socket; parse the command; return a response
             loop {
-                let mut buf = [0; 1024];
-                let n = match socket.read(&mut buf).await {
+                let mut request = [0; 1024];
+                let response = match socket.read(&mut request).await {
                     // socket closed
                     Ok(n) if n == 0 => return,
                     Ok(n) => {
-                        let s = match std::str::from_utf8(&buf) {
+                        let s = match std::str::from_utf8(&request) {
                             Ok(v) => v,
                             Err(e) => panic!("invalid utf-8: {}", e),
                         };
                         println!("session: {} len: {} msg: {}", cid, n, s);
 
-                        if buf[..n] == b"ping\r\n"[..] {
-                            println!("pong");
-                            buf[0] = 80_u8;
-                            buf[1] = 79_u8;
-                            buf[2] = 78_u8;
-                            buf[3] = 71_u8;
+                        if request[..n] == b"ping\r\n"[..] {
+                            "pong\r\n".as_bytes()
+                        } else {
+                            "ERROR\r\n".as_bytes()
                         }
-
-                        n
                     }
                     Err(e) => {
                         eprintln!("error: {}", e);
@@ -49,7 +45,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
                 };
 
                 // Write the data back
-                if let Err(e) = socket.write_all(&buf[0..n]).await {
+                if let Err(e) = socket.write_all(&response[..]).await {
                     eprintln!("failed to write to socket; err = {:?}", e);
                     return;
                 }
