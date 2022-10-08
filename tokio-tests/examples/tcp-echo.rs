@@ -17,7 +17,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
         let (mut socket, _) = listener.accept().await?;
 
         tokio::spawn(async move {
-            let mid = id.clone();
+            let cid = id.clone();
             let mut buf = [0; 1024];
 
             // In a loop, read data from the socket and write the data back.
@@ -30,7 +30,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
                             Ok(v) => v,
                             Err(e) => panic!("invalid utf-8: {}", e),
                         };
-                        print!("id: {} msg: {}", mid, s);
+                        print!("conn id: {} msg: {}", cid, s);
                         n
                     }
                     Err(e) => {
