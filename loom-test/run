@@ -1,0 +1,8 @@
+#!/usr/bin/env bash
+# dpw@Darryls-iMac.localdomain
+# 2022-10-09 18:15:01
+#
+
+set -eu
+
+RUSTFLAGS="--cfg loom" cargo test --test buggy_concurrent_inc --release
