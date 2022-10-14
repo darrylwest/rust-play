@@ -1,4 +1,5 @@
 use anyhow::Result;
+use std::time::Duration;
 use subprocess::{Exec, Redirection};
 
 fn show_utf8(data: Vec<u8>) {
@@ -10,14 +11,24 @@ fn show_utf8(data: Vec<u8>) {
 
 // create a struct for this
 fn run_redis() -> Result<()> {
-    let result = Exec::cmd("redis-server")
+    let mut p = Exec::cmd("redis-server")
         .stdout(Redirection::Pipe)
         .stderr(Redirection::Merge)
-        .capture();
+        .popen()?;
 
-    match result {
-        Ok(data) => show_utf8(data.stdout),
-        Err(e) => eprintln!("error: {}", e),
+    if let Some(pid) = p.pid() {
+        println!("process running, pid: {}", pid)
+    }
+
+    if let Some(status) = p.wait_timeout(Duration::new(5, 0))? {
+        println!("process completed, status: {:?}", status);
+    } else {
+        println!("still running, pid: {:?}", p.pid());
+
+        p.kill()?;
+        p.wait()?;
+
+        println!("process killed");
     }
 
     Ok(())
