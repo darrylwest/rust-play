@@ -1,0 +1,7 @@
+
+name = "redis-supervisor"
+version = "0.1.1"
+base_port = 2000
+instance_count = 3
+redis_template = "config/redis.conf.template"
+

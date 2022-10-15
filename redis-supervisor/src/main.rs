@@ -1,8 +1,18 @@
 use anyhow::Result;
 use log::{error, info};
-use std::fs::File;
+use std::{fs::File, io::Read};
 // use std::time::Duration;
 use subprocess::{Exec, Redirection};
+use serde_derive::Deserialize;
+
+#[derive(Debug, Deserialize)]
+pub struct Config {
+    pub name: String,
+    pub version: String,
+    pub base_port: u16,
+    pub instance_count: u8,
+    pub redis_template: String,
+}
 
 pub fn show_utf8(data: Vec<u8>) {
     match String::from_utf8(data) {
@@ -12,7 +22,7 @@ pub fn show_utf8(data: Vec<u8>) {
 }
 
 // create a struct for this
-fn start_redis(port: u32) -> Result<()> {
+fn start_redis(port: u16) -> Result<()> {
     // read the redis.conf template
 
     info!("start instance on port: {}, ...", port);
@@ -39,6 +49,7 @@ fn start_redis(port: u32) -> Result<()> {
     Ok(())
 }
 
+
 fn main() -> Result<()> {
     log4rs::init_file("config/rolling.yaml", Default::default()).unwrap();
 
@@ -46,7 +57,12 @@ fn main() -> Result<()> {
     // read config
 
     info!("read the supervisor config file...");
-    // let config = std::fs::read_to_string()
+    let mut file = File::open("config/supervisor.toml")?;
+    let mut text = String::new();
+    file.read_to_string(&mut text)?;
+    let config: Config = toml::from_str(&text).unwrap();
+
+    info!("toml: {:?}", config);
 
     // determine if any other supervisors are running;
     // if so, determine the leader, else set leader to me
@@ -57,13 +73,9 @@ fn main() -> Result<()> {
 
     // start instances if necessary
 
-    // read these from supervisor config
-    let total_instances = 3;
-    let port = 2000;
-
-    for p in 1..=total_instances {
+    for p in 1..=config.instance_count {
         // create and write out the redis config file; or pipe to process
-        start_redis(port + p)?;
+        start_redis(config.base_port + (p as u16))?;
     }
 
     // begin supervisor loop with a ping to the database to ensure it stays alive and healthy
