@@ -1,8 +1,9 @@
 use anyhow::Result;
 use std::time::Duration;
 use subprocess::{Exec, Redirection};
+use std::fs::File;
 
-fn show_utf8(data: Vec<u8>) {
+pub fn show_utf8(data: Vec<u8>) {
     match String::from_utf8(data) {
         Ok(s) => println!("{}", s),
         Err(e) => println!("utf8 error: {}", e),
@@ -10,9 +11,14 @@ fn show_utf8(data: Vec<u8>) {
 }
 
 // create a struct for this
-fn run_redis() -> Result<()> {
+fn run_redis(port: u32) -> Result<()> {
+    println!("start instance on port: {}", port);
+    let folder = "logs";
+    let filename = format!("{}/out-{}.log", folder, port);
+    let fout = File::create(filename)?;
+
     let mut p = Exec::cmd("redis-server")
-        .stdout(Redirection::Pipe)
+        .stdout(Redirection::File(fout))
         .stderr(Redirection::Merge)
         .popen()?;
 
@@ -20,16 +26,28 @@ fn run_redis() -> Result<()> {
         println!("process running, pid: {}", pid)
     }
 
-    if let Some(status) = p.wait_timeout(Duration::new(5, 0))? {
-        println!("process completed, status: {:?}", status);
-    } else {
-        println!("still running, pid: {:?}", p.pid());
+    let mut count = 0;
+    loop {
+        if let Some(status) = p.wait_timeout(Duration::new(10, 0))? {
+            println!("status: {:?}", status);
+        }
 
-        p.kill()?;
-        p.wait()?;
+        if let Some(pid) = p.pid() {
+            println!("{}: process running, pid: {}", count, pid)
+        } else {
+            println!("process is dead...");
+            break;
+        }
 
-        println!("process killed");
+        count += 1;
     }
+
+    // make sure that you send a `save` command...
+
+    p.kill()?;
+    p.wait()?;
+
+    println!("process killed");
 
     Ok(())
 }
@@ -39,7 +57,7 @@ fn main() -> Result<()> {
     // let config = std::fs::read_to_string()
     // start the instances with async (begin with simple threads)
 
-    run_redis()?;
+    run_redis(2001)?;
 
     // add shutdown logic with messaging
 
