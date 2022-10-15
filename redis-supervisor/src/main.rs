@@ -57,9 +57,14 @@ fn main() -> Result<()> {
 
     // start instances if necessary
 
-    start_redis(2001)?;
-    start_redis(2002)?;
-    start_redis(2003)?;
+    // read these from supervisor config
+    let total_instances = 3;
+    let port = 2000;
+
+    for p in 1..=total_instances {
+        // create and write out the redis config file; or pipe to process
+        start_redis(port + p)?;
+    }
 
     // begin supervisor loop with a ping to the database to ensure it stays alive and healthy
 
