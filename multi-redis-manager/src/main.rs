@@ -18,6 +18,8 @@ fn run_redis(port: u32) -> Result<()> {
     let fout = File::create(filename)?;
 
     let mut p = Exec::cmd("redis-server")
+        .arg("config/redis.conf")
+        .cwd("instances")
         .stdout(Redirection::File(fout))
         .stderr(Redirection::Merge)
         .popen()?;
