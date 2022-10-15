@@ -1,6 +1,6 @@
 use anyhow::Result;
 use std::fs::File;
-use std::time::Duration;
+// use std::time::Duration; // used for timeouts...
 use subprocess::{Exec, Redirection};
 
 pub fn show_utf8(data: Vec<u8>) {
@@ -11,7 +11,7 @@ pub fn show_utf8(data: Vec<u8>) {
 }
 
 // create a struct for this
-fn run_redis(port: u32) -> Result<()> {
+fn start_redis(port: u32) -> Result<()> {
     println!("start instance on port: {}", port);
     let filename = format!("logs/out-{}.log", port);
     let fout = File::create(filename)?;
@@ -19,7 +19,7 @@ fn run_redis(port: u32) -> Result<()> {
     let instance_folder = "instances";
     let redis_conf = format!("redis-{}.conf", port);
 
-    let mut p = Exec::cmd("redis-server")
+    let p = Exec::cmd("redis-server")
         .arg(redis_conf)
         .cwd(instance_folder)
         .stdout(Redirection::File(fout))
@@ -30,29 +30,6 @@ fn run_redis(port: u32) -> Result<()> {
         println!("process running, pid: {}", pid)
     }
 
-    let mut count = 0;
-    loop {
-        if let Some(status) = p.wait_timeout(Duration::new(10, 0))? {
-            println!("status: {:?}", status);
-        }
-
-        if let Some(pid) = p.pid() {
-            println!("{}: process running, pid: {}", count, pid)
-        } else {
-            println!("process is dead...");
-            break;
-        }
-
-        count += 1;
-    }
-
-    // make sure that you send a `save` command...
-
-    p.kill()?;
-    p.wait()?;
-
-    println!("process killed");
-
     Ok(())
 }
 
@@ -61,9 +38,11 @@ fn main() -> Result<()> {
     // let config = std::fs::read_to_string()
     // start the instances with async (begin with simple threads)
 
-    run_redis(2001)?;
+    start_redis(2001)?;
 
     // add shutdown logic with messaging
+
+    // TODO loop with a ping to the database to ensure it stays alive and healthy
 
     Ok(())
 }
