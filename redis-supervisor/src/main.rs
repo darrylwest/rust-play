@@ -49,6 +49,15 @@ fn start_redis(port: u16) -> Result<()> {
     Ok(())
 }
 
+fn read_config(filename: &str) -> Result<Config> {
+    let mut file = File::open(filename)?;
+    let mut text = String::new();
+    file.read_to_string(&mut text)?;
+    let config: Config = toml::from_str(&text).unwrap();
+
+    Ok(config)
+}
+
 
 fn main() -> Result<()> {
     log4rs::init_file("config/rolling.yaml", Default::default()).unwrap();
@@ -57,12 +66,10 @@ fn main() -> Result<()> {
     // read config
 
     info!("read the supervisor config file...");
-    let mut file = File::open("config/supervisor.toml")?;
-    let mut text = String::new();
-    file.read_to_string(&mut text)?;
-    let config: Config = toml::from_str(&text).unwrap();
 
-    info!("toml: {:?}", config);
+    let config_filename = "config/supervisor.toml";
+    let config = read_config(config_filename)?;
+    info!("parsed {} config, version: {} ", config_filename, config.version);
 
     // determine if any other supervisors are running;
     // if so, determine the leader, else set leader to me
