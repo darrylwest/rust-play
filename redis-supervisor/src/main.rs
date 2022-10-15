@@ -1,6 +1,6 @@
 use anyhow::Result;
 use std::fs::File;
-use std::time::Duration;
+// use std::time::Duration;
 use subprocess::{Exec, Redirection};
 
 pub fn show_utf8(data: Vec<u8>) {
@@ -29,16 +29,17 @@ fn start_redis(port: u32) -> Result<()> {
         .popen()?
         .wait()?;
 
-    println!("exit status success? {}", p.success(), );
+    println!("exit status success? {}", p.success(),);
 
     Ok(())
 }
 
 fn main() -> Result<()> {
+    log4rs::init_file("config/rolling.yaml", Default::default()).unwrap();
     // read config
     // let config = std::fs::read_to_string()
 
-    // determine if any other supervisors are running; 
+    // determine if any other supervisors are running;
     // if so, determine the leader, else set leader to me
 
     // verify the supervisor directory structure is in place
