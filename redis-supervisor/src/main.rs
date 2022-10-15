@@ -1,4 +1,5 @@
 use anyhow::Result;
+use log::{error, info};
 use std::fs::File;
 // use std::time::Duration;
 use subprocess::{Exec, Redirection};
@@ -14,8 +15,8 @@ pub fn show_utf8(data: Vec<u8>) {
 fn start_redis(port: u32) -> Result<()> {
     // read the redis.conf template
 
-    print!("start instance on port: {}, ...", port);
-    let filename = format!("logs/out-{}.log", port);
+    info!("start instance on port: {}, ...", port);
+    let filename = &format!("logs/out-{}.log", port);
     let fout = File::create(filename)?;
 
     let instance_folder = "instances";
@@ -29,14 +30,22 @@ fn start_redis(port: u32) -> Result<()> {
         .popen()?
         .wait()?;
 
-    println!("exit status success? {}", p.success(),);
+    if p.success() {
+        info!("exit success? {}", p.success(),);
+    } else {
+        error!("exit status failed, see log file: {}", filename);
+    }
 
     Ok(())
 }
 
 fn main() -> Result<()> {
     log4rs::init_file("config/rolling.yaml", Default::default()).unwrap();
+
+    info!("read the command line args...");
     // read config
+
+    info!("read the supervisor config file...");
     // let config = std::fs::read_to_string()
 
     // determine if any other supervisors are running;
