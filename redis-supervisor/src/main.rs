@@ -36,13 +36,21 @@ fn start_redis(port: u32) -> Result<()> {
 fn main() -> Result<()> {
     // read config
     // let config = std::fs::read_to_string()
-    // start the instances with async (begin with simple threads)
+
+    // determine if any other supervisors are running; 
+    // if so, determine the leader, else set leader to me
+
+    // verify the supervisor directory structure is in place
+
+    // verify any current instances that are up
+
+    // start instances if necessary
 
     start_redis(2001)?;
+    start_redis(2002)?;
+    start_redis(2003)?;
 
-    // add shutdown logic with messaging
-
-    // TODO loop with a ping to the database to ensure it stays alive and healthy
+    // begin supervisor loop with a ping to the database to ensure it stays alive and healthy
 
     Ok(())
 }
