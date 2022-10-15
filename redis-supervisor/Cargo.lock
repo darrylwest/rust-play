@@ -15,8 +15,8 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "68783febc7782c6c5cb401fbda4de5a9898be1762314da0bb2c10ced61f18b0c"
 
 [[package]]
-name = "multi-redis-manager"
-version = "0.1.1"
+name = "redis-supervisor"
+version = "0.1.2"
 dependencies = [
  "anyhow",
  "subprocess",

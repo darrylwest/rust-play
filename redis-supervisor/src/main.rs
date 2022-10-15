@@ -1,6 +1,6 @@
 use anyhow::Result;
 use std::fs::File;
-// use std::time::Duration; // used for timeouts...
+use std::time::Duration;
 use subprocess::{Exec, Redirection};
 
 pub fn show_utf8(data: Vec<u8>) {
@@ -12,7 +12,9 @@ pub fn show_utf8(data: Vec<u8>) {
 
 // create a struct for this
 fn start_redis(port: u32) -> Result<()> {
-    println!("start instance on port: {}", port);
+    // read the redis.conf template
+
+    print!("start instance on port: {}, ...", port);
     let filename = format!("logs/out-{}.log", port);
     let fout = File::create(filename)?;
 
@@ -24,11 +26,10 @@ fn start_redis(port: u32) -> Result<()> {
         .cwd(instance_folder)
         .stdout(Redirection::File(fout))
         .stderr(Redirection::Merge)
-        .popen()?;
+        .popen()?
+        .wait()?;
 
-    if let Some(pid) = p.pid() {
-        println!("process running, pid: {}", pid)
-    }
+    println!("exit status success? {}", p.success(), );
 
     Ok(())
 }
