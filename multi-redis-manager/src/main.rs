@@ -1,7 +1,7 @@
 use anyhow::Result;
+use std::fs::File;
 use std::time::Duration;
 use subprocess::{Exec, Redirection};
-use std::fs::File;
 
 pub fn show_utf8(data: Vec<u8>) {
     match String::from_utf8(data) {
@@ -13,13 +13,15 @@ pub fn show_utf8(data: Vec<u8>) {
 // create a struct for this
 fn run_redis(port: u32) -> Result<()> {
     println!("start instance on port: {}", port);
-    let folder = "logs";
-    let filename = format!("{}/out-{}.log", folder, port);
+    let filename = format!("logs/out-{}.log", port);
     let fout = File::create(filename)?;
 
+    let instance_folder = "instances";
+    let redis_conf = format!("redis-{}.conf", port);
+
     let mut p = Exec::cmd("redis-server")
-        .arg("redis-2001.conf")
-        .cwd("instances")
+        .arg(redis_conf)
+        .cwd(instance_folder)
         .stdout(Redirection::File(fout))
         .stderr(Redirection::Merge)
         .popen()?;
