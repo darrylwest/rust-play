@@ -35,6 +35,3 @@ release:
 watch:
     watchexec -d 500 -c -e rs cargo test && cargo fmt && cargo clippy && cargo run
 
-# merge the develop branch to main
-merge:
-    git push && git checkout main && git pull && git merge develop && git push && git checkout develop
