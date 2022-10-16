@@ -4,9 +4,10 @@ use std::{
     fs::File,
     io::{BufRead, BufReader, Read, Write},
 };
-// use std::time::Duration;
+use std::time::Duration;
 use serde_derive::Deserialize;
 use subprocess::{Exec, Redirection};
+// use redis::Client;
 
 #[derive(Debug, Deserialize)]
 pub struct Config {
@@ -142,7 +143,28 @@ fn main() -> Result<()> {
         start_redis(port)?;
     }
 
+    // delay a bit to give time for the instances to start...
+    std::thread::sleep(Duration::from_secs(2));
+
     // begin supervisor loop with a ping to the database to ensure it stays alive and healthy
+    for n in 1..=config.instance_count {
+        let port = config.base_port + (n as u16);
+        info!("ping: 127.0.0.1:{}", port);
+
+        let url = format!("redis://{}:{}@127.0.0.1:{}", "default", config.auth(), port);
+
+        let client = redis::Client::open(url)?;
+        let mut conn = client.get_connection()?;
+
+        // test the connection
+        let result: redis::RedisResult<()> = redis::cmd("PING").query(&mut conn);
+        match result {
+            Err(e) => error!("{}", e),
+            _ => info!("ping ok"),
+        }
+    }
+
+    // info!("ping result: {:?}", r);
 
     Ok(())
 }
