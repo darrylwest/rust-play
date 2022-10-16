@@ -90,7 +90,8 @@ pub fn read_template(config: &Config, instance_no: u16) -> Result<String> {
         }
     }
 
-    info!("{}", text);
+    // will have to strip this out when template changes...
+    assert!(text.len() > 1500);
 
     Ok(text)
 }
