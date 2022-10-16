@@ -2,7 +2,7 @@ use anyhow::Result;
 use log::{error, info};
 use std::{
     fs::File,
-    io::{BufRead, BufReader, Read},
+    io::{BufRead, BufReader, Read, Write},
 };
 // use std::time::Duration;
 use serde_derive::Deserialize;
@@ -32,7 +32,7 @@ pub fn show_utf8(data: Vec<u8>) {
 }
 
 // create a struct for this
-fn start_redis(port: u16) -> Result<()> {
+pub fn start_redis(port: u16) -> Result<()> {
     // read the redis.conf template
 
     info!("start instance on port: {}, ...", port);
@@ -95,6 +95,14 @@ pub fn read_template(config: &Config, instance_no: u16) -> Result<String> {
     Ok(text)
 }
 
+fn write_redis_conf(text: &[u8], target: &str) -> Result<()> {
+    info!("write config to {}", target);
+    let mut file = File::create(target)?;
+    file.write_all(text)?;
+
+    Ok(())
+}
+
 fn main() -> Result<()> {
     log4rs::init_file("config/rolling.yaml", Default::default()).unwrap();
 
@@ -119,10 +127,15 @@ fn main() -> Result<()> {
 
     // start instances if necessary
 
-    for p in 1..=config.instance_count {
+    for n in 1..=config.instance_count {
         // create and write out the redis config file; or pipe to process
+        let port = config.base_port + (n as u16);
+        let text = read_template(&config, n as u16).unwrap();
 
-        start_redis(config.base_port + (p as u16))?;
+        let redis_conf = format!("{}/redis-{}.conf", "instances", port);
+        write_redis_conf(text.as_bytes(), &redis_conf)?;
+
+        start_redis(port)?;
     }
 
     // begin supervisor loop with a ping to the database to ensure it stays alive and healthy
@@ -137,8 +150,12 @@ mod tests {
     #[test]
     fn read_template_test() {
         let config: Config = read_config("config/supervisor.toml").unwrap();
+        // let port = 2001_u16;
         let text = read_template(&config, 1).unwrap();
 
-        println!("{}", text);
+        assert!(text.len() > 1500);
+        // check for port number in file
+        // check for password in file
+        // println!("{}", text);
     }
 }
