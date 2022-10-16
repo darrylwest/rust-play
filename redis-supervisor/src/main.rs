@@ -18,7 +18,7 @@ pub struct Config {
 }
 
 impl Config {
-    pub fn auth() -> String {
+    pub fn auth(&self) -> String {
         // TODO figure out a better way to get this key; or create on the fly?...
         "65ba104a9e3eef7a655c9027fdf59e27".to_string()
     }
@@ -74,13 +74,16 @@ pub fn read_template(config: &Config, instance_no: u16) -> Result<String> {
 
     let mut text = String::new();
     let port = format!("{}", config.base_port + instance_no);
+    let auth = config.auth();
 
     for (_idx, line) in reader.lines().enumerate() {
         let line = line.unwrap();
         let line = line.trim();
 
         if !line.starts_with('#') && !line.is_empty() {
-            let line = line.replace("{{PORT}}", &port);
+            let line = line
+                .replace("{{PORT}}", &port)
+                .replace("{{PASSWORD}}", &auth);
 
             text.push_str(&line);
             text.push('\n');
