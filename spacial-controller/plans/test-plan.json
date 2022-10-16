@@ -1,0 +1,12 @@
+{
+  "name": "test plan",
+  "created": "2022-09-10T07:28:33",
+  "world_grid": {
+      "xmin": -1000,
+      "xmax": 1000,
+      "ymin": -1000,
+      "ymax": 1000,
+      "zmin": 0,
+      "zmax": 300
+  }
+}
