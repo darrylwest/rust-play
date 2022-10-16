@@ -13,6 +13,7 @@ pub struct Config {
     pub name: String,
     pub version: String,
     pub base_port: u16,
+    pub instance_folder: String,
     pub instance_count: u8,
     pub redis_template: String,
 }
@@ -60,9 +61,11 @@ pub fn start_redis(port: u16) -> Result<()> {
 }
 
 fn read_config(filename: &str) -> Result<Config> {
-    let mut file = File::open(filename)?;
+    let file = File::open(filename)?;
+    let mut reader = BufReader::new(file);
+
     let mut text = String::new();
-    file.read_to_string(&mut text)?;
+    reader.read_to_string(&mut text)?;
     let config: Config = toml::from_str(&text).unwrap();
 
     Ok(config)
@@ -149,6 +152,16 @@ mod tests {
     use super::*;
 
     #[test]
+    fn read_config_test() {
+        let config: Config = read_config("config/supervisor.toml").unwrap();
+
+        assert_eq!(config.base_port, 2000);
+        assert_eq!(config.instance_folder, "instances");
+        assert_eq!(config.instance_count, 3);
+        assert_eq!(config.redis_template, "config/redis.conf.template");
+    }
+
+    #[test]
     fn read_template_test() {
         let config: Config = read_config("config/supervisor.toml").unwrap();
         // let port = 2001_u16;
@@ -156,7 +169,6 @@ mod tests {
 
         assert!(text.len() > 1500);
         // check for port number in file
-        // check for password in file
         // println!("{}", text);
     }
 }

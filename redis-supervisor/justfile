@@ -33,5 +33,5 @@ release:
 
 # watch the current folders and run tests when a file is changed
 watch:
-    watchexec -d 500 -c -e rs cargo test && cargo fmt && cargo clippy && cargo run
+    watchexec -d 500 -c -e rs just test-all
 
