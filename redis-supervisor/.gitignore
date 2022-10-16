@@ -1,3 +1,4 @@
 logs/[A-Z][a-z]*
 instances/data/*
+instances/redis-*
 .env
