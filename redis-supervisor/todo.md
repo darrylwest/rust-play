@@ -8,6 +8,7 @@
 * separate read_template into read and process to eliminate reading template multiple times
 * create a Supervisor struct to hold config, template, state, etc
 * move project to it's own repo (need name first rxkv?  redis-farm?)
+* update apis to support ACL, JSON, etc
 * design supervisor config file to specify instances
     * ~~redis.conf template file location (would override default)~~
     * ~~all template keys, i.e., port, password, max connections, etc~~

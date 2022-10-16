@@ -157,7 +157,7 @@ mod tests {
 
         assert_eq!(config.base_port, 2000);
         assert_eq!(config.instance_folder, "instances");
-        assert_eq!(config.instance_count, 3);
+        assert!(config.instance_count >= 3);
         assert_eq!(config.redis_template, "config/redis.conf.template");
     }
 
