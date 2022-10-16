@@ -1,4 +1,4 @@
-logs/[A-Z][a-z]*
+logs/*
 instances/data/*
 instances/redis-*
 .env
