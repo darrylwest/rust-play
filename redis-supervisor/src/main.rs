@@ -1,11 +1,11 @@
 use anyhow::Result;
 use log::{error, info};
+use serde_derive::Deserialize;
+use std::time::Duration;
 use std::{
     fs::File,
     io::{BufRead, BufReader, Read, Write},
 };
-use std::time::Duration;
-use serde_derive::Deserialize;
 use subprocess::{Exec, Redirection};
 // use redis::Client;
 
@@ -17,6 +17,9 @@ pub struct Config {
     pub instance_folder: String,
     pub instance_count: u8,
     pub redis_template: String,
+    pub startup_delay_seconds: u64,
+    pub ping_loop_interval_seconds: u64,
+    pub ping_loop_limit: u16, // zero = infinate...
 }
 
 impl Config {
@@ -144,27 +147,64 @@ fn main() -> Result<()> {
     }
 
     // delay a bit to give time for the instances to start...
-    std::thread::sleep(Duration::from_secs(2));
+    info!(
+        "give the instances {} seconds to start up, then start the ping loop...",
+        config.startup_delay_seconds
+    );
+    std::thread::sleep(Duration::from_secs(config.startup_delay_seconds));
 
     // begin supervisor loop with a ping to the database to ensure it stays alive and healthy
+    let mut count = 0_u16;
+    loop {
+        std::thread::sleep(Duration::from_secs(config.ping_loop_interval_seconds));
+
+        for n in 1..=config.instance_count {
+            let port = config.base_port + (n as u16);
+            info!("ping: 127.0.0.1:{}", port);
+
+            let url = format!("redis://{}:{}@127.0.0.1:{}", "default", config.auth(), port);
+
+            let client = redis::Client::open(url)?;
+            let mut conn = client.get_connection()?;
+
+            // test the connection
+            let result: redis::RedisResult<()> = redis::cmd("PING").query(&mut conn);
+            match result {
+                Err(e) => error!("{}", e),
+                _ => info!("ping ok"),
+            }
+        }
+
+        if config.ping_loop_limit != 0 {
+            count += 1;
+            if count > config.ping_loop_limit {
+                info!("breaking out of ping loop...");
+                break;
+            }
+        }
+    }
+
+    std::thread::sleep(Duration::from_secs(1));
+    info!("shut down the instances...");
+
     for n in 1..=config.instance_count {
         let port = config.base_port + (n as u16);
-        info!("ping: 127.0.0.1:{}", port);
+        info!("shutdown: 127.0.0.1:{}", port);
 
         let url = format!("redis://{}:{}@127.0.0.1:{}", "default", config.auth(), port);
 
         let client = redis::Client::open(url)?;
         let mut conn = client.get_connection()?;
 
-        // test the connection
+        // ignore the error...
+        let _: redis::RedisResult<()> = redis::cmd("SHUTDOWN").arg("SAVE").query(&mut conn);
+
         let result: redis::RedisResult<()> = redis::cmd("PING").query(&mut conn);
         match result {
-            Err(e) => error!("{}", e),
-            _ => info!("ping ok"),
+            Err(e) => info!("ping after shutdown: {}", e),
+            _ => error!("shutdown failed..."),
         }
     }
-
-    // info!("ping result: {:?}", r);
 
     Ok(())
 }

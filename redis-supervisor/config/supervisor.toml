@@ -5,3 +5,6 @@ base_port = 2000
 instance_folder = "instances"
 instance_count = 3
 redis_template = "config/redis.conf.template"
+startup_delay_seconds = 2
+ping_loop_interval_seconds = 5
+ping_loop_limit = 10
