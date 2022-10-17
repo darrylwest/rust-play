@@ -5,6 +5,7 @@
 * move project to it's own repo (need name first rx-kv?  redis-supervisor?)
 * create a Supervisor struct to hold config, template, state, etc
 * unit tests
+* ~~replace tcp with unix sockets for primary connections~~ (in configuration)
 * eliminate conf files and pipe to redis-server start
 * separate read_template into read and process to eliminate reading template multiple times
 * update apis to support ACL, JSON, etc
@@ -15,5 +16,5 @@
     * ~~auth source env, file, secrets?~~
     * any overrides from template (module at end of file)
 
-###### dpw | 2022-10-16-a
+###### dpw | 2022-10-17
 

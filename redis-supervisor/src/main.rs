@@ -27,6 +27,24 @@ impl Config {
         // TODO figure out a better way to get this key; or create on the fly?...
         "65ba104a9e3eef7a655c9027fdf59e27".to_string()
     }
+
+    pub fn get_url(&self, port: u16) -> String {
+        if self.base_port == 0 {
+            let sockfile = "instances/data";
+            let pbuf = std::env::current_dir().unwrap();
+            let wd = pbuf.as_path().to_str().unwrap();
+
+            format!(
+                "redis+unix://{}/{}/redis-{}.sock?pass={}",
+                wd,
+                sockfile,
+                port,
+                self.auth()
+            )
+        } else {
+            format!("redis://{}:{}@127.0.0.1:{}", "default", self.auth(), port)
+        }
+    }
 }
 
 pub fn show_utf8(data: Vec<u8>) {
@@ -151,6 +169,7 @@ fn main() -> Result<()> {
         "give the instances {} seconds to start up, then start the ping loop...",
         config.startup_delay_seconds
     );
+
     std::thread::sleep(Duration::from_secs(config.startup_delay_seconds));
 
     // begin supervisor loop with a ping to the database to ensure it stays alive and healthy
@@ -160,9 +179,9 @@ fn main() -> Result<()> {
 
         for n in 1..=config.instance_count {
             let port = config.base_port + (n as u16);
-            info!("ping: 127.0.0.1:{}", port);
+            info!("ping port: {}", port);
 
-            let url = format!("redis://{}:{}@127.0.0.1:{}", "default", config.auth(), port);
+            let url = config.get_url(port);
 
             let client = redis::Client::open(url)?;
             let mut conn = client.get_connection()?;
@@ -189,9 +208,9 @@ fn main() -> Result<()> {
 
     for n in 1..=config.instance_count {
         let port = config.base_port + (n as u16);
-        info!("shutdown: 127.0.0.1:{}", port);
+        info!("shutdown port: {}", port);
 
-        let url = format!("redis://{}:{}@127.0.0.1:{}", "default", config.auth(), port);
+        let url = config.get_url(port);
 
         let client = redis::Client::open(url)?;
         let mut conn = client.get_connection()?;
@@ -217,10 +236,12 @@ mod tests {
     fn read_config_test() {
         let config: Config = read_config("config/supervisor.toml").unwrap();
 
-        assert_eq!(config.base_port, 2000);
+        assert_eq!(config.base_port, 0);
         assert_eq!(config.instance_folder, "instances");
         assert!(config.instance_count >= 3);
-        assert_eq!(config.redis_template, "config/redis.conf.template");
+        assert_eq!(config.redis_template, "config/redis.conf-socket.template");
+
+        println!("url: {}", config.get_url(1));
     }
 
     #[test]
@@ -233,4 +254,21 @@ mod tests {
         // check for port number in file
         // println!("{}", text);
     }
+
+    /*
+    #[test]
+    fn connect() {
+        // redis-server needs to be running - TODO move this to integration tests
+        let config: Config = read_config("config/supervisor.toml").unwrap();
+        let url = config.get_url(1);
+
+        println!("url: {url}");
+
+        let client = redis::Client::open(url).unwrap();
+        let mut conn = client.get_connection().unwrap();
+
+        let result: redis::RedisResult<()> = redis::cmd("PING").query(&mut conn);
+        assert!(result.is_ok());
+    }
+    */
 }
