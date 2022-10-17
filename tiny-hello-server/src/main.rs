@@ -5,7 +5,7 @@ use std::thread;
 
 
 fn main() {
-    let host = "0.0.0.0:9975";
+    let host = "0.0.0.0:14090";
     let server = Arc::new(tiny_http::Server::http(&host).unwrap());
 
     println!("now listening on {}", &host);
