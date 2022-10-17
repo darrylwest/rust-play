@@ -2,7 +2,7 @@
 
 ## To Do List
 
-* move project to it's own repo (need name first rx-kv?  redis-supervisor?)
+* move project to it's own rxkv repo
 * create a Supervisor struct to hold config, template, state, etc
 * unit tests
 * ~~replace tcp with unix sockets for primary connections~~ (in configuration)
