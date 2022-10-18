@@ -1,15 +1,15 @@
-
-use serde_derive::{Deserialize, Serialize};
-use chrono::prelude::*;
 use chrono::naive::NaiveDateTime;
+use chrono::prelude::*;
 use domain_keys::keys::RouteKey;
-
-fn get_now() -> NaiveDateTime {
-    // let utc: DateTime<Utc> = Utc::now();
-    Utc::now().naive_utc()
-}
+use serde_derive::{Deserialize, Serialize};
 
 pub type TS = NaiveDateTime;
+
+fn get_now() -> TS {
+    // let utc: DateTime<Utc> = Utc::now();
+    Utc::now().naive_utc()
+    // Utc::now().timestamp_micros() as u64
+}
 
 #[derive(Debug, Default, Deserialize, Serialize, Clone, PartialEq, Eq)]
 pub struct Version {
@@ -41,6 +41,7 @@ impl Version {
 }
 
 #[derive(Debug, Deserialize, Serialize, Clone, PartialEq, Eq)]
+#[serde(tag = "t", content = "c")]
 pub enum Status {
     New(u8),
     Pending(u8),
@@ -57,8 +58,7 @@ impl Default for Status {
     }
 }
 
-
-#[derive(Debug, Default, Clone, PartialEq, Eq)]
+#[derive(Debug, Default, Deserialize, Serialize, Clone, PartialEq, Eq)]
 pub struct Model<T> {
     pub key: String,
     pub version: Version,
@@ -95,8 +95,39 @@ impl<T: Clone> Model<T> {
     }
 }
 
+#[derive(Debug, Default, Serialize, Deserialize, Clone, PartialEq, Eq)]
+pub struct Person {
+    pub email: String,
+    pub first_name: String,
+    pub last_name: String,
+    pub phone: String,
+}
+
+impl Person {
+    pub fn new(email: &str, first_name: &str, last_name: &str, phone: &str) -> Person {
+        Person { 
+            email: email.to_string(), 
+            first_name: first_name.to_string(), 
+            last_name: last_name.to_string(), 
+            phone: phone.to_string() 
+        }
+    }
+}
+
 fn main() {
-    println!("Hello, world!");
+    let person = Person::new("dpw@rcs.com", "dpw", "west", "555-222-1212");
+
+    let model = Model::new(person);
+    let toml = toml::to_string(&model).unwrap();
+
+    println!("---------------------- toml ----------------------");
+    println!("{}", toml);
+    println!("{} bytes", toml.len());
+
+    let json = serde_json::to_string(&model).expect("should encode model to json");
+    println!("---------------------- json ----------------------");
+    println!("{}", json);
+    println!("{} bytes", json.len());
 }
 
 #[cfg(test)]
