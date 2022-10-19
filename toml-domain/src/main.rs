@@ -105,11 +105,11 @@ pub struct Person {
 
 impl Person {
     pub fn new(email: &str, first_name: &str, last_name: &str, phone: &str) -> Person {
-        Person { 
-            email: email.to_string(), 
-            first_name: first_name.to_string(), 
-            last_name: last_name.to_string(), 
-            phone: phone.to_string() 
+        Person {
+            email: email.to_string(),
+            first_name: first_name.to_string(),
+            last_name: last_name.to_string(),
+            phone: phone.to_string(),
         }
     }
 }
