@@ -8,13 +8,15 @@ use std::time::Duration;
 use daemonize::Daemonize;
 
 fn main() {
-    let stdout = File::create("/tmp/daemon.out").unwrap();
-    let stderr = File::create("/tmp/daemon.err").unwrap();
+    println!("do this: tail -f tmp/daemon.out");
+
+    let stdout = File::create("./tmp/daemon.out").unwrap();
+    let stderr = File::create("./tmp/daemon.err").unwrap();
 
     let daemonize = Daemonize::new()
-        .pid_file("/tmp/daemon.pid") // Every method except `new` and `start`
+        .pid_file("./tmp/daemon.pid") // Every method except `new` and `start`
         // .chown_pid_file(true)      // is optional, see `Daemonize` documentation
-        .working_directory("/tmp") // for default behaviour.
+        .working_directory("./tmp") // for default behaviour.
         // .user("nobody")
         // .group("daemon") // Group name
         // .group(2)        // or group id.
@@ -24,12 +26,23 @@ fn main() {
         .privileged_action(|| "Executed before drop privileges");
 
     match daemonize.start() {
-        Ok(_) => println!("Success, daemonized"),
-        Err(e) => eprintln!("Error, {}", e),
+        Ok(_) => {
+            println!("Success, daemonized");
+
+            // put this in a separate thread...
+            for n in 0..=1_000_000 {
+                println!("i'm alive: {}", n);
+                thread::sleep(Duration::from_secs(1));
+            }
+            //
+            // now, remove the pid file
+            //
+        }
+        Err(e) => {
+            eprintln!("Error, {}", e);
+            eprintln!("bailing out!");
+        }
     }
 
-    for n in 0..=1_000_000 {
-        println!("i'm alive: {}", n);
-        thread::sleep(Duration::from_secs(1));
-    }
+
 }
