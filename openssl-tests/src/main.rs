@@ -11,8 +11,10 @@ fn gen_key() -> Vec<u8> {
     bytes
 }
 
-fn gen_iv() -> &'static [u8] {
-    let iv = b"\x0F\x01\x02\x03\x04\x05\x06\x07\x00\x01\x02\x03\x04\x05\x06\x07\x0F\x01\x02\x03\x04\x05\x06\x07\x00\x01\x02\x03\x04\x05\x06\x07\x33\x0F\x01\x02\x03\x04\x05\x06\x07\x00\x01\x02\x03\x04\x05\x06\x07\x0F\x01\x02\x03\x04\x05\x06\x07\x00\x01\x02\x03\x04\x05\x06\x07\x33\x0F\x01\x02\x03\x04\x05\x06\x07\x00\x01\x02\x03\x04\x05\x06\x07\x0F\x01\x02\x03\x04\x05\x06\x07\x00\x01\x02\x03\x04\x05\x06\x07\x33";
+fn gen_iv(size: u8) -> Vec<u8> {
+    let sz = size as usize;
+    let rng = fastrand::Rng::new();
+    let iv: Vec<u8> = repeat_with(|| rng.u8(..)).take(sz).collect();
 
     iv
 }
@@ -29,12 +31,14 @@ fn enc_dec() {
     let key = gen_key();
 
     // this can be any length
-    let iv = gen_iv();
+    let iv_size: u8 = fastrand::u8(16..64);
+    // println!("iv size: {}", iv_size);
+    let iv = gen_iv(iv_size);
 
-    let ciphertext = encrypt(cipher, &key, Some(iv), data).unwrap();
+    let ciphertext = encrypt(cipher, &key, Some(&iv), data).unwrap();
     println!("{:?}", ciphertext);
 
-    let plaintext = decrypt(cipher, &key, Some(iv), &ciphertext[..]).unwrap();
+    let plaintext = decrypt(cipher, &key, Some(&iv), &ciphertext[..]).unwrap();
     let decrypt_text = String::from_utf8(plaintext).unwrap();
 
     println!("{:?}", decrypt_text);
