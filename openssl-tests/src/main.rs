@@ -1,10 +1,14 @@
 // use std::env;
+// use num_bigint::BigUint;
+// use rand::prelude::*;
 use openssl::symm::{encrypt, decrypt, Cipher};
+use std::iter::repeat_with;
 
-fn gen_key() -> &'static [u8] {
-    let key = b"\x0F\x01\x02\x03\x04\x05\x06\x07\x08\x09\x0A\x0B\x0C\x0D\x0E\x0F";
+fn gen_key() -> Vec<u8> {
+    let rng = fastrand::Rng::new();
+    let bytes: Vec<u8> = repeat_with(|| rng.u8(..)).take(16).collect();
 
-    key
+    bytes
 }
 
 fn gen_iv() -> &'static [u8] {
@@ -27,10 +31,10 @@ fn enc_dec() {
     // this can be any length
     let iv = gen_iv();
 
-    let ciphertext = encrypt(cipher, key, Some(iv), data).unwrap();
+    let ciphertext = encrypt(cipher, &key, Some(iv), data).unwrap();
     println!("{:?}", ciphertext);
 
-    let plaintext = decrypt(cipher, key, Some(iv), &ciphertext[..]).unwrap();
+    let plaintext = decrypt(cipher, &key, Some(iv), &ciphertext[..]).unwrap();
     let decrypt_text = String::from_utf8(plaintext).unwrap();
 
     println!("{:?}", decrypt_text);
