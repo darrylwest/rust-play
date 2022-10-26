@@ -5,7 +5,7 @@ use std::iter::repeat_with;
 
 fn gen_key() -> Vec<u8> {
     let rng = fastrand::Rng::new();
-    let bytes: Vec<u8> = repeat_with(|| rng.u8(..)).take(16).collect();
+    let bytes: Vec<u8> = repeat_with(|| rng.u8(..)).take(32).collect();
 
     bytes
 }
@@ -31,14 +31,20 @@ fn save_key(key: &Vec<u8>, iv: &Vec<u8>) {
     }
 
     let b64 = encode_block(v.as_slice());
-    println!("{:?}", &v);
-    println!("{}", b64);
+    // println!("{:?}", &v);
+    println!("key/iv: {}", b64);
 
     // v
 }
 
+fn save_encoded(data: &Vec<u8>) {
+    let b64 = encode_block(data.as_slice());
+
+    println!("data {}", b64);
+}
+
 fn enc_dec() {
-    let cipher = Cipher::aes_128_cbc();
+    let cipher = Cipher::aes_256_cbc();
 
     let original = String::from("Some secret plain Text to encrypt");
     println!("original: {}", original);
@@ -56,7 +62,7 @@ fn enc_dec() {
     save_key(&key, &iv);
 
     let ciphertext = encrypt(cipher, &key, Some(&iv), data).unwrap();
-    println!("{:?}", ciphertext);
+    save_encoded(&ciphertext);
 
     let plaintext = decrypt(cipher, &key, Some(&iv), &ciphertext[..]).unwrap();
     let decrypt_text = String::from_utf8(plaintext).unwrap();
