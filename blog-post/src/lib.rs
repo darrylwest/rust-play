@@ -7,7 +7,7 @@ pub struct Post {
 impl Post {
     pub fn new() -> Post {
         Post {
-            state: Some(Box::new(Draft {})),
+            state: Some(Box::new(Draft { })),
             content: String::new(),
         }
     }
@@ -38,14 +38,11 @@ trait State {
     fn request_review(self: Box<Self>) -> Box<dyn State>;
     fn approve(self: Box<Self>) -> Box<dyn State>;
 
-    fn content<'a>(&self, _post: &'a Post) -> &'a str {
-        ""
-    }
+    fn content<'a>(&self, post: &'a Post) -> &'a str;
 }
 
 // --snip--
-
-struct Draft {}
+struct Draft { }
 
 impl State for Draft {
     fn request_review(self: Box<Self>) -> Box<dyn State> {
@@ -54,6 +51,10 @@ impl State for Draft {
 
     fn approve(self: Box<Self>) -> Box<dyn State> {
         self
+    }
+
+    fn content<'a>(&self, _post: &'a Post) -> &'a str {
+        "[Draft]"
     }
 }
 
@@ -66,6 +67,10 @@ impl State for PendingReview {
 
     fn approve(self: Box<Self>) -> Box<dyn State> {
         Box::new(Published {})
+    }
+
+    fn content<'a>(&self, _post: &'a Post) -> &'a str {
+        "[PendingReview]"
     }
 }
 
@@ -93,22 +98,23 @@ mod tests {
 
     #[test]
     fn post() {
+        let blog_text = "this is a test blog post.";
+
         let mut post = Post::new();
+        assert_eq!("[Draft]", post.content());
+        assert_eq!("", post.content);
 
-        assert_eq!("", post.content());
-
-        post.add_text("i need water quick.");
-        assert_eq!("", post.content());
-        assert_ne!("", post.content);
-
-        // println!("state 1: {}", post);
+        post.add_text(blog_text);
+        assert_eq!("[Draft]", post.content());
+        assert_eq!(blog_text, post.content);
 
         post.request_review();
 
-        assert_eq!("", post.content());
-        assert_ne!("", post.content);
+        assert_eq!("[PendingReview]", post.content());
+        assert_eq!(blog_text, post.content);
 
-        // println!("state 2: {}", post.show_state());
+        post.approve();
         
+        assert_eq!(blog_text, post.content());
     }
 }
