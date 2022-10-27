@@ -1,11 +1,10 @@
-#[derive(Default)]
+
 pub struct Post {
     state: Option<Box<dyn State>>,
     content: String,
 }
 
 impl Post {
-    // --snip--
     pub fn new() -> Post {
         Post {
             state: Some(Box::new(Draft {})),
@@ -18,7 +17,7 @@ impl Post {
     }
 
     pub fn content(&self) -> &str {
-        ""
+        self.state.as_ref().unwrap().content(self)
     }
 
     pub fn request_review(&mut self) {
@@ -32,19 +31,23 @@ impl Post {
             self.state = Some(s.approve())
         }
     }
-
 }
 
 trait State {
+    // --snip--
     fn request_review(self: Box<Self>) -> Box<dyn State>;
     fn approve(self: Box<Self>) -> Box<dyn State>;
-    fn name(self: Box<Self>) -> String;
+
+    fn content<'a>(&self, _post: &'a Post) -> &'a str {
+        ""
+    }
 }
+
+// --snip--
 
 struct Draft {}
 
 impl State for Draft {
-    // --snip--
     fn request_review(self: Box<Self>) -> Box<dyn State> {
         Box::new(PendingReview {})
     }
@@ -52,16 +55,11 @@ impl State for Draft {
     fn approve(self: Box<Self>) -> Box<dyn State> {
         self
     }
-
-    fn name(self: Box<Self>) -> String {
-        "Draft".to_string()
-    }
 }
 
 struct PendingReview {}
 
 impl State for PendingReview {
-    // --snip--
     fn request_review(self: Box<Self>) -> Box<dyn State> {
         self
     }
@@ -69,15 +67,12 @@ impl State for PendingReview {
     fn approve(self: Box<Self>) -> Box<dyn State> {
         Box::new(Published {})
     }
-
-    fn name(self: Box<Self>) -> String {
-        "PendingReview".to_string()
-    }
 }
 
 struct Published {}
 
 impl State for Published {
+    // --snip--
     fn request_review(self: Box<Self>) -> Box<dyn State> {
         self
     }
@@ -86,8 +81,8 @@ impl State for Published {
         self
     }
 
-    fn name(self: Box<Self>) -> String {
-        "Published".to_string()
+    fn content<'a>(&self, post: &'a Post) -> &'a str {
+        &post.content
     }
 }
 
