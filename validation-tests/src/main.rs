@@ -17,12 +17,18 @@ struct SignupData {
 }
 
 fn validate_phone(phone: &str) -> Result<(), ValidationError> {
-    match phone.len() {
-        0 => Ok(()),
-        10 => Ok(()),
-        _ => Err(ValidationError::new("bad phone")),
+    if phone.is_empty() {
+        return Ok(());
+    } 
+    
+    if phone.len() == 10 {
+        return Ok(());
     }
+
+    return Err(ValidationError::new("bad phone"));
 }
+
+// fn is_numeric(s: &str) -> Result<(), 
 
 fn validate_unique_username(username: &str) -> Result<(), ValidationError> {
     if username == "xXxBadxXx" {
@@ -38,13 +44,11 @@ fn main() {
         phone: Cow::from("5551236666"),
         site: Cow::from("https://raincitysoftware.com"),
         first_name: Cow::from("darryl"),
-        age: 29,
+        age: 30,
     };
 
     match sd.validate() {
         Ok(_) => println!("{:?} is valid", sd),
         Err(e) => println!("{:?} error: {}", sd, e),
     }
-
-
 }
