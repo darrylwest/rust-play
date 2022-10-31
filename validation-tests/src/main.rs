@@ -21,14 +21,12 @@ fn validate_phone(phone: &str) -> Result<(), ValidationError> {
         return Ok(());
     } 
     
-    if phone.len() == 10 {
+    if phone.len() >= 10 {
         return Ok(());
     }
 
     return Err(ValidationError::new("bad phone"));
 }
-
-// fn is_numeric(s: &str) -> Result<(), 
 
 fn validate_unique_username(username: &str) -> Result<(), ValidationError> {
     if username == "xXxBadxXx" {
