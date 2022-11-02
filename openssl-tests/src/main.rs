@@ -83,6 +83,6 @@ pub fn check_version() {
 }
 
 fn main() {
-
+    check_version();
     enc_dec();
 }

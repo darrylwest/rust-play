@@ -37,7 +37,7 @@ fn main() -> Result<()> {
 
         let mut decrypted = vec![];
         let mut reader = decryptor.decrypt(&Secret::new(passphrase.to_owned()), None)?;
-        reader.read_to_end(&mut decrypted);
+        reader.read_to_end(&mut decrypted)?;
 
         decrypted
     };
