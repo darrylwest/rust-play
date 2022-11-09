@@ -3,6 +3,7 @@ use openssl::symm::{encrypt, decrypt, Cipher};
 use openssl::base64::encode_block;
 use std::iter::repeat_with;
 
+// key is a fixed 32 bytes for 256
 fn gen_key() -> Vec<u8> {
     let rng = fastrand::Rng::new();
     let bytes: Vec<u8> = repeat_with(|| rng.u8(..)).take(32).collect();
@@ -10,7 +11,9 @@ fn gen_key() -> Vec<u8> {
     bytes
 }
 
+// iv is any size requested but 64 is a good guess
 fn gen_iv(size: u8) -> Vec<u8> {
+    println!("request size: {}", size);
     let sz = size as usize;
     let rng = fastrand::Rng::new();
     let iv: Vec<u8> = repeat_with(|| rng.u8(..)).take(sz).collect();
@@ -25,6 +28,8 @@ fn save_key(key: &Vec<u8>, iv: &Vec<u8>) {
     for n in key {
         v.push(*n);
     }
+
+    // v.push(b".");
 
     for n in iv {
         v.push(*n);
@@ -51,13 +56,15 @@ fn enc_dec() {
 
     let data = original.as_bytes();
 
-    // this has to be 16 bytes
+    // this has to be 32 bytes
     let key = gen_key();
+    println!("key length: {}", key.len());
 
     // this can be any length
-    let iv_size: u8 = fastrand::u8(16..64);
+    let iv_size: u8 = 32; // fastrand::u8(32..64);
     // println!("iv size: {}", iv_size);
     let iv = gen_iv(iv_size);
+    println!("iv length: {}", iv.len());
 
     save_key(&key, &iv);
 
