@@ -2,6 +2,7 @@
 use serde::{Serialize, Deserialize};
 use chrono::naive::NaiveDateTime;
 use chrono::Utc;
+use std::collections::HashMap;
 
 #[derive(Serialize, Deserialize, Debug)]
 enum SerializedColor {
@@ -46,4 +47,13 @@ fn main() {
         .expect("This should decode from json string");
     
     println!("and back {:?}", deserialized);
+
+    let mut map: HashMap<&str, &str> = HashMap::new();
+    map.insert("testkey", "this is a test");
+    map.insert("key1", "key one");
+
+    let s = serde_json::to_string_pretty(&map).expect("hashmap");
+    println!("{s}");
+
+
 }
