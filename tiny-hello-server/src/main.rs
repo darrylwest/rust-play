@@ -1,4 +1,3 @@
-extern crate tiny_http;
 
 use std::sync::Arc;
 use std::thread;
@@ -25,6 +24,11 @@ fn main() {
                 println!("req {:?} {:?} {:?}", rq.method(), &url, rq.headers());
 
                 match url.as_str() {
+                    "/" => {
+                        let response = Response::from_string("hello tiny world".to_string());
+                        let _ = rq.respond(response);
+                    }
+
                     "/hello" => {
                         let response = Response::from_string("hello world".to_string());
                         let _ = rq.respond(response);
