@@ -41,6 +41,9 @@ fn stdtime_test() {
         Err(_) => panic!("SystemTime before UNIX EPOCH!"),
     }
 
+    let t1 = Instant::now();
+
+    println!("t0: {:?}, t1: {:?}, t1 > t0? {}", t0, t1, t1 > t0);
 
 }
 

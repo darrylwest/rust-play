@@ -15,6 +15,7 @@ fn main() {
     let adder = create_adder();
     
     println!("{} + {} = {}", x, y, adder(x, y));
+    // can't invoke more than once: println!("{} + {} = {}", x, y, adder(x, y));
 
     let stepper = create_stepper(2);
     let mut z = 20;
