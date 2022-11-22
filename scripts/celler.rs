@@ -3,7 +3,7 @@
 use std::collections::HashMap;
 use std::cell::Cell;
 use std::thread;
-use std::time::Duration;
+// use std::time::Duration;
 use std::sync::mpsc;
 
 //
@@ -14,7 +14,7 @@ fn main() {
 
     // wont compile
     thread::spawn(move || {
-        thread::sleep(Duration::from_secs(1));
+        // thread::sleep(Duration::from_secs(1));
 
         let map = create_map();
         let cell = map.get(&100u8).unwrap();
