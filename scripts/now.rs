@@ -47,10 +47,31 @@ fn stdtime_test() {
 
 }
 
+fn show_weekday() {
+    use chrono::prelude::*;
+    // use chrono::Weekday;
+    use chrono::naive::{NaiveDateTime, Days};
+
+    let date = NaiveDate::from_ymd_opt(2022, 10, 20).unwrap();
+    let time = NaiveTime::from_hms_milli_opt(0, 0, 0, 0).unwrap();
+    let dt = NaiveDateTime::new(date, time);
+
+    // suitable for unix cron format of day of week (sunday = 0 or 7)
+    println!("date: {:?}", dt);
+    let dt = NaiveDateTime::parse_from_str("2022-11-20 00:00:00", "%Y-%m-%d %H:%M:%S").unwrap();
+    println!("date: {:?} {} {}", dt, dt.weekday(), dt.weekday().number_from_monday() % 7);
+
+    for n in 1..7 {
+        let dt = dt.checked_add_days(Days::new(n as u64)).unwrap();
+        println!("date: {:?} {} {}", dt, dt.weekday(), dt.weekday().number_from_monday() % 7);
+    }
+}
+
 
 fn main() {
     chrono_test();
     stdtime_test();
+    show_weekday();
 
     println!("\nNano Second NOTE: this works in linux but osx only shows 000 for nanos.");
     println!("There is a fix in cpp if you want to ffi it in: ~/raincity/c-projects/cpp-utils/datetime\n");

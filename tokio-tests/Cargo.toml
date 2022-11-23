@@ -12,3 +12,4 @@ bytes = "1"
 tracing = "0.1"
 tracing-subscriber = "0.3"
 anyhow = "1.0.66"
+chrono = { version = "0.4.23", features = ["serde"] }
