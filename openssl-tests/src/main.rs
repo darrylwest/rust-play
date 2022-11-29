@@ -2,6 +2,9 @@ use std::env;
 use openssl::symm::{encrypt, decrypt, Cipher};
 use openssl::base64::encode_block;
 use std::iter::repeat_with;
+use openssl::sha;
+use std::io::prelude::*;
+use std::fs::File;
 
 // key is a fixed 32 bytes for 256
 fn gen_key() -> Vec<u8> {
@@ -89,7 +92,20 @@ pub fn check_version() {
     }
 }
 
+pub fn hash() {
+    let mut hasher = sha::Sha256::new();
+
+    let content = std::fs::read("src/main.rs").unwrap();
+
+    hasher.update(content.as_slice());
+
+    let hash = hasher.finish();
+
+    println!("hash: {}", hex::encode(hash));
+}
+
 fn main() {
     check_version();
     enc_dec();
+    hash();
 }

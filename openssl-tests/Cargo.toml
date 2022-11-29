@@ -7,5 +7,6 @@ edition = "2021"
 
 [dependencies]
 fastrand = "1.8.0"
+hex = "0.4.3"
 openssl = "0.10.42"
 openssl-sys = "0.9.77"
