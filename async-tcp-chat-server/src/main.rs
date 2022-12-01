@@ -51,7 +51,7 @@ async fn main() -> io::Result<()>{
     let mut incoming = listener.incoming();
     let mut con_count = 0;
 
-    println!("use telnet to connect on localhost 28080");
+    println!("use telnet to connect on <host> 28080");
 
     while let Some(stream) = incoming.next().await {
         con_count += 1;
