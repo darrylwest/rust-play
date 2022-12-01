@@ -1,11 +1,12 @@
+// TODO: refactor this to use request/response channels
 use std::collections::HashSet;
 use tokio::sync::oneshot;
 
 #[derive(Debug, Clone)]
 pub enum Command {
-    Find(String),
-    Insert(String),
-    Remove(String),
+    Find(String), // add response channel
+    Insert(String), // add response channel
+    Remove(String), // add response channel
 }
 
 #[derive(Debug, Default, Clone)]
