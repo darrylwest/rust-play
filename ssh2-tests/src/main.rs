@@ -16,8 +16,8 @@ fn main() -> Result<()> {
     sess.handshake()?;
     println!("session ok");
 
-    let pw = "";
-    sess.userauth_password("dpw", pw).unwrap();
+    let pw = std::env::var("PW")?;
+    sess.userauth_password("dpw", &pw).unwrap();
     println!("auth via dpw");
 
     assert!(sess.authenticated());
