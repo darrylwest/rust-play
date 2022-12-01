@@ -3,6 +3,17 @@
     <head>
         <meta charset="UTF-8">
         <title>Local Chat</title>
+<style>
+body {
+    font-family:verdana;
+    background-image: url("https://raincitysoftware.com/images/crater-lake-dark.jpg");
+    background-size: 100%;
+    background-color: black;
+    background-repeat: none;
+}
+h1 {color: white}
+h6 {color: white}
+</style>
     </head>
     <body>
         <h1>Local Chat</h1>
@@ -10,7 +21,8 @@
         <input id="username" style="display:block; width:100px; box-sizing: border-box" type="text" placeholder="username">
         <button id="join-chat" type="button">Join Chat</button>
         <textarea id="chat" style="display:block; width:600px; height:400px; box-sizing: border-box" cols="30" rows="10"></textarea>
-        <input id="input" style="display:block; width:600px; box-sizing: border-box" type="text" placeholder="chat">
+        <input id="input" style="display:block; width:600px; box-sizing: border-box" type="text" placeholder="enter a message...">
+        <h6>Version 0.2.1</h6>
 
         <script>
             const username = document.querySelector("#username");
