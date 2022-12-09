@@ -1,8 +1,11 @@
+//
+// test withnet cat: echo "/ping" | nc -w 1 -u <ip> <port>
+//
 
 use tokio::net::UdpSocket;
 use std::io;
 use std::time::{SystemTime, UNIX_EPOCH};
-use std::borrow::Cow;
+// use std::borrow::Cow;
 
 #[tokio::main]
 async fn main() -> io::Result<()> {
@@ -17,26 +20,32 @@ async fn main() -> io::Result<()> {
 
         let (len, addr) = sock.recv_from(&mut buf).await?;
         let msg = String::from_utf8_lossy(&buf[..len]);
+        let msg = msg.trim();
+
         println!("recv: {} bytes from {:?}, msg: {}", len, addr, msg);
-
-        // parse the message to create a response
-        let response = match msg {
-            Cow::Borrowed("/now\n") => {
-                let tm = get_now();
-                tm.to_string()
-            },
-            Cow::Borrowed("/ms\n") => {
-                let tm = get_now_ms();
-                tm.to_string()
-            },
-            Cow::Borrowed("/ping\n") => String::from("pong\r\n"),
-            _ => String::from("error\r\n"),
-        };
-
+        let response = handle_request(msg);
 
         // return the response
         let len = sock.send_to(response.as_bytes(), addr).await?;
         println!("returned: {:?}, size {}.", response, len);
+    }
+}
+
+// move this to lib
+
+fn handle_request(request: &str) -> String {
+    // parse the message to create a response
+    match request {
+        "/now" => {
+            let tm = get_now();
+            tm.to_string()
+        },
+        "/ms" => {
+            let tm = get_now_ms();
+            tm.to_string()
+        },
+        "/ping" => String::from("pong\r\n"),
+        _ => String::from("error\r\n"),
     }
 }
 
