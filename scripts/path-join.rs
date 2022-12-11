@@ -8,4 +8,8 @@ fn main() {
     pbuf.push("bar/baz");
 
     println!("path: {}", pbuf.to_str().unwrap());
+
+    // or
+    let pbuf: PathBuf = [ "foo", "bar", "baz" ].iter().collect();
+    println!("path: {}", pbuf.to_str().unwrap());
 }

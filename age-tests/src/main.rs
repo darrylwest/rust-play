@@ -1,15 +1,33 @@
 use anyhow::Result;
 use age::secrecy::Secret;
 use std::io::{Read, Write};
+use std::fs;
+use std::path::PathBuf;
 
-fn show_utf8(data: Vec<u8>) {
+fn main() -> Result<()> {
+    let home = std::env::var("HOME")?;
+    let pkey_file: PathBuf = [&home, ".ssh/ed25519"].iter().collect();
+    let key_file: PathBuf = [ &home, ".ssh/key-service.key.enc"].iter().collect();
+
+    println!("{} {}", pkey_file.to_str().unwrap(), key_file.to_str().unwrap());
+
+    let pkey = fs::read_to_string(pkey_file.to_str().unwrap())?;
+    println!("{}", pkey);
+
+    let bytes = fs::read(key_file.to_str().unwrap())?;
+    println!("{:?}", bytes);
+
+    Ok(())
+}
+
+pub fn show_utf8(data: Vec<u8>) {
     match String::from_utf8(data) {
         Ok(s) => println!("{}", s),
         Err(e) => println!("utf8 error: {}", e),
     }
 }
 
-fn read_passphrase() -> Result<String> {
+pub fn read_passphrase() -> Result<String> {
     let mut buf = String::new();
 
     println!("Enter passs phrase: ");
@@ -19,8 +37,7 @@ fn read_passphrase() -> Result<String> {
     Ok(buf)
 }
 
-fn main() -> Result<()> {
-
+pub fn password_encoder() -> Result<()> {
     let text = "this is a test string to be encrypted then decrypted.  it will first be converted to bytes using 'as_bytes'.".to_string();
     let plaintext = text.as_bytes();
     // let passphrase = "a31f95aae7c3016156ea2b768d3c3d7dc382578a16e63d5b538ae066fadb20cb80e2800c5df493fe05bd2fd47369047906ab540addd442cc2872feb8c14b8418";
