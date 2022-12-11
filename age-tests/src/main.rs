@@ -2,18 +2,32 @@ use anyhow::Result;
 use age::secrecy::Secret;
 use std::io::{Read, Write};
 
-pub fn show_utf8(data: Vec<u8>) {
+fn show_utf8(data: Vec<u8>) {
     match String::from_utf8(data) {
         Ok(s) => println!("{}", s),
         Err(e) => println!("utf8 error: {}", e),
     }
 }
 
+fn read_passphrase() -> Result<String> {
+    let mut buf = String::new();
+
+    println!("Enter passs phrase: ");
+    let stdin = std::io::stdin();
+    stdin.read_line(&mut buf)?;
+
+    Ok(buf)
+}
+
 fn main() -> Result<()> {
 
-    let text = "this is a test string to be encrypted then decrypted.  it will first be converted to bytes using 'as_bytest'.".to_string();
+    let text = "this is a test string to be encrypted then decrypted.  it will first be converted to bytes using 'as_bytes'.".to_string();
     let plaintext = text.as_bytes();
-    let passphrase = "a31f95aae7c3016156ea2b768d3c3d7dc382578a16e63d5b538ae066fadb20cb80e2800c5df493fe05bd2fd47369047906ab540addd442cc2872feb8c14b8418";
+    // let passphrase = "a31f95aae7c3016156ea2b768d3c3d7dc382578a16e63d5b538ae066fadb20cb80e2800c5df493fe05bd2fd47369047906ab540addd442cc2872feb8c14b8418";
+    //
+    // prompt for the pass phrase
+    let passphrase = read_passphrase()?;
+    println!("ok, working...");
 
     // Encrypt the plaintext to a ciphertext using the passphrase...
     let encrypted = {
@@ -29,6 +43,7 @@ fn main() -> Result<()> {
 
 
     // ... and decrypt the ciphertext to the plaintext again using the same passphrase.
+    println!("and, working...");
     let decrypted = {
         let decryptor = match age::Decryptor::new(&encrypted[..])? {
             age::Decryptor::Passphrase(d) => d,
