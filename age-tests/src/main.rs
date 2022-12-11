@@ -1,10 +1,13 @@
 use anyhow::Result;
 use age::secrecy::Secret;
 use std::io::{Read, Write};
-use std::fs;
-use std::path::PathBuf;
+// use std::fs;
+// use std::path::PathBuf;
+use std::iter;
+// use age::x25519::Identity;
+// use std::str::FromStr;
 
-fn main() -> Result<()> {
+    /*
     let home = std::env::var("HOME")?;
     let pkey_file: PathBuf = [&home, ".ssh/ed25519"].iter().collect();
     let key_file: PathBuf = [ &home, ".ssh/key-service.key.enc"].iter().collect();
@@ -12,10 +15,48 @@ fn main() -> Result<()> {
     println!("{} {}", pkey_file.to_str().unwrap(), key_file.to_str().unwrap());
 
     let pkey = fs::read_to_string(pkey_file.to_str().unwrap())?;
-    println!("{}", pkey);
+    let key = Identity::from_str(&pkey).unwrap();
 
     let bytes = fs::read(key_file.to_str().unwrap())?;
     println!("{:?}", bytes);
+    */
+
+fn main() -> Result<()> {
+    let key = age::x25519::Identity::generate();
+    // println!("key: {:?}", key.to_string());
+
+    let pubkey = key.to_public();
+    println!("pub: {:?}", pubkey.to_string());
+
+    let plaintext = b"this is a test text blob";
+
+    let encrypted = {
+        let encryptor = age::Encryptor::with_recipients(vec![Box::new(pubkey)]).expect("a recipient");
+        let mut encrypted = vec![];
+        let mut writer = encryptor.wrap_output(&mut encrypted)?;
+        writer.write_all(plaintext)?;
+        writer.finish()?;
+
+        encrypted
+    };
+
+    println!("enc: {:?}", encrypted);
+
+    let decrypted = {
+        let decryptor = match age::Decryptor::new(&encrypted[..])? {
+            age::Decryptor::Recipients(d) => d,
+            _ => unreachable!(),
+        };
+
+        let mut decrypted = vec![];
+        let mut reader = decryptor.decrypt(iter::once(&key as &dyn age::Identity))?;
+        reader.read_to_end(&mut decrypted)?;
+
+        decrypted
+    };
+
+    assert_eq!(decrypted, plaintext);
+    show_utf8(decrypted);
 
     Ok(())
 }
