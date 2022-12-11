@@ -15,7 +15,7 @@ fn send(req: &str) {
     let socket = UdpSocket::bind("0.0.0.0:0").expect("should bind");
 
     print!("{} -> ", req);
-    socket.connect("10.0.1.142:22200").expect("connect to remote");
+    socket.connect("10.0.1.151:22200").expect("connect to piedmont");
     socket.send(req.as_bytes()).expect("send to error");
     
     const MAX_DATAGRAM_SIZE: usize = 4096;
