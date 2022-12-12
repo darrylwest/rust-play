@@ -1,0 +1,6 @@
+# use the phrase below to decrypt readme.md.age like this
+#
+
+rage -d -i ./key.age readme.md.age
+
+3 curious-fine-fancy-sun-lonely-involve-share-flip-boil-rail
