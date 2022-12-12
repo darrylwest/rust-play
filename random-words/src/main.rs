@@ -5,10 +5,13 @@ const BIP39_WORDS: &str = include_str!("../assets/bip39-english.txt");
 
 fn main() {
     // command line arg: --seed
-    if env::args().len() == 5 {
-        fastrand::seed(8766);
+    if env::args().len() >= 2 {
+        fastrand::seed(19501103);
     }
 
+    // command line arg: --show-indexes
+    let show_indexes = false;
+    
     // command line arg: --size
     let size = 12_usize;
 
@@ -18,10 +21,13 @@ fn main() {
     let rng = fastrand::Rng::new();
     (1..=count).for_each(|x| {
         let idx_list = generate_idx(&rng, size);
-        println!("{} {:?}", x, &idx_list);
+        if show_indexes {
+            println!("{} {:?}", x, &idx_list);
+        }
+
         let words = get_words(idx_list);
 
-        println!("{} {}", x, words.join("-"));
+        println!("{:02} {}", x, words.join("-"));
     });
 }
 
