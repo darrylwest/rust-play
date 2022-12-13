@@ -28,6 +28,8 @@ fn main() -> Result<()> {
     let pubkey = key.to_public();
     println!("pub: {:?}", pubkey.to_string());
 
+    // now send the public key to remote service
+
     let plaintext = b"this is a test text blob";
 
     let encrypted = {
