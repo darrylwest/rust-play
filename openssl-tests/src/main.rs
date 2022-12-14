@@ -3,8 +3,8 @@ use openssl::symm::{encrypt, decrypt, Cipher};
 use openssl::base64::encode_block;
 use std::iter::repeat_with;
 use openssl::sha;
-use std::io::prelude::*;
-use std::fs::File;
+// use std::io::prelude::*;
+// use std::fs::File;
 
 // key is a fixed 32 bytes for 256
 fn gen_key() -> Vec<u8> {
