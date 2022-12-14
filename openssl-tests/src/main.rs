@@ -7,7 +7,7 @@ use openssl::sha;
 // use std::fs::File;
 
 // key is a fixed 32 bytes for 256
-fn gen_key() -> Vec<u8> {
+pub fn gen_key() -> Vec<u8> {
     let rng = fastrand::Rng::new();
     let bytes: Vec<u8> = repeat_with(|| rng.u8(..)).take(32).collect();
 
@@ -15,7 +15,7 @@ fn gen_key() -> Vec<u8> {
 }
 
 // iv is any size requested but 64 is a good guess
-fn gen_iv(size: u8) -> Vec<u8> {
+pub fn gen_iv(size: u8) -> Vec<u8> {
     println!("request size: {}", size);
     let sz = size as usize;
     let rng = fastrand::Rng::new();
@@ -24,7 +24,7 @@ fn gen_iv(size: u8) -> Vec<u8> {
     iv
 }
 
-fn save_key(key: &Vec<u8>, iv: &Vec<u8>) {
+pub fn save_key(key: &Vec<u8>, iv: &Vec<u8>) {
     let sz = key.len() + iv.len();
     let mut v = Vec::with_capacity(sz);
 
@@ -45,13 +45,13 @@ fn save_key(key: &Vec<u8>, iv: &Vec<u8>) {
     // v
 }
 
-fn save_encoded(data: &Vec<u8>) {
+pub fn save_encoded(data: &Vec<u8>) {
     let b64 = encode_block(data.as_slice());
 
     println!("data {}", b64);
 }
 
-fn enc_dec() {
+pub fn enc_dec() {
     let cipher = Cipher::aes_256_cbc();
 
     let original = String::from("Some secret plain Text to encrypt");
@@ -104,8 +104,40 @@ pub fn hash() {
     println!("hash: {}", hex::encode(hash));
 }
 
+pub fn ed25519() {
+    use openssl::pkey::{PKey, Id};
+
+    println!("generate new priv/pub keys...");
+
+    let key = PKey::generate_ed25519().expect("should generate the private key");
+    let public_key = key.raw_public_key().expect("should create the pub side");
+
+    println!("priv: {:?}", key);
+    println!("pub: {:?}", public_key);
+
+}
+
+pub fn ssl() {
+    use openssl::ssl::{SslMethod, SslConnector};
+    use std::io::{Read, Write};
+    use std::net::TcpStream;
+
+    let connector = SslConnector::builder(SslMethod::tls()).unwrap().build();
+
+    let stream = TcpStream::connect("github.com:443").unwrap();
+    let mut stream = connector.connect("github.com", stream).unwrap();
+
+    stream.write_all(b"GET / HTTP/1.0\r\n\r\n").unwrap();
+    let mut resp = vec![];
+    stream.read_to_end(&mut resp).unwrap();
+
+    println!("{}", String::from_utf8_lossy(&resp));
+}
+
 fn main() {
-    check_version();
-    enc_dec();
-    hash();
+    // check_version();
+    // enc_dec();
+    // hash();
+    ed25519();
+    // ssl();
 }
