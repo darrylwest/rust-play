@@ -1,6 +1,8 @@
 # use the phrase below to decrypt readme.md.age like this
 #
 
+# pbcopy only works on the local machine
+echo 'curious-fine-fancy-sun-lonely-involve-share-flip-boil-rail' | pbcopy
+
 rage -d -i ./key.age readme.md.age
 
-3 curious-fine-fancy-sun-lonely-involve-share-flip-boil-rail
