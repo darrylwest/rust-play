@@ -1,13 +1,19 @@
 
 use std::sync::Arc;
 use std::thread;
-use tiny_http::Response;
+use tiny_http::{Response, Server};
 use std::time::SystemTime;
 
 
 fn main() {
     let host = "0.0.0.0:14090";
-    let server = Arc::new(tiny_http::Server::http(&host).unwrap());
+    let server = Arc::new(Server::https(
+        &host,
+        tiny_http::SslConfig {
+            certificate: include_bytes!("../cert.pem").to_vec(),
+            private_key: include_bytes!("../key.pem").to_vec(),
+        },
+    ).unwrap());
 
     println!("now listening on {}", &host);
 
