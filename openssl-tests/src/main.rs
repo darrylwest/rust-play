@@ -51,7 +51,7 @@ pub fn save_encoded(data: &Vec<u8>) {
     println!("data {}", b64);
 }
 
-pub fn enc_dec() {
+pub fn enc_dec(key: Vec<u8>) {
     let cipher = Cipher::aes_256_cbc();
 
     let original = String::from("Some secret plain Text to encrypt");
@@ -60,7 +60,7 @@ pub fn enc_dec() {
     let data = original.as_bytes();
 
     // this has to be 32 bytes
-    let key = gen_key();
+    // let key = gen_key();
     println!("key length: {}", key.len());
 
     // this can be any length
@@ -92,20 +92,8 @@ pub fn check_version() {
     }
 }
 
-pub fn hash() {
-    let mut hasher = sha::Sha256::new();
-
-    let content = std::fs::read("src/main.rs").unwrap();
-
-    hasher.update(content.as_slice());
-
-    let hash = hasher.finish();
-
-    println!("hash: {}", hex::encode(hash));
-}
-
 pub fn ed25519() {
-    use openssl::pkey::{PKey, Id};
+    use openssl::pkey::PKey;
 
     println!("generate new priv/pub keys...");
 
@@ -134,10 +122,28 @@ pub fn ssl() {
     println!("{}", String::from_utf8_lossy(&resp));
 }
 
+pub fn create_hash(phrase: &str) -> Vec<u8> {
+    let mut hasher = sha::Sha256::new();
+
+    // let content = std::fs::read("src/main.rs").unwrap();
+
+    hasher.update(phrase.as_bytes());
+
+    let hash = hasher.finish();
+
+    println!("hash: {:?}", hash);
+    println!("len : {}", hash.len());
+    println!("hash: {}", hex::encode(hash));
+
+    hash.to_vec()
+}
+
 fn main() {
     // check_version();
-    // enc_dec();
-    // hash();
+
+    let token = create_hash("minimum-ivory-project-nice-law-claw-winner-system-donkey-obey-poverty-aim");
+    enc_dec(token);
+
     ed25519();
     // ssl();
 }
