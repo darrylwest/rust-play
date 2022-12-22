@@ -44,5 +44,17 @@ fn main() -> Result<()> {
     info!("save db to file: {}", filename);
     db.save(filename)?;
 
+    math_tests();
+
     Ok(())
+}
+
+// math tests
+fn math_tests() {
+    use malachite::num::arithmetic::traits::Factorial;
+    use malachite::Natural;
+
+    let n = 100;
+    println!("factorial({});", n);
+    println!("{}", Natural::factorial(n));
 }
