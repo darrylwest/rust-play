@@ -20,13 +20,19 @@ fn read_creds() -> Credentials {
     Credentials::new(username, password)
 }
 
+// generate a 6 digit random number
+fn generate_otp() -> u64 {
+    let range = 100_000..1_000_000_u64;
+    fastrand::u64(range)
+}
+
 fn main() {
     let from = "darryl.west<darryl.west@raincitysoftware.com>";
     let to = "<7752508168@messaging.sprintpcs.com>";
 
     // todo - read this from a email template file or command line args...
     let subject = "dpw";
-    let body = String::from("test message; ya.");
+    let body = format!("OTP: {}", generate_otp());
 
     let email = Message::builder()
         .from(from.parse().unwrap())
@@ -48,5 +54,18 @@ fn main() {
     match mailer.send(&email) {
         Ok(_) => println!("Email sent successfully!"),
         Err(e) => panic!("Could not send email: {:?}", e),
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn gen_otp() {
+        for _i in 0..10 {
+            let otp = generate_otp();
+            println!("{}", otp);
+        }
     }
 }

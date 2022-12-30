@@ -1,10 +1,11 @@
 [package]
 name = "email-tests"
-version = "0.1.0"
+version = "0.1.1"
 edition = "2021"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
 base64 = "0.13.1"
+fastrand = "1.8.0"
 lettre = "0.10.1"
