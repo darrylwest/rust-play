@@ -1,0 +1,12 @@
+[package]
+name = "password-hash"
+version = "0.1.0"
+edition = "2021"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+anyhow = "1.0.68"
+argon2 = { version = "0.4.1", features = ["parallel", "rayon"] }
+rand_core = { version = "0.6", features = ["std"] }
+
