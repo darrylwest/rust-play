@@ -1,3 +1,4 @@
+extern crate zxcvbn;
 
 use anyhow::Result;
 use std::env;
@@ -8,6 +9,8 @@ use argon2::{
     },
     Argon2
 };
+
+use zxcvbn::zxcvbn;
 
 fn make_hash(password: String) -> Result<String> {
     let pw = password.as_bytes();
@@ -34,7 +37,10 @@ fn verify_password(password: String, hash: String) -> Result<bool> {
 fn main() -> Result<()> {
     let args: Vec<String> = env::args().collect();
     let pw = &args[1].to_string();
-    println!("pass: {}", pw);
+
+    let estimate = zxcvbn(&pw, &[])?;
+    println!("pass: {}, score: {}", pw, estimate.score());
+
     let hash = make_hash(pw.clone())?;
 
     // happy path

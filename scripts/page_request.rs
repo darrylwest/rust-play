@@ -3,8 +3,11 @@
 
 use async_std::io::prelude::*;
 use async_std::net;
+use async_std::task;
 
 async fn cheapo_request(host: &str, port: u16, path: &str) -> std::io::Result<String> {
+    println!("waiting on page response from {}:{}", host, port);
+
     let mut socket = net::TcpStream::connect((host, port)).await?;
 
     let request = format!("GET {} HTTP/1.1\r\nHost: {}\r\n\r\n", path, host);
@@ -19,8 +22,6 @@ async fn cheapo_request(host: &str, port: u16, path: &str) -> std::io::Result<St
 }
 
 fn main() -> std::io::Result<()> {
-    use async_std::task;
-
     let response = task::block_on(cheapo_request("raincitysoftware.com", 80, "/"))?;
     println!("{}", response);
 
