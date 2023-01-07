@@ -13,7 +13,7 @@ pub async fn read_file(path: String) -> Result<String> {
         let n = file.read(&mut buf).await?;
 
         if n == 0 {
-            return Ok(String::from_utf8(text).unwrap());
+            return Ok(String::from_utf8(text)?);
         }
 
         text.write_all(&buf[..n]).await?;
@@ -21,12 +21,13 @@ pub async fn read_file(path: String) -> Result<String> {
 }
 
 fn main() -> Result<()> {
-    let path = "Cargo.toml".to_string();
+    let path = "Cargo.toml";
+    let task = task::spawn(read_file(path.to_string()));
+    println!("reading file: {}", path);
 
-    println!("read file: {}", path);
+    let r = task::block_on(task)?;
 
-    let r = task::block_on(read_file(path.to_string()))?;
-
+    println!("file read complete, {} bytes.", r.len());
     println!("{}", r);
 
     Ok(())
