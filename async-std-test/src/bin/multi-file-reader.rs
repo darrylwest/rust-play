@@ -11,11 +11,7 @@ fn main() -> Result<()> {
     let paths = vec!["data/file-1.txt", "data/file-2.txt", "data/file-3.txt" ];
     let mut tasks = vec![];
 
-    for path in paths.iter() {
-        let j = task::spawn(read_file(path.to_string()));
-
-        tasks.push(j);
-    };
+    paths.iter().for_each(|p| tasks.push(task::spawn(read_file(p.to_string()))));
 
     task::block_on(task::sleep(Duration::from_millis(100)));
 
