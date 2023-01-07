@@ -1,10 +1,9 @@
-
 /// a collection of async file utilities
 use anyhow::Result;
-use log::info;
 use async_std::fs::File;
-use async_std::task;
 use async_std::prelude::*;
+use async_std::task;
+use log::info;
 
 pub async fn read_file(path: String) -> Result<String> {
     let tid = task::current().id();
