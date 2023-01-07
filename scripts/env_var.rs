@@ -1,5 +1,10 @@
 #!/usr/bin/env rust-script
 
+///
+/// @see https://dhghomon.github.io/easy_rust/Chapter_42.html,  chapter 17. Strings and Text from
+/// 'Rust: Fast, Safe Systems Development' in the 'Putting off Allocation' section (451).
+///
+
 use std::env;
 use std::borrow::Cow;
 use std::fmt::Write;

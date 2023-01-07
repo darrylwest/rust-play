@@ -8,7 +8,9 @@ use std::time::Duration;
 fn main() {
     let (tx, rx) = mpsc::channel();
 
+    println!("starting...");
     thread::spawn(move || {
+        
         let vals = vec![
             String::from("hi"),
             String::from("from"),
@@ -18,7 +20,7 @@ fn main() {
 
         for val in vals {
             tx.send(val).unwrap();
-            thread::sleep(Duration::from_secs(1));
+            thread::sleep(Duration::from_secs(5));
         }
     });
 
