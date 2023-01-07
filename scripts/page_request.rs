@@ -18,10 +18,10 @@ async fn cheapo_request(host: &str, port: u16, path: &str) -> std::io::Result<St
     socket.read_to_string(&mut response).await?;
 
     Ok(response)
-
 }
 
 fn main() -> std::io::Result<()> {
+
     let response = task::block_on(cheapo_request("raincitysoftware.com", 80, "/"))?;
     println!("{}", response);
 
