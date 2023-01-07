@@ -1,9 +1,9 @@
 
-// use std::env::args;
+/// a collection of async file utilities
 use anyhow::Result;
 use log::info;
-use std::time::Duration;
-use async_std::{fs::File, prelude::*, task};
+use async_std::fs::File;
+use async_std::prelude::*;
 
 pub async fn read_file(path: String) -> Result<String> {
     let mut file = File::open(&path).await?;
@@ -23,22 +23,4 @@ pub async fn read_file(path: String) -> Result<String> {
 
         text.write_all(&buf[..n]).await?;
     }
-}
-
-fn main() -> Result<()> {
-    log4rs::init_file("config/log4rs.yaml", Default::default()).unwrap();
-
-    let path = "Cargo.toml";
-    let task = task::spawn(read_file(path.to_string()));
-
-    task::block_on(task::sleep(Duration::from_millis(500)));
-
-    info!("[m]reading file: {}", path);
-
-    let r = task::block_on(task)?;
-
-    info!("[m]file read complete, {} bytes.", r.len());
-    // info!("[m]\n{}", r);
-
-    Ok(())
 }
