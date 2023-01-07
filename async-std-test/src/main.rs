@@ -1,16 +1,13 @@
 
 // use std::env::args;
+use anyhow::Result;
+use async_std::{fs::File, prelude::*, task};
 
-use async_std::fs::File;
-use async_std::io;
-use async_std::prelude::*;
-use async_std::task;
-
-pub async fn read_file(path: String) -> io::Result<String> {
+pub async fn read_file(path: String) -> Result<String> {
     let mut file = File::open(&path).await?;
     // let mut stdout = io::stdout();
     let mut text = vec![];
-    let mut buf = vec![0u8; 16 * 1024];
+    let mut buf = vec![0u8; 16 * 256];
 
     loop {
         let n = file.read(&mut buf).await?;
@@ -23,7 +20,7 @@ pub async fn read_file(path: String) -> io::Result<String> {
     }
 }
 
-fn main() -> io::Result<()> {
+fn main() -> Result<()> {
     let path = "Cargo.toml".to_string();
 
     println!("read file: {}", path);
