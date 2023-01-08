@@ -9,6 +9,7 @@ use std::time::Instant;
 pub enum Command {
     #[default]
     Status, // request the worker's status
+    Shutdown,
 }
 
 #[derive(Debug, Default, Clone)]
@@ -30,7 +31,6 @@ impl Worker {
     pub async fn new() -> Worker {
         let started_at = Instant::now();
         let id = "worker-1";
-        let state = WorkerState::Idle;
 
         info!("starting up worker, id: {}", id);
 
@@ -43,12 +43,25 @@ impl Worker {
         };
 
         async_std::task::spawn(async move {
+            let state = WorkerState::Idle;
             // now read and respond to requests
+            while let Ok(cmd) = request_receiver.recv().await {
+                println!("recv cmd: {:?}", cmd);
+                match cmd {
+                    Command::Status => {
+                        println!("status: {:?}", state)
+                    }
+                    Command::Shutdown => {
+                        println!("worker id: {} shutdown", id);
+                        break;
+                    }
+                }
+            }
 
             request_receiver.close();
         });
 
-        info!("worker created: {:?}, state: {:?}", &worker, state);
+        info!("worker created: {:?}", &worker);
 
         // return a reference to this worker
         worker
@@ -86,6 +99,14 @@ mod tests {
             println!("worker: {:?}", worker);
 
             assert_eq!(worker.get_uptime(), 0);
+            let cmd = Command::Status;
+            let request_channel = worker.request_channel();
+            let ok = request_channel.send(cmd).await.is_ok();
+            assert_eq!(ok, true);
+
+            let cmd = Command::Shutdown;
+            let ok = request_channel.send(cmd).await.is_ok();
+            assert_eq!(ok, true);
         });
     }
 }
