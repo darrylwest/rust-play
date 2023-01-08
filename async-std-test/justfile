@@ -3,7 +3,8 @@ alias t := test
 alias ta := test-all
 alias b := build
 alias rel := release
-alias r := run
+
+alias mfa := multi-file-reader
 
 # run the standard tests
 test:
@@ -20,9 +21,13 @@ build:
     clear
     cargo build
 
-# run the key-service back-end; start the db if necessary
+# run the default bin
 run:
     cargo run
+
+# run the multi-file-reader
+multi-file-reader:
+    cargo run --bin multi-file-reader
 
 # build the release
 release:
