@@ -5,7 +5,8 @@ use async_std_test::files::read_file;
 use log::info;
 use std::time::Duration;
 
-fn main() -> Result<()> {
+#[async_std::main]
+async fn main() -> Result<()> {
     log4rs::init_file("config/log4rs.yaml", Default::default()).unwrap();
 
     let paths = vec!["data/file-1.txt", "data/file-2.txt", "data/file-3.txt"];
@@ -16,7 +17,7 @@ fn main() -> Result<()> {
         .map(|p| task::spawn(read_file(p.to_string())))
         .collect::<Vec<JoinHandle<_>>>();
 
-    task::block_on(task::sleep(Duration::from_millis(100)));
+    task::block_on(task::sleep(Duration::from_millis(1)));
 
     info!("[m]reading files: {:?}", paths);
 
