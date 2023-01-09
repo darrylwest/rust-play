@@ -1602,8 +1602,8 @@ dependencies = [
 
 [[package]]
 name = "service_uptime"
-version = "0.2.4"
-source = "git+https://github.com/darrylwest/service-uptime.git#4cd7c996a4044888bce175e8c3d4382126eb74a5"
+version = "0.2.5"
+source = "git+https://github.com/darrylwest/service-uptime.git#e692c97ef522af27eb80e875af3beec32024265a"
 
 [[package]]
 name = "sha1"
