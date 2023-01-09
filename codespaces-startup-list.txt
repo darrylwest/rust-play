@@ -1,11 +1,55 @@
+Steps to follow to configure the codespaces container
+
 * set -o vi
 * sudo apt update && sudo apt upgrade -y
 
 * curl --proto '=https' --tlsv1.2 https://sh.rustup.rs -sSf | sh -s -- -y
 * logout/login or dot in ~/.bashrc 
 * cargo --version
-* cargo install lsd
+* cargo installs:  lsd, bat, just
 * vi ~/.bashrc
    * set -o vi
-   * copy aliases
+   * copy aliases (see below)
+
+add this to the bottom of ~/.bashrc
+
+#
+# @(#)local.profile 1.6 2020.05.12
+#
+
+set -o v
+# alias vi=/usr/local/bin/nvim
+
+################################################################################
+alias hi='history'
+alias rm='/bin/rm -i'
+alias lc='ls -c'
+alias l='lsd -lA'
+alias ll='lsd -la'
+alias ut='exit'
+alias lh='lsd -l -t'
+alias ts='date "+%s"'
+alias dt='tput sc && tput clear && tput cup 1 0 && figlet -w 300 -f big $(date +"%A, %d-%b-%Y  %H : %m : %S") && tput rc'
+
+function cdl { cd $1; lsd -la; }
+
+if which bat > /dev/null
+then
+  alias cat=bat
+fi
+
+################################################################################
+
+MD="$HOME/MyDownloads" ; export MD
+alias md='cd $MD ; lsd -lA -S | head -40'
+
+#################################################################################
+# git aliases
+alias gst='git status'
+alias gbr='git branch -a'
+alias gco='git checkout'
+alias gcom='git commit'
+alias gac='git add . ; git commit -v'
+alias gpull='git pull'
+alias gpush='git push'
 
