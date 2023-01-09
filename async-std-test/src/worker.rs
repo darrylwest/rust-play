@@ -1,14 +1,16 @@
-use async_channel::bounded;
-use async_channel::Sender;
 /// general purpose worker
 // use anyhow::Result;
-use log::info;
+use async_channel::bounded;
+use async_channel::Sender;
+use log::{error, info};
+use std::iter::repeat_with;
 use std::time::Instant;
 
-#[derive(Debug, Default, Clone)]
+use crate::JsonString;
+
+#[derive(Debug, Clone)]
 pub enum Command {
-    #[default]
-    Status, // request the worker's status
+    Status(Sender<JsonString>), // request the worker's status
     Shutdown,
 }
 
@@ -17,6 +19,7 @@ pub enum WorkerState {
     #[default]
     Idle,
     Busy,
+    Shutdown,
 }
 
 #[derive(Debug, Clone)]
@@ -30,29 +33,41 @@ impl Worker {
     /// create and start a new worker.
     pub async fn new() -> Worker {
         let started_at = Instant::now();
-        let id = "worker-1";
+        let id: String = repeat_with(fastrand::alphanumeric).take(10).collect();
+
+        // this is for the worker struct
+        let wid = id.clone();
 
         info!("starting up worker, id: {}", id);
 
         let (tx, request_receiver) = bounded(250);
 
-        let worker = Worker {
-            id: id.to_string(),
-            started_at,
-            request_tx: tx,
-        };
-
         async_std::task::spawn(async move {
-            let state = WorkerState::Idle;
+            let mut state = WorkerState::Idle;
+            let mut error_count = 0;
             // now read and respond to requests
             while let Ok(cmd) = request_receiver.recv().await {
-                println!("recv cmd: {:?}", cmd);
+                info!("recv cmd: {:?}", cmd);
                 match cmd {
-                    Command::Status => {
-                        println!("status: {:?}", state)
+                    Command::Status(tx) => {
+                        let msg = format!(
+                            r#"{}"status":"{}","state":"{:?}","error_count":{}{}"#,
+                            "{",
+                            "Ok",
+                            state.clone(),
+                            error_count,
+                            "}\n",
+                        );
+
+                        info!("status response: {}", msg);
+                        if tx.send(msg).await.is_err() {
+                            error_count += 1;
+                            error!("error returning status to channel: {:?}", tx);
+                        }
                     }
                     Command::Shutdown => {
-                        println!("worker id: {} shutdown", id);
+                        state = WorkerState::Shutdown;
+                        info!("worker id: {}, state: {:?}", id, state);
                         break;
                     }
                 }
@@ -61,14 +76,21 @@ impl Worker {
             request_receiver.close();
         });
 
+        // define here, before the async loop to ensure it does not get moved
+        let worker = Worker {
+            id: wid,
+            started_at,
+            request_tx: tx,
+        };
+
         info!("worker created: {:?}", &worker);
 
-        // return a reference to this worker
+        // return this worker
         worker
     }
 
     /// return the worker's id
-    pub fn worker_id(&self) -> String {
+    pub fn id(&self) -> String {
         self.id.to_string()
     }
 
@@ -98,11 +120,22 @@ mod tests {
             let worker = Worker::new().await;
             println!("worker: {:?}", worker);
 
+            assert_eq!(worker.id().len(), 10);
             assert_eq!(worker.get_uptime(), 0);
-            let cmd = Command::Status;
+
+            let (send, response_channel) = async_channel::unbounded();
+
             let request_channel = worker.request_channel();
+
+            let cmd = Command::Status(send);
             let ok = request_channel.send(cmd).await.is_ok();
             assert_eq!(ok, true);
+            let resp = response_channel
+                .recv()
+                .await
+                .expect("should respond to status request");
+            println!("[t] status response: {}", resp);
+            assert!(resp.len() > 6);
 
             let cmd = Command::Shutdown;
             let ok = request_channel.send(cmd).await.is_ok();

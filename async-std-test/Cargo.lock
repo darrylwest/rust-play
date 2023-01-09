@@ -211,8 +211,11 @@ dependencies = [
  "anyhow",
  "async-channel",
  "async-std",
+ "fastrand",
  "log",
  "log4rs",
+ "serde",
+ "serde_json",
  "surf",
 ]
 
@@ -1410,6 +1413,7 @@ version = "1.0.91"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "877c235533714907a8c2464236f5c4b2a17262ef1bd71f38f35ea592c8da6883"
 dependencies = [
+ "indexmap",
  "itoa",
  "ryu",
  "serde",
