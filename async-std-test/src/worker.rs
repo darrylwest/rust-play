@@ -4,10 +4,10 @@ use crate::JsonString;
 use anyhow::Result;
 use async_channel::bounded;
 use async_channel::{Receiver, Sender};
+use domain_keys::keys::RouteKey;
 use log::*;
 use serde::{Deserialize, Serialize};
 use service_uptime::Uptime;
-use std::iter::repeat_with;
 
 #[derive(Debug, Clone)]
 pub enum Command {
@@ -43,7 +43,7 @@ impl Worker {
     /// create and start a new worker.
     pub async fn new() -> Worker {
         let uptime = Uptime::new();
-        let id: String = repeat_with(fastrand::alphanumeric).take(10).collect();
+        let id = RouteKey::create();
 
         // this is for the worker struct
         let wid = id.clone();
@@ -80,7 +80,7 @@ impl Worker {
 
     /// return the number of seconds this worker has been alive
     pub fn get_uptime(&self) -> String {
-        self.uptime.get_uptime()
+        self.uptime.to_string()
     }
 
     pub fn get_update_seconds(&self) -> u64 {
@@ -97,6 +97,7 @@ impl Worker {
 // the handler loop
 async fn handler(id: String, rx: Receiver<Command>) -> Result<()> {
     // let mut meta: Vec<Pairs>
+    let uptime = Uptime::new();
     let mut state = WorkerState::Idle;
     let mut error_count = 0;
     // now read and respond to requests
@@ -107,7 +108,7 @@ async fn handler(id: String, rx: Receiver<Command>) -> Result<()> {
                 let status = WorkerStatus {
                     status: "ok".to_string(),
                     state: state.clone(),
-                    uptime: String::new(),
+                    uptime: uptime.to_string(),
                     error_count,
                     // meta,
                 };
@@ -148,7 +149,7 @@ mod tests {
             let worker = Worker::new().await;
             println!("worker: {:?}", worker);
 
-            assert_eq!(worker.id().len(), 10);
+            assert_eq!(worker.id().len(), 16);
             assert_eq!(worker.get_update_seconds(), 0);
             println!("{}", worker.get_uptime());
 

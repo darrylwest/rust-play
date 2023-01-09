@@ -206,7 +206,7 @@ dependencies = [
 
 [[package]]
 name = "async-std-test"
-version = "0.2.3"
+version = "0.2.4"
 dependencies = [
  "anyhow",
  "async-channel",
@@ -1602,8 +1602,11 @@ dependencies = [
 
 [[package]]
 name = "service_uptime"
-version = "0.2.5"
-source = "git+https://github.com/darrylwest/service-uptime.git#e692c97ef522af27eb80e875af3beec32024265a"
+version = "0.3.2"
+source = "git+https://github.com/darrylwest/service-uptime.git#8214a2b12ff61bfb2ea59321747571c6f90a8566"
+dependencies = [
+ "serde",
+]
 
 [[package]]
 name = "sha1"
