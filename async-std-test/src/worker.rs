@@ -1,8 +1,9 @@
 /// general purpose worker
 // use anyhow::Result;
+use anyhow::Result;
 use async_channel::bounded;
-use async_channel::Sender;
-use log::{error, info};
+use async_channel::{Receiver, Sender};
+use log::*;
 use serde::{Deserialize, Serialize};
 use std::iter::repeat_with;
 use std::time::Instant;
@@ -38,6 +39,7 @@ pub struct WorkerStatus {
     error_count: u16,
 }
 
+//
 impl Worker {
     /// create and start a new worker.
     pub async fn new() -> Worker {
@@ -49,54 +51,21 @@ impl Worker {
 
         info!("starting up worker, id: {}", id);
 
-        let (tx, request_receiver) = bounded(250);
+        let (request_tx, request_receiver) = bounded(250);
 
+        // run the handler loop as a background task
         async_std::task::spawn(async move {
-            // let mut meta: Vec<Pairs>
-            let mut state = WorkerState::Idle;
-            let mut error_count = 0;
-            // now read and respond to requests
-            while let Ok(cmd) = request_receiver.recv().await {
-                info!("recv cmd: {:?}", cmd);
-                match cmd {
-                    Command::Status(tx) => {
-                        let status = WorkerStatus {
-                            status: "ok".to_string(),
-                            state: state.clone(),
-                            uptime: String::new(),
-                            error_count,
-                            // meta,
-                        };
-
-                        let msg = match serde_json::to_string(&status) {
-                            Ok(js) => js,
-                            Err(e) => {
-                                format!(r#"{}"status":"json parse error: {:?}"{}"#, "{", e, "}\n")
-                            }
-                        };
-
-                        info!("status response: {}", msg);
-                        if tx.send(msg).await.is_err() {
-                            error_count += 1;
-                            error!("error returning status to channel: {:?}", tx);
-                        }
-                    }
-                    Command::Shutdown => {
-                        state = WorkerState::Shutdown;
-                        info!("worker id: {}, state: {:?}", id, state);
-                        break;
-                    }
-                }
+            match handler(id.clone(), request_receiver).await {
+                Ok(()) => info!("worker handler exit for worker id: {}", id),
+                Err(e) => error!("worker exex with error: {:?}", e),
             }
-
-            request_receiver.close();
         });
 
         // define here, before the async loop to ensure it does not get moved
         let worker = Worker {
             id: wid,
             started_at,
-            request_tx: tx,
+            request_tx,
         };
 
         info!("worker created: {:?}", &worker);
@@ -124,6 +93,50 @@ impl Worker {
     pub fn request_channel(&self) -> Sender<Command> {
         self.request_tx.clone()
     }
+}
+
+// the handler loop
+async fn handler(id: String, rx: Receiver<Command>) -> Result<()> {
+    // let mut meta: Vec<Pairs>
+    let mut state = WorkerState::Idle;
+    let mut error_count = 0;
+    // now read and respond to requests
+    while let Ok(cmd) = rx.recv().await {
+        info!("recv cmd: {:?}", cmd);
+        match cmd {
+            Command::Status(tx) => {
+                let status = WorkerStatus {
+                    status: "ok".to_string(),
+                    state: state.clone(),
+                    uptime: String::new(),
+                    error_count,
+                    // meta,
+                };
+
+                let msg = match serde_json::to_string(&status) {
+                    Ok(js) => js,
+                    Err(e) => {
+                        format!(r#"{}"status":"json parse error: {:?}"{}"#, "{", e, "}\n")
+                    }
+                };
+
+                info!("status response: {}", msg);
+                if tx.send(msg).await.is_err() {
+                    error_count += 1;
+                    error!("error returning status to channel: {:?}", tx);
+                }
+            }
+            Command::Shutdown => {
+                state = WorkerState::Shutdown;
+                info!("worker id: {}, state: {:?}", id, state);
+                break;
+            }
+        }
+    }
+
+    rx.close();
+
+    Ok(())
 }
 
 #[cfg(test)]
