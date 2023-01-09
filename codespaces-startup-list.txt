@@ -1,0 +1,11 @@
+* set -o vi
+* sudo apt update && sudo apt upgrade -y
+
+* curl --proto '=https' --tlsv1.2 https://sh.rustup.rs -sSf | sh -s -- -y
+* logout/login or dot in ~/.bashrc 
+* cargo --version
+* cargo install lsd
+* vi ~/.bashrc
+   * set -o vi
+   * copy aliases
+
