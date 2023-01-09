@@ -6,8 +6,8 @@ use async_channel::bounded;
 use async_channel::{Receiver, Sender};
 use log::*;
 use serde::{Deserialize, Serialize};
+use service_uptime::Uptime;
 use std::iter::repeat_with;
-use std::time::Instant;
 
 #[derive(Debug, Clone)]
 pub enum Command {
@@ -26,7 +26,7 @@ pub enum WorkerState {
 #[derive(Debug, Clone)]
 pub struct Worker {
     id: String,
-    started_at: Instant,
+    uptime: Uptime,
     request_tx: Sender<Command>,
 }
 
@@ -42,7 +42,7 @@ pub struct WorkerStatus {
 impl Worker {
     /// create and start a new worker.
     pub async fn new() -> Worker {
-        let started_at = Instant::now();
+        let uptime = Uptime::new();
         let id: String = repeat_with(fastrand::alphanumeric).take(10).collect();
 
         // this is for the worker struct
@@ -63,7 +63,7 @@ impl Worker {
         // define here, before the async loop to ensure it does not get moved
         let worker = Worker {
             id: wid,
-            started_at,
+            uptime,
             request_tx,
         };
 
@@ -79,12 +79,12 @@ impl Worker {
     }
 
     /// return the number of seconds this worker has been alive
-    pub fn get_uptime(&self) -> u64 {
-        let secs = self.started_at.elapsed().as_secs();
+    pub fn get_uptime(&self) -> String {
+        self.uptime.get_uptime()
+    }
 
-        info!("uptime {} seconds", secs);
-
-        secs
+    pub fn get_update_seconds(&self) -> u64 {
+        self.uptime.get_uptime_seconds()
     }
 
     /// This is invoked by the client to enable sending command request to
@@ -149,7 +149,8 @@ mod tests {
             println!("worker: {:?}", worker);
 
             assert_eq!(worker.id().len(), 10);
-            assert_eq!(worker.get_uptime(), 0);
+            assert_eq!(worker.get_update_seconds(), 0);
+            println!("{}", worker.get_uptime());
 
             let (send, response_channel) = async_channel::unbounded();
 
