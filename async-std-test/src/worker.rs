@@ -3,6 +3,7 @@
 use async_channel::bounded;
 use async_channel::Sender;
 use log::{error, info};
+use serde::{Deserialize, Serialize};
 use std::iter::repeat_with;
 use std::time::Instant;
 
@@ -14,7 +15,7 @@ pub enum Command {
     Shutdown,
 }
 
-#[derive(Debug, Default, Clone)]
+#[derive(Debug, Default, Clone, Serialize, Deserialize)]
 pub enum WorkerState {
     #[default]
     Idle,
@@ -27,6 +28,14 @@ pub struct Worker {
     id: String,
     started_at: Instant,
     request_tx: Sender<Command>,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct WorkerStatus {
+    status: String,
+    state: WorkerState,
+    uptime: String,
+    error_count: u16,
 }
 
 impl Worker {
@@ -43,6 +52,7 @@ impl Worker {
         let (tx, request_receiver) = bounded(250);
 
         async_std::task::spawn(async move {
+            // let mut meta: Vec<Pairs>
             let mut state = WorkerState::Idle;
             let mut error_count = 0;
             // now read and respond to requests
@@ -50,14 +60,20 @@ impl Worker {
                 info!("recv cmd: {:?}", cmd);
                 match cmd {
                     Command::Status(tx) => {
-                        let msg = format!(
-                            r#"{}"status":"{}","state":"{:?}","error_count":{}{}"#,
-                            "{",
-                            "Ok",
-                            state.clone(),
+                        let status = WorkerStatus {
+                            status: "ok".to_string(),
+                            state: state.clone(),
+                            uptime: String::new(),
                             error_count,
-                            "}\n",
-                        );
+                            // meta,
+                        };
+
+                        let msg = match serde_json::to_string(&status) {
+                            Ok(js) => js,
+                            Err(e) => {
+                                format!(r#"{}"status":"json parse error: {:?}"{}"#, "{", e, "}\n")
+                            }
+                        };
 
                         info!("status response: {}", msg);
                         if tx.send(msg).await.is_err() {
