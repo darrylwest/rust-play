@@ -7,7 +7,6 @@ use log::*;
 use serde::{Deserialize, Serialize};
 use std::iter::repeat_with;
 use std::time::Instant;
-
 use crate::JsonString;
 
 #[derive(Debug, Clone)]
