@@ -9,3 +9,36 @@
    * set -o vi
    * copy aliases
 
+#
+# @(#)local.profile 1.6 2020.05.12
+#
+
+# alias vi=/usr/local/bin/nvim
+
+################################################################################
+alias hi='history'
+alias rm='/bin/rm -i'
+alias lc='ls -c'
+alias l='lsd -lA'
+alias ll='lsd -la'
+alias ut='exit'
+alias lh='lsd -l -t'
+alias ts='date "+%s"'
+alias dt='tput sc && tput clear && tput cup 1 0 && figlet -w 300 -f big $(date +"%A, %d-%b-%Y  %H : %m : %S") && tput rc'
+
+function cdl { cd $1; lsd -la; }
+
+if which bat > /dev/null
+then
+  alias cat=bat
+fi
+
+#################################################################################
+# git aliases
+alias gst='git status'
+alias gbr='git branch -a'
+alias gco='git checkout'
+alias gcom='git commit'
+alias gac='git add . ; git commit -v'
+alias gpull='git pull'
+alias gpush='git push'
