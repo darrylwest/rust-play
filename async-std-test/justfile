@@ -1,0 +1,40 @@
+
+alias t := test
+alias ta := test-all
+alias b := build
+alias rel := release
+
+alias mfa := multi-file-reader
+
+# run the standard tests
+test:
+    clear
+    cargo test
+
+# run the standard tests + clippy and fmt
+test-all:
+    clear
+    cargo test && cargo fmt && cargo clippy
+
+# build the debug target
+build:
+    clear
+    cargo build
+
+# run the default bin
+run:
+    cargo run
+
+# run the multi-file-reader
+multi-file-reader:
+    cargo run --bin multi-file-reader
+
+# build the release
+release:
+    clear
+    cargo build --release --bins
+
+# watch the current folders and run tests when a file is changed
+watch:
+    watchexec -d 500 -c -e rs cargo test && cargo fmt && cargo clippy
+
