@@ -17,11 +17,11 @@ fn main() {
   let g: Box<&str> = Box::new("this is a box test");
 
 
-  println!("type of a: {} -> {}", type_of(a), a);
-  println!("type of b: {} -> {}", type_of(b), b);
-  println!("type of c: {} -> {}", type_of(c), c);
-  println!("type of d: {} -> {}", type_of(d), d);
-  println!("type of e: {} -> {}", type_of(e), e);
-  println!("type of f: {} -> {}", type_of(f.clone()), f.clone());
-  println!("type of g: {} -> {}", type_of(g.clone()), g.clone());
+  println!("type of a: {} -> {}", a, type_of(a));
+  println!("type of b: {} -> {}", b, type_of(b));
+  println!("type of c: {} -> {}", c, type_of(c));
+  println!("type of d: {} -> {}", d, type_of(d));
+  println!("type of e: {} -> {}", e, type_of(e));
+  println!("type of f: {} -> {}", f.clone(), type_of(f.clone()));
+  println!("type of g: {} -> {}", g.clone(), type_of(g.clone()));
 }
