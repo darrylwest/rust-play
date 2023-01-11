@@ -5,6 +5,7 @@
 
 set -eu
 
-FILE=async-command.rs
+FILE=json-parser.rs
+PARAMS="data/user.json"
 
-watchexec -d 500 -c -e rs ./$FILE
+watchexec -d 500 -c -e rs ./$FILE $PARAMS
