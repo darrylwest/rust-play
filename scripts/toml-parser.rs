@@ -1,10 +1,13 @@
 #!/usr/bin/env rust-script
 //! Use serde json to parse an un-typed object and display the contents
 //! 
+//! on mac, binaries are cached in $HOME/Library/Caches/rust-script/binaries/release/
+//!
 //! ```cargo
 //! [dependencies]
 //! anyhow = "1"
 //! toml = "0.5"
+//! ```
 //! 
 
 use toml::value::Value;
@@ -18,6 +21,8 @@ use std::{
 };
 
 fn main() -> Result<()> {
+    // println!("{:?}", env::args().collect::<String>()); // shows the full path to binary
+
     let args: Vec<String> = env::args().skip(1).collect();
     if args.is_empty() {
         println!("Error! Use {} file [file, file, ...]", "toml-parser");
