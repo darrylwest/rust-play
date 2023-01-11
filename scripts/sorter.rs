@@ -1,3 +1,5 @@
+#!/usr/bin/env rust-script
+
 fn main() {
     let slice: &str = &ransom_note;
     let mut note: Vec<char> = slice.chars().collect();
