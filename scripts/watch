@@ -5,7 +5,7 @@
 
 set -eu
 
-FILE=json-parser.rs
-PARAMS="data/user.json"
+FILE=toml-parser.rs
+PARAMS="data/sample.toml"
 
 watchexec -d 500 -c -e rs ./$FILE $PARAMS

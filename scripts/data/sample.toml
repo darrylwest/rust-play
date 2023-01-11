@@ -1,0 +1,4 @@
+name = "mesh-client"
+hosts = [ "10.0.1.151", "10.0.1.142" ]
+port = 22200
+logging_config = "config/console.yaml"
