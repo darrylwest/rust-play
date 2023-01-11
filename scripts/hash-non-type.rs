@@ -19,13 +19,16 @@ fn main() {
     let v2: Box<dyn Any> = Box::new("this is a test");
     let v3: Box<dyn Any> = Box::new("this is a test".to_string());
     let v4: Box<dyn Any> = Box::new(vec!["a", "b", "c"]);
-    let v5: Box<dyn Any> = Box::new(p); 
+    let v5: Box<dyn Any> = Box::new(p);
 
-    println!("v1 is i32: {}", (&*v1).type_id() == TypeId::of::<i32>());
-    println!("v2 is &str: {}", (&*v2).type_id() == TypeId::of::<&str>());
+    let t_i32 = TypeId::of::<i32>();
+    let t_str = TypeId::of::<&str>();
+
+    println!("v1 is i32: {}", (&*v1).type_id() == t_i32);
+    println!("v2 is &str: {}", (&*v2).type_id() == t_str);
     println!("v3 is String: {}", (&*v3).type_id() == TypeId::of::<String>());
-    println!("v4 is vec: {}", (&*v4).type_id() == TypeId::of::<&str>());
-    println!("v5 is vec: {}", (&*v5).type_id() == TypeId::of::<Person>());
+    println!("v4 is vec: {}", (&*v4).type_id() == TypeId::of::<Vec<&str>>());
+    println!("v5 is Person: {}", (&*v5).type_id() == TypeId::of::<Person>());
 
 
     hmap.insert(create_key(), v1);
@@ -35,8 +38,16 @@ fn main() {
 
     println!("hmap: {:?}", hmap);
 
-    for (k, v) in hmap.iter() {
-        println!("{} {:?}", k, (&v));
+    for (k, v) in hmap.into_iter() {
+        let t_id = (&*v).type_id();
+
+        if t_id == t_i32 {
+            if let Ok(n) = v.downcast::<i32>() {
+                println!("k: {}, v: {}", k, n);
+            }
+        } else {
+            println!("what?");
+        }
     }
 
 }
