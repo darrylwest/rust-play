@@ -5,6 +5,6 @@
 
 set -eu
 
-FILE=hash-non-type.rs
+FILE=async-command.rs
 
 watchexec -d 500 -c -e rs ./$FILE
