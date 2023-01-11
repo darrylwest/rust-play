@@ -5,6 +5,6 @@
 
 set -eu
 
-FILE=trait_tests.rs
+FILE=hash-non-type.rs
 
 watchexec -d 500 -c -e rs ./$FILE
