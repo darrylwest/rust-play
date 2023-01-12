@@ -5,7 +5,8 @@
 
 set -eu
 
-FILE=toml-parser.rs
-PARAMS="data/sample.toml"
+FILE=$1
+
+PARAMS=""
 
 watchexec -d 500 -c -e rs ./$FILE $PARAMS
