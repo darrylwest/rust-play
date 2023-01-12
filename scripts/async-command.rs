@@ -1,8 +1,16 @@
 #!/usr/bin/env rust-script
-// cargo-deps: async-io, async-process, futures-lite
+// cargo-deps: async-io, async-process, futures, async-std
+//
+//! demonstrates how to run system commands concurrently and
+//! waif for completion in a single join function. join, and
+//! join3 .. join5 plus join_all from sutures::future.
+//!
+//! @see https://docs.rs/async-process/1.6.0/async_process/
+//! @see https://docs.rs/futures/0.3.5/futures/future/struct.JoinAll.html
 
+use async_std::task;
 use async_process::{Command, Stdio};
-use futures_lite::{future, io::BufReader, prelude::*};
+use futures::{future, io::BufReader, prelude::*};
 use std::time::{SystemTime, UNIX_EPOCH};
 
 async fn find(path: &str) -> Vec<String> {
@@ -29,15 +37,19 @@ async fn find(path: &str) -> Vec<String> {
 
 fn main() {
     async_io::block_on(async {
-        let fut2 = find("../tm-cli/src");
+        let j3 = task::spawn(find("/tmp/"));
+        let j1 = task::spawn(find("../scripts"));
+        let j2 = task::spawn(find("../tm-cli/src"));
 
-        let fut1 = find("../scripts");
+        let jlist = future::join3(j1, j2, j3);
+        let (r1, r2, r3) = jlist.await;
 
+        println!("{:?}", r1);
+        println!("{:?}", r2);
 
-        let results = future::zip(fut2, fut1).await;
-
-        let mut full = results.0;
-        full.extend(results.1);
+        let mut full = r1;
+        full.extend(r2);
+        full.extend(r3);
 
         full.sort();
 
