@@ -5,6 +5,10 @@
 //! Example Use: json-encode.rs id=23434 email=flarb age=44
 //! this creates a json string: { "email": "flarb", "age": "44", "id": "rjZ17fEKPcKSoBrG" }
 //!
+//! A better approach would be to use a json mustash template and single values on the commad
+//! line.  That would solve the type issues. But in any case this provides an easy way to create
+//! key/value pairs in a json starter format that can be edited or turned into a template faster
+//! than creating one from scratch. 
 //! 
 //! ```cargo
 //! [dependencies]
