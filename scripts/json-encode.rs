@@ -1,5 +1,7 @@
 #!/usr/bin/env rust-script
-//! Use serde json to encode a HashMap
+//! Use serde json to encode a HashMap (HashBrown) of <String, String>.  I tried to
+//! use Any but serde rejects encoding that, so...
+//!
 //! 
 //! ```cargo
 //! [dependencies]
@@ -10,6 +12,7 @@
 
 use anyhow::Result;
 use std::{
+    env,
     fs::File,
     io::prelude::*,
 };
@@ -32,10 +35,27 @@ fn create_user() -> HashMap<String, String> {
     user
 }
 
+fn parse_args(args: Vec<String>) -> Result<HashMap<String, String>> {
+    let mut map: HashMap<String, String> = HashMap::new();
+
+    // now parse through the key=value pairs and insert into hashmap
+    for arg in args {
+        println!("{}", arg);
+    }
+
+    Ok(map)
+}
+
 fn main() -> Result<()> {
+
+    let args: Vec<String> = env::args().skip(1).collect();
+    let map: HashMap<String, String> = if args.is_empty() {
+        create_user()
+    } else {
+        parse_args(args).unwrap()
+    };
     
-    let user = create_user();
-    let json = serde_json::to_string_pretty(&user)?;
+    let json = serde_json::to_string_pretty(&map)?;
 
     println!("{}", json);
 
@@ -47,3 +67,12 @@ fn main() -> Result<()> {
     Ok(())
 }
 
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn parse_args() {
+        assert!(true);
+    }
+}
