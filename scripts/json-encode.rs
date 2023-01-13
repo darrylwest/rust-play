@@ -2,6 +2,9 @@
 //! Use serde json to encode a HashMap (HashBrown) of <String, String>.  I tried to
 //! use Any but serde rejects encoding that, so...
 //!
+//! Example Use: json-encode.rs id=23434 email=flarb age=44
+//! this creates a json string: { "email": "flarb", "age": "44", "id": "rjZ17fEKPcKSoBrG" }
+//!
 //! 
 //! ```cargo
 //! [dependencies]
@@ -39,8 +42,13 @@ fn parse_args(args: Vec<String>) -> Result<HashMap<String, String>> {
     let mut map: HashMap<String, String> = HashMap::new();
 
     // now parse through the key=value pairs and insert into hashmap
-    for arg in args {
-        println!("{}", arg);
+    for arg in args.iter() {
+        let v: Vec<_> = arg.split("=").collect();
+        let (key, value) = (v[0].to_string(), v[1].to_string());
+
+        // println!("{}{}", key, value);
+
+        map.insert(key, value);
     }
 
     Ok(map)
