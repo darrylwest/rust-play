@@ -8,9 +8,13 @@ edition = "2021"
 [dependencies]
 anyhow = "1.0.68"
 argon2 = { version = "0.4.1", features = ["parallel", "rayon"] }
+async-channel = "1.8.0"
+async-io = "1.12.0"
+async-process = "1.6.0"
 async-std = { version = "1.12.0", features = ["async-attributes", "async-process", "attributes", "futures-core" ] }
 chrono = { version = "0.4.23", features = ["serde"] }
 fastrand = "1.8.0"
+futures = "0.3.25"
 hashbrown = { version = "0.13.2", features = ["rayon"] }
 rand_core = { version = "0.6.4", features = ["serde"] }
 rayon = "1.6.1"

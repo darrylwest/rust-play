@@ -1,16 +1,24 @@
 use anyhow::Result;
 
-fn main() -> Result<()> {
+fn rand_letters() {
     let v = vec!["a", "b", "c", "d", "e", "f"];
 
     for _ in 0..10 {
         let n = fastrand::usize(0..v.len());
         let f = v[n];
 
-        print!("{}", f);
+        if fastrand::bool() {
+            print!("{}", f);
+        } else {
+            print!("{}", f.to_uppercase());
+        }
     }
 
-    println!("");
+    println!();
+}
+
+fn main() -> Result<()> {
+    rand_letters();
 
     Ok(())
 }
