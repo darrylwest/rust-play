@@ -24,3 +24,5 @@ async-process:
 fastrand:
     cargo run --bin fastrand-test
 
+chacha:
+    cargo run --bin chacha-test
