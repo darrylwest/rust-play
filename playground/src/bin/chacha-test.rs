@@ -15,7 +15,7 @@ pub struct ChaChaKeys {
     pub nonce: GenericArray<u8, U12>,
 }
 
-pub fn encrypt(cck: ChaChaKeys, text: &str) -> Result<Vec<u8>> {
+pub fn encrypt(cck: &ChaChaKeys, text: &str) -> Result<Vec<u8>> {
 
     let ptext = text.as_bytes();
     let cipher = ChaCha20Poly1305::new(&cck.key);
@@ -24,13 +24,17 @@ pub fn encrypt(cck: ChaChaKeys, text: &str) -> Result<Vec<u8>> {
     Ok(ciphertext)
 }
 
-pub fn decrypt(cck: ChaChaKeys, ciphertext: Vec<u8>) -> Result<String> {
-    let text = String::new();
+pub fn decrypt(cck: &ChaChaKeys, ciphertext: Vec<u8>) -> Result<Vec<u8>> {
+    let cipher = ChaCha20Poly1305::new(&cck.key);
+    let vtext = cipher.decrypt(&cck.nonce, ciphertext.as_ref()).unwrap();
 
-    Ok(text)
+    Ok(vtext)
 }
 
 fn main() -> Result<()> {
+    let text = "my plain text message for the chacha group";
+    println!("original: {}", text);
+
     let key = ChaCha20Poly1305::generate_key(&mut OsRng);
     let nonce = ChaCha20Poly1305::generate_nonce(&mut OsRng); // 96-bits; unique per message
 
@@ -42,9 +46,15 @@ fn main() -> Result<()> {
     let json = serde_json::to_string(&cck)?;
     println!("{}", json);
 
-    let text = "my plain text message for the chacha group";
-    let ciphertext = encrypt(cck, text)?;
+
+    let ciphertext = encrypt(&cck, text)?;
     println!("{:?}", ciphertext);
+
+    let vtext = decrypt(&cck, ciphertext)?;
+    let stext = String::from_utf8(vtext)?;
+    println!("decrypted: {}", stext);
+
+    assert_eq!(text, stext);
 
     /*
 
