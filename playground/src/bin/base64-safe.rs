@@ -1,12 +1,10 @@
-
-
 use anyhow::Result;
 use std::env;
 
 /// a url safe base64 encode/decode with no padding
 pub mod url_b64 {
     use anyhow::Result;
-    use base64::{Engine as _, engine::general_purpose};
+    use base64::{engine::general_purpose, Engine as _};
 
     pub fn encode(data: &[u8]) -> String {
         general_purpose::URL_SAFE_NO_PAD.encode(data)
