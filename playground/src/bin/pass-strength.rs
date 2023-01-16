@@ -1,10 +1,10 @@
 //! calc the password strength
-//! 
+//!
 
 use anyhow::Result;
-use zxcvbn::zxcvbn;
-use std::env;
 use log::*;
+use std::env;
+use zxcvbn::zxcvbn;
 
 fn main() -> Result<()> {
     let args: Vec<String> = env::args().skip(1).collect();
