@@ -12,6 +12,7 @@ async-channel = "1.8.0"
 async-io = "1.12.0"
 async-process = "1.6.0"
 async-std = { version = "1.12.0", features = ["async-attributes", "async-process", "attributes", "futures-core" ] }
+base64 = "0.21.0"
 chacha20poly1305 = { version = "0.10.1", features = ["stream"] }
 chrono = { version = "0.4.23", features = ["serde"] }
 fastrand = "1.8.0"
