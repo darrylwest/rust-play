@@ -30,7 +30,7 @@ pub mod chacha {
         if let Ok(ciphertext) = cipher.encrypt(&cck.nonce, blob.as_ref()) {
             Ok(ciphertext)
         } else {
-            Err(anyhow!("broken cha cha"))
+            Err(anyhow!("broken cha cha encrypt"))
         }
     }
 
@@ -41,7 +41,7 @@ pub mod chacha {
         if let Ok(vtext) = cipher.decrypt(&cck.nonce, ciphertext.as_ref()) {
             Ok(vtext)
         } else {
-            Err(anyhow!("broken cha cha"))
+            Err(anyhow!("broken cha cha decrypt"))
         }
     }
 }
