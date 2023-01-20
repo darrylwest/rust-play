@@ -1,4 +1,5 @@
 use anyhow::Result;
+use clap::Parser;
 
 pub mod chacha {
     use anyhow::{anyhow, Result};
@@ -46,7 +47,36 @@ pub mod chacha {
     }
 }
 
+#[derive(Debug, Default, Parser)]
+struct Cli {
+    /// name the plain text file
+    #[clap(short, long, value_parser)]
+    plain: String,
+    /// name the cipher text file
+    #[clap(short, long, value_parser)]
+    cipher: String,
+    /// name the key/nonce file
+    #[clap(short, long, value_parser)]
+    key_file: String,
+    /// set true to encrypt
+    #[clap(short, long, value_parser)]
+    encrypt: bool,
+    /// set true to decrypt
+    #[clap(short, long, value_parser)]
+    decrypt: bool,
+}
+
+impl Cli {
+    fn new() -> Cli {
+        Cli::parse()
+    }
+}
+
 fn main() -> Result<()> {
+    let cli = Cli::new();
+
+    println!("{:?}", cli);
+
     let text = "my plain text message for the chacha group";
     let blob = text.as_bytes();
     println!("original: {}", text);
