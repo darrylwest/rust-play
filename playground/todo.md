@@ -4,6 +4,8 @@ Create separate encode / decode switches to enable chacha saving keys/nonce.
 
 ## CLI
 
+chacha --encrypt --plain data/plain.txt  --cipher data/cipher.txt --key-file data/keys
+
 chacha --encrypt --key-file filename --plain-text filename --cipher-text filename
 chacha --decrypt --key-file filename --cipher-test filename --plain-test filename
 
