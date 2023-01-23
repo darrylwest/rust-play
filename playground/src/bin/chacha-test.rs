@@ -1,5 +1,7 @@
 use anyhow::Result;
 use clap::Parser;
+use std::{fs::File, io::{Read, Write}};
+
 
 pub mod chacha {
     use anyhow::{anyhow, Result};
@@ -72,28 +74,60 @@ impl Cli {
     }
 }
 
+fn read_file(filename: String) -> Result<Vec<u8>> {
+    let mut file = File::open(filename)?;
+    let mut buf: Vec<u8> = vec![];
+
+    file.read_to_end(buf)?;
+
+    Ok(buf)
+}
+
+fn write_file(filename: String, buf: Vec<u8>) -> Result<()> {
+    let byte_count = 0_usize;
+
+    let mut file = File::open(filename)?;
+    file.write_all(&buf)?;
+
+    Ok(())
+}
+
+fn do_encrypt(cli: Cli, cck: Keys) -> Result<()> {
+    let plain_text = read_file(cli.plain)?;
+
+
+    Ok(())
+}
+
 fn main() -> Result<()> {
     let cli = Cli::new();
 
     println!("{:?}", cli);
 
-    let text = "my plain text message for the chacha group";
-    let blob = text.as_bytes();
-    println!("original: {}", text);
+    if cli.encrypt {
+        let cck = chacha::generate_keys();
+        let json = serde_json::to_string(&cck)?;
+        // write the keys to file
 
-    let cck = chacha::generate_keys();
+        // read the input file
+        // encrypt
+        // write encrypted data to output file
+    } else {
+        // read the encrypted file
+        // read the keys
 
-    let json = serde_json::to_string(&cck)?;
-    println!("{}", json);
+        // decrypt
+        // write to stdout or file
+        let ciphertext = chacha::encrypt(&cck, blob)?;
+        println!("{:?}", ciphertext);
 
-    let ciphertext = chacha::encrypt(&cck, blob)?;
-    println!("{:?}", ciphertext);
+        let vtext = chacha::decrypt(&cck, ciphertext)?;
+        let stext = String::from_utf8(vtext)?;
+        println!("decrypted: {}", stext);
 
-    let vtext = chacha::decrypt(&cck, ciphertext)?;
-    let stext = String::from_utf8(vtext)?;
-    println!("decrypted: {}", stext);
+        // assert_eq!(text, stext);
+    }
 
-    assert_eq!(text, stext);
 
     Ok(())
 }
