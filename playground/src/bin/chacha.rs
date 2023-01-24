@@ -51,6 +51,7 @@ pub mod chacha {
 }
 
 #[derive(Debug, Default, Parser)]
+#[command(author, version, about, long_about = None)]
 struct Cli {
     /// name the plain text file
     #[clap(short, long, value_parser)]
@@ -134,7 +135,6 @@ fn main() -> Result<()> {
         write_file(cli.plain.clone(), vtext)?;
         println!("decrypted text written to : {}", &cli.plain);
     }
-
 
     Ok(())
 }
