@@ -124,17 +124,15 @@ fn main() -> Result<()> {
         write_file(cli.cipher.clone(), ciphertext)?;
         println!("encrypted file saved to {}", cli.cipher);
     } else {
-        // read the encrypted file
-        // read the keys
+        println!("read existing key from {}", &cli.key_file);
+        let json = read_file(cli.key_file)?;
+        let cck = serde_json::from_slice(&json)?;
 
-        // decrypt
-        // write to stdout or file
+        let ciphertext = read_file(cli.cipher)?;
+        let vtext = chacha::decrypt(&cck, ciphertext)?;
 
-        // let vtext = chacha::decrypt(&cck, ciphertext)?;
-        // let stext = String::from_utf8(vtext)?;
-        // println!("decrypted: {}", stext);
-
-        // assert_eq!(text, stext);
+        write_file(cli.plain.clone(), vtext)?;
+        println!("decrypted text written to : {}", &cli.plain);
     }
 
 
