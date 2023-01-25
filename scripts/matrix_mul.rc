@@ -1,0 +1,33 @@
+#!/usr/bin/env rust-script
+
+fn main() {
+    println!(r#"
+     --     --     --    --     --        --
+    | 1  2  3 |   |  7   8 |   | r1c1  r1c2 |
+    | 4  5  6 | * |  9  10 | = | r2c1  r2c2 |
+     --     --    | 11  12 |    --        --
+                   --    --
+    "#);
+
+    let r1 = [1, 2, 3];
+    let r2 = [4, 5, 6];
+
+    let c1 = [7, 9, 11];
+    let c2 = [8, 10, 12];
+
+    let mut r1c1 = 0;
+    let mut r1c2 = 0;
+    let mut r2c1 = 0;
+    let mut r2c2 = 0;
+
+    for n in 0..r1.len() {
+        r1c1 += r1[n] * c1[n];
+        r2c1 += r2[n] * c1[n];
+
+        r1c2 += r1[n] * c2[n];
+        r2c2 += r2[n] * c2[n];
+    }
+
+    println!("r1c1: {r1c1} r1c2: {r1c2}");
+    println!("r2c1: {r2c1} r2c2: {r2c2}");
+}
