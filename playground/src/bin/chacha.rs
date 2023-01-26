@@ -1,8 +1,10 @@
 use anyhow::Result;
 use clap::Parser;
-use std::{fs::File, io::{Read, Write}};
 use std::path::Path;
-
+use std::{
+    fs::File,
+    io::{Read, Write},
+};
 
 pub mod chacha {
     use anyhow::{anyhow, Result};
@@ -114,7 +116,6 @@ fn main() -> Result<()> {
 
             keys
         };
-
 
         // read the input file
         let blob = read_file(cli.plain)?;
