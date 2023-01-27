@@ -3,6 +3,7 @@
 fn main() {
     let a = 2;
     let b = 3;
-    let c = | a | a | b;
+    let c = | x | b | a | x;
+
     println!("{}", c(1));
 }
