@@ -1,9 +1,13 @@
 #!/usr/bin/env rust-script
+// cargo-deps: anyhow
 
-use std::io::prelude::*;
-use std::fs::File;
+use anyhow::Result;
+use std::{
+    io::Write,
+    fs::File,
+};
 
-fn main() -> std::io::Result<()> {
+fn main() -> Result<()> {
     let filename = "/tmp/my-foo-file.txt";
     let mut buf = File::create(filename)?;
 
