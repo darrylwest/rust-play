@@ -139,3 +139,17 @@ fn main() -> Result<()> {
 
     Ok(())
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn generate_keys() {
+        for _ in 0..10 {
+            let keys = chacha::generate_keys();
+            let json = serde_json::to_string(&keys).unwrap();
+            println!("{}", json);
+        }
+    }
+}
