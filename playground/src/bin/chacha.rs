@@ -146,7 +146,7 @@ mod tests {
 
     #[test]
     fn generate_keys() {
-        for _ in 0..10 {
+        for _ in 0..100 {
             let keys = chacha::generate_keys();
             let json = serde_json::to_string(&keys).unwrap();
             println!("{}", json);
