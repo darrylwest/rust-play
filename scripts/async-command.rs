@@ -2,7 +2,7 @@
 // cargo-deps: async-io, async-process, futures, async-std
 //
 //! demonstrates how to run system commands concurrently and
-//! waif for completion in a single join function. join, and
+//! wait for completion in a single join function. join, and
 //! join3 .. join5 plus join_all from sutures::future.
 //!
 //! @see https://docs.rs/async-process/1.6.0/async_process/
@@ -37,7 +37,7 @@ async fn find(path: &str) -> Vec<String> {
 
 fn main() {
     async_io::block_on(async {
-        let j3 = task::spawn(find("/tmp/"));
+        let j3 = task::spawn(find("/tmp"));
         let j1 = task::spawn(find("../scripts"));
         let j2 = task::spawn(find("../tm-cli/src"));
 

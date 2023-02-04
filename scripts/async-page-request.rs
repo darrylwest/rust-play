@@ -5,7 +5,7 @@ use async_std::io::prelude::*;
 use async_std::net;
 use async_std::task;
 
-async fn cheapo_request(host: &str, port: u16, path: &str) -> std::io::Result<String> {
+async fn socket_request(host: &str, port: u16, path: &str) -> std::io::Result<String> {
     println!("waiting on page response from {}:{}", host, port);
 
     let mut socket = net::TcpStream::connect((host, port)).await?;
@@ -22,7 +22,7 @@ async fn cheapo_request(host: &str, port: u16, path: &str) -> std::io::Result<St
 
 fn main() -> std::io::Result<()> {
 
-    let response = task::block_on(cheapo_request("raincitysoftware.com", 80, "/"))?;
+    let response = task::block_on(socket_request("raincitysoftware.com", 80, "/"))?;
     println!("{}", response);
 
     Ok(())
