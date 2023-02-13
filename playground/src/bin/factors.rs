@@ -50,20 +50,17 @@ pub fn factor(num: i32) -> Vec<Factor> {
 fn show_factors(num: i32, list: Vec<Factor>) {
     let prime = list.len() == 1;
 
-    fn format(num: i32, f: Factor) -> String {
-        if num >= 1000 {
-            format!("{:>4} * {:>4}", f.a, f.b)
-        } else if num >= 100 {
-            format!("{:>3} * {:>3}", f.a, f.b)
-        } else {
-            format!("{:>2} * {:>2}", f.a, f.b)
-        }
-    }
+    let width = match num {
+        0..=99 => 2,
+        100..=999 => 3,
+        1000..=9999 => 4,
+        _ => 5
+    };
 
     println!("Factors of {}", num);
 
     for f in list.into_iter() {
-        println!("{}", format(num, f));
+        println!("{:width$} * {:width$}", f.a, f.b);
     }
 
     if prime {
