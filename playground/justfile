@@ -24,8 +24,13 @@ async-process:
 fastrand:
     cargo run --bin fastrand-test
 
+# run chacha
 chacha:
-    cargo run --bin chacha-test
+    cargo run --bin chacha -- --help
+
+# run factors for a single number
+factors:
+    cargo run --bin factors -- 24
 
 b64:
     cargo run --bin base64-safe -- 'this is a test string with rtkey: 0VdX7fJnEfp6Kd0H'
