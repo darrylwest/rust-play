@@ -11,7 +11,7 @@ Example: isprime 19501103 22
 19501103 is prime: true
 22 is prime: false
 
-gcd Version: 1.0.2, rcs/dpw
+gcd Version: 1.3, rcs/dpw
     "#;
 
     println!("{s}");
@@ -81,7 +81,9 @@ mod tests {
 
     #[test]
     fn big_prime() {
-        let n = 485031120071u64;
-        assert_eq!(is_prime(n), true);
+        let list = [ 485031120071u64, 398964368629 ];
+        for n in list {
+            assert_eq!(is_prime(n), true);
+        }
     }
 }

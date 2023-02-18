@@ -4,8 +4,8 @@ use std::env;
 
 #[derive(Default, Debug, Clone)]
 pub struct Factor {
-    pub a: i32,
-    pub b: i32,
+    pub a: i64,
+    pub b: i64,
 }
 
 fn show_help() {
@@ -14,14 +14,14 @@ Use: factors val
 
 Where val is the positive integer to be factored.  Shows all combinations.
 
-Version: 1.1
+Version: 1.2
     "#;
 
     println!("{s}");
 }
 
 /// build a Factor table with every combination of factors between 
-pub fn factor(num: i32) -> Vec<Factor> {
+pub fn factor(num: i64) -> Vec<Factor> {
     let mut list = vec![];
 
     let mut x = 1;
@@ -40,21 +40,23 @@ pub fn factor(num: i32) -> Vec<Factor> {
             list.push(val);
         }
 
-        x += 1;
+        x += 1i64;
     }
 
     list
 }
 
 /// display the factors row by row
-fn show_factors(num: i32, list: Vec<Factor>) {
+fn show_factors(num: i64, list: Vec<Factor>) {
     let prime = list.len() == 1;
 
     let width = match num {
         0..=99 => 2,
         100..=999 => 3,
         1000..=9999 => 4,
-        _ => 5
+        10000..=99999 => 5,
+        100000..=999999 => 6,
+        _ => 7
     };
 
     println!("Factors of {}", num);
@@ -76,7 +78,7 @@ fn main() -> Result<()> {
         return Ok(());
     }
 
-    match args[0].parse::<i32>() {
+    match args[0].parse::<i64>() {
         Ok(num) => {
             let list = factor(num);
             show_factors(num, list);
@@ -96,5 +98,16 @@ mod tests {
         let list = factor(120);
 
         println!("{:?}", list);
+    }
+
+    #[test]
+    fn factor_big() {
+        let list = [ 485031120072_i64 ];
+
+        for n in list {
+            let list = factor(n);
+
+            println!("{:?}", list);
+        }
     }
 }
