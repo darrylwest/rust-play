@@ -11,18 +11,35 @@ Example: isprime 19501103 22
 19501103 is prime: true
 22 is prime: false
 
-gcd Version: 1.0.1, rcs/dpw
+gcd Version: 1.0.2, rcs/dpw
     "#;
 
     println!("{s}");
 }
 
-
+// sieve of eratosthenes
 fn is_prime(n: u64) -> bool {
-    match n {
-        0..=1 => false,
-        _ => !(2..n).any(|d| n % d == 0),
+    if n <= 1 {
+        return false;
     }
+
+    if n <= 3 {
+        return true;
+    }
+
+    if n % 2 == 0 || n % 3 == 0 {
+        return false;
+    }
+
+    let mut i = 5;
+    while i * i <= n {
+        if n % i == 0 || n % (i + 2) == 0 {
+            return false;
+        }
+        i += 6;
+    }
+
+    true
 }
 
 fn main() -> Result<()> {
@@ -60,6 +77,11 @@ mod tests {
             let nn = n * 3;
             assert_eq!(is_prime(nn), false);
         }
+    }
 
+    #[test]
+    fn big_prime() {
+        let n = 485031120071u64;
+        assert_eq!(is_prime(n), true);
     }
 }
