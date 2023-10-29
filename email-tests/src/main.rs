@@ -28,11 +28,14 @@ fn generate_otp() -> u64 {
 
 fn main() {
     let from = "darryl.west<darryl.west@raincitysoftware.com>";
-    let to = "<7752508168@messaging.sprintpcs.com>";
+    let to = "<dpw500@raincitysoftware.com>";
 
-    // todo - read this from a email template file or command line args...
-    let subject = "dpw";
-    let body = format!("OTP: {}", generate_otp());
+    // todo - write the otp file
+    let subject = "otp";
+    let otp = generate_otp();
+    let body = format!("{}", otp);
+
+    println!("otp: {} to: {}", otp, to);
 
     let email = Message::builder()
         .from(from.parse().unwrap())
