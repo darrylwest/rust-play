@@ -22,7 +22,7 @@ fn get_var(key: &str, title: Option<String>) -> Cow<'static, str> {
 }
 
 fn main() {
-    let name = get_var("HOME", Some("Phd".to_string()));
+    let name = get_var("HOME", Some("pwd".to_string()));
     println!("HOME={:?}", name);
 
     let name = get_var("my-empty-var", None);
