@@ -1,17 +1,20 @@
 
 use lettre::transport::smtp::authentication::Credentials;
 use lettre::{Message, SmtpTransport, Transport};
+use base64::{Engine as _, engine::general_purpose};
 
 fn read_creds() -> Credentials {
     // read from key store
     use std::env;
-    use base64::decode;
 
     let b64 = env::var("EMAIL_CREDS").expect("should read creds from env");
-    let plain = decode(&b64).expect("should decode the b64");
+
+    // let plain = decode(&b64).expect("should decode the b64");
+    let plain = general_purpose::STANDARD_NO_PAD.decode(b64).unwrap();
     let plain = String::from_utf8(plain).expect("should be string");
 
-    // println!("{}", &plain);
+    println!("{}", &plain);
+
     let v: Vec<&str> = plain.split(":").collect();
 
     let username = v[0].to_string();
