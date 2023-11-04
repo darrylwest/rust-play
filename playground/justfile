@@ -35,5 +35,8 @@ factors:
 b64:
     cargo run --bin base64-safe -- 'this is a test string with rtkey: 0VdX7fJnEfp6Kd0H'
 
+b85:
+    cargo run --bin base85-std -- 'this is a test string with rtkey: 0VdX7fJnEfp6Kd0H'
+
 rel:
     cargo build --release --bins
