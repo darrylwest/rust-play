@@ -43,6 +43,4 @@ fn main() {
             eprintln!("bailing out!");
         }
     }
-
-
 }
