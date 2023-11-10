@@ -1,19 +1,20 @@
-
 use std::sync::Arc;
 use std::thread;
-use tiny_http::{Response, Server};
 use std::time::SystemTime;
-
+use tiny_http::{Response, Server};
 
 fn main() {
     let host = "0.0.0.0:14090";
-    let server = Arc::new(Server::https(
-        &host,
-        tiny_http::SslConfig {
-            certificate: include_bytes!("../cert.pem").to_vec(),
-            private_key: include_bytes!("../key.pem").to_vec(),
-        },
-    ).unwrap());
+    let server = Arc::new(
+        Server::https(
+            host,
+            tiny_http::SslConfig {
+                certificate: include_bytes!("../cert.pem").to_vec(),
+                private_key: include_bytes!("../key.pem").to_vec(),
+            },
+        )
+        .unwrap(),
+    );
 
     println!("now listening on {}", &host);
 
@@ -26,7 +27,7 @@ fn main() {
             for rq in server.incoming_requests() {
                 let url = rq.url().to_string();
                 // let path = Path::new(&url);
-                
+
                 println!("req {:?} {:?} {:?}", rq.method(), &url, rq.headers());
 
                 match url.as_str() {
@@ -62,15 +63,13 @@ fn main() {
                         let _ = rq.respond(response);
                     }
                 }
-
-            };
+            }
         }));
     }
 
     for h in handles {
         h.join().unwrap();
     }
-
 }
 
 fn ping() -> String {
@@ -81,4 +80,3 @@ fn status() -> String {
     let now = SystemTime::now();
     format!("i'm ok, at lease at {:?}", now)
 }
-
