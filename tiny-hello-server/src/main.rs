@@ -16,7 +16,7 @@ fn main() {
         .unwrap(),
     );
 
-    println!("now listening on {}", &host);
+    println!("now listening on {}", host);
 
     let mut handles = Vec::new();
 
