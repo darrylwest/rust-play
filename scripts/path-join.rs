@@ -12,4 +12,8 @@ fn main() {
     // or
     let pbuf: PathBuf = [ "foo", "bar", "baz" ].iter().collect();
     println!("path: {}", pbuf.to_str().unwrap());
+
+    for it in pbuf.iter() {
+        println!("{:?}", it);
+    }
 }
