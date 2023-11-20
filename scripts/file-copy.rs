@@ -1,7 +1,7 @@
 #!/usr/bin/env rust-script
 // cargo-deps: anyhow
 
-use anyhow::Result;
+use anyhow::{Result, anyhow};
 use std::fs;
 use std::path::Path;
 
@@ -12,8 +12,10 @@ fn main() -> Result<()> {
     let parent = dest.parent().unwrap();
 
     if !parent.exists() {
-        let resp = fs::create_dir_all(parent);
-        println!("mkdir resp: {:?}", resp);
+        println!("mkdir {:?}", parent);
+        if fs::create_dir_all(parent).is_err() {
+            return Err(anyhow!("could not create parent folder: {}", parent.display()));
+        }
     }
 
     println!("copy {} to {} ...", src.display(), dest.display());

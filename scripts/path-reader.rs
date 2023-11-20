@@ -6,7 +6,7 @@ fn main() -> io::Result<()> {
     // let args: Vec<String> = env::args().collect();
     // let paths = if args.length
 
-    let path = ".";
+    let path = "./data";
 
     let mut entries = fs::read_dir(path)?
         .map(|res| res.map(|e| e.path()))
@@ -19,8 +19,10 @@ fn main() -> io::Result<()> {
 
     // The entries have now been sorted by their path.
     for file in &entries {
-        println!("{:?}", file);
+        println!("{:?} {} {}", file, file.is_file(), file.is_symlink());
     }
+
+    
 
     Ok(())
 }

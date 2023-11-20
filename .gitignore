@@ -2,3 +2,4 @@ build
 .idea
 .vscode
 target
+scripts/data/my_user.json
