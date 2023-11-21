@@ -9,9 +9,9 @@ fn chrono_test() {
     let utc: DateTime<Utc> = Utc::now();
 
     println!(
-        "micros: {} nanos: {} {:x} {}",
-        utc.timestamp_micros(),
-        utc.timestamp_nanos(),
+        "seconds: {}, micros {}, rfc3339: {}",
+        utc.timestamp(),
+        //utc.timestamp_nanos_opt(),
         utc.timestamp_micros(),
         utc.to_rfc3339()
     );
@@ -50,7 +50,7 @@ fn stdtime_test() {
 fn show_weekday() {
     use chrono::prelude::*;
     // use chrono::Weekday;
-    use chrono::naive::{NaiveDateTime, Days};
+    use chrono::naive::Days;
 
     let date = NaiveDate::from_ymd_opt(2022, 10, 20).unwrap();
     let time = NaiveTime::from_hms_milli_opt(0, 0, 0, 0).unwrap();
