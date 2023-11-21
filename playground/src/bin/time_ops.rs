@@ -24,8 +24,8 @@ impl TimeOps {
     }
 
     /// returns the current utc time in nanos
-    pub fn now_nanos() -> u128 {
-        Utc::now().timestamp_nanos_opt().unwrap() as u128
+    pub fn now_nanos() -> u64 {
+        Utc::now().timestamp_nanos_opt().unwrap() as u64
     }
 
     /// return the rfc3339 formated string from the timestamp
