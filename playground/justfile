@@ -38,5 +38,8 @@ b64:
 b85:
     cargo run --bin base85-std -- 'this is a test string with rtkey: 0VdX7fJnEfp6Kd0H'
 
+timeops:
+    cargo run --bin time_ops
+
 rel:
     cargo build --release --bins
