@@ -1,5 +1,6 @@
 /// time-ops covers most of the generation and conversion of unix time stamps to rfc3339 formats
-
+/// should port this to a library and eventually a crate
+/// datetime-rs
 
 use chrono::{NaiveDate, Utc, TimeZone, NaiveDateTime};
 
