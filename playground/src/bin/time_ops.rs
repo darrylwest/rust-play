@@ -1,6 +1,7 @@
 /// time-ops covers most of the generation and conversion of unix time stamps to rfc3339 formats
 
-use chrono::{Utc, TimeZone};
+
+use chrono::{NaiveDate, Utc, TimeZone, NaiveDateTime};
 
 pub struct TimeOps {
     pub start_time: u64,
@@ -32,6 +33,16 @@ impl TimeOps {
     pub fn rfc3339_from_timestamp(ts: u64) -> String {
         Utc.timestamp_opt(ts as i64, 0).unwrap().to_rfc3339()
     }
+
+    /// return the current naive date
+    pub fn today() -> NaiveDate {
+        Utc::now().date_naive()
+    }
+
+    /// return the current utc date time
+    pub fn utc_now() -> NaiveDateTime {
+        Utc::now().naive_utc()
+    }
 }
 
 fn main() {
@@ -41,5 +52,7 @@ fn main() {
     println!("micros: {}", TimeOps::now_micros());
     println!("nanos : {}", TimeOps::now_nanos());
     println!("rfc3339 from timestamp: {}", TimeOps::rfc3339_from_timestamp(ts));
+    println!("utc today: {}", TimeOps::today());
+    println!("utc now  : {}", TimeOps::utc_now());
 }
 
