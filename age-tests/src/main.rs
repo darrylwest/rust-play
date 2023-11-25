@@ -69,7 +69,7 @@ pub fn show_utf8(data: Vec<u8>) {
 pub fn read_passphrase() -> Result<String> {
     let mut buf = String::new();
 
-    println!("Enter passs phrase: ");
+    println!("Enter pass phrase: ");
     let stdin = std::io::stdin();
     stdin.read_line(&mut buf)?;
 
