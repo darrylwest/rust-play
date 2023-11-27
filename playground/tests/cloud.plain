@@ -1,0 +1,13 @@
+This is a second typical secrets file.  It might just be a simple username / password but more typically it would contain a set of username/password or other secrets for a group of accounts, like google, amazon, or an email service etc.  It should also include retained data like old passwords clearly marked as "old" or "archived" with the current version as an iso string.
+
+
+version: 2023-11-27 17:30:32
+
+amazon:
+    expat-uk@gmail.com some-password OTP via 704-205-4321
+    groundhogg@gmail.com some-password OTP via iphone
+
+
+aws keys:
+    ya...
+

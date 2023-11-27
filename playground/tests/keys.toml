@@ -1,0 +1,63 @@
+[[keys]]
+key = "y0Eu7fgL4oZWWcfs"
+
+version.created_at = "2023-01-31T13:30:57.791114648"
+version.updated_at = "2023-01-31T13:30:57.791114648"
+version.update_count = 0
+version.hash = 0
+
+status.t = "New"
+status.c = 0
+
+value.owner = "x0Eu7fgL4oZWWcfr"
+value.name = "backup.tar"
+value.location = "https://raincitysoftware.com"
+value.key = "5aa5b5d367327999a9fcb6af66c6a682"
+
+[[users]]
+key = "x0Eu7fgL4oZWWcfr"
+
+version.created_at = "2023-01-31T13:30:57.791114648"
+version.updated_at = "2023-01-31T13:30:57.791114648"
+version.update_count = 0
+version.hash = 0
+
+status.t = "New"
+status.c = 0
+
+value.owner = "y0Eu7fgL4oZWWcfs"
+value.name = "tiburon.backup"
+value.location = "/media/dpw/tiburon"
+value.key = "faff2c179b6ca434e0d5b642f0bbea13"
+
+[[users]]
+key = "y0Eu7fgL4oZWWcfs"
+
+version.created_at = "2023-01-31T13:30:57.791114648"
+version.updated_at = "2023-01-31T13:30:57.791114648"
+version.update_count = 0
+version.hash = 0
+
+status.t = "New"
+status.c = 0
+
+value.email = "dpw@raincity.com"
+value.first_name = "darryl"
+value.last_name = ""
+value.phone = ""
+
+[[users]]
+key = "x0Eu7fgL4oZWWcfr"
+
+version.created_at = "2023-01-31T13:30:57.791114648"
+version.updated_at = "2023-01-31T13:30:57.791114648"
+version.update_count = 0
+version.hash = 0
+
+status.t = "New"
+status.c = 0
+
+value.email = "dpw@rcs.com"
+value.first_name = "dpw"
+value.last_name = "west"
+value.phone = "555-222-1213"

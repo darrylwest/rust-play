@@ -28,6 +28,10 @@ fastrand:
 chacha:
     cargo run --bin chacha -- --help
 
+# filewalk
+filewalk:
+    cargo run --bin file-walk
+
 # run factors for a single number
 factors:
     cargo run --bin factors -- 24

@@ -1,0 +1,4 @@
+to = "dpw500@raincitysoftware.com"
+from  = "dpw500@raincitysoftware.com"
+subject = "test toml email"
+body = "send more money."
