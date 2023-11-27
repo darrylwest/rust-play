@@ -5,7 +5,7 @@ use std::path::{Path, PathBuf};
 
 #[derive(Debug, Clone)]
 pub struct FileOpts {
-    pub home: String,
+    pub home: String, // this is where the walks will happen
 }
 
 impl FileOpts {
@@ -19,25 +19,24 @@ impl FileOpts {
         }
     }
 
+    // walk the home files to find extension pattern exact matches
     pub fn pattern_find(&self, pattern: &str) -> Vec<PathBuf> {
         let mut files: Vec<PathBuf> = vec![];
 
         let path = Path::new(&self.home);
 
-        for entry in path.read_dir().expect("read_dir call failed") {
-            if let Ok(entry)  = entry {
-                let pb: PathBuf = entry.path().clone();
-                let ext = pb.extension();
-                if ext.is_none() {
-                    continue;
-                }
+        for entry in path.read_dir().expect("read_dir call failed").flatten() {
+            let pb: PathBuf = entry.path().clone();
+            let ext = pb.extension();
+            if ext.is_none() {
+                continue;
+            }
 
-                let ext = ext.unwrap();
-                
-                if pb.is_file() && ext == pattern {
-                    println!("{:?}, ext: {:?}", &pb, pb.clone().extension());
-                    files.push(pb.clone())
-                }
+            let ext = ext.unwrap();
+            
+            if pb.is_file() && ext == pattern {
+                println!("{:?}, ext: {:?}", &pb, pb.clone().extension());
+                files.push(pb.clone())
             }
         }
 
@@ -46,16 +45,21 @@ impl FileOpts {
 }
 
 fn main() {
-    println!("vers 0.0.1");
+    println!("vers 0.0.2");
     let args: Vec<String> = env::args().skip(1).collect();
-    let home: String;
-    match args.len() {
-        0 => home = "./tests".to_string(),
-        _ => home = args[0].clone(),
-    }
+    let home: String = match args.len() {
+        0 => "./tests".to_string(),
+        _ => args[0].clone(),
+    };
 
     let ops = FileOpts::new(home.as_ref()).unwrap();
 
     let list = ops.pattern_find("eb64");
-    println!("{:?}", list);
+    println!("\nList of files{:?}\n", list);
+
+    for pb in list.iter() {
+        let mut newpath = pb.clone();
+        newpath.set_extension("plain");
+        println!("{:?} {:?}", pb, newpath);
+    }
 }

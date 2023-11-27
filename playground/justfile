@@ -6,7 +6,7 @@ alias ta := test-all
 # run the standard tests
 test:
     clear
-    cargo test
+    cargo test && cargo clippy
 
 # run the standard tests + clippy and fmt
 test-all:
@@ -45,5 +45,6 @@ b85:
 timeops:
     cargo run --bin time_ops
 
+# release all the bins
 rel:
     cargo build --release --bins

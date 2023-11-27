@@ -51,7 +51,7 @@ fn main() -> Result<()> {
     }
     
     for arg in args.iter() {
-        let n = u64::from_str_radix(arg, 10)?;
+        let n = arg.parse::<u64>().expect("this should parse to u64");
         println!("{} is prime: {}", n, is_prime(n));
     }
 

@@ -73,7 +73,7 @@ fn show_factors(num: i64, list: Vec<Factor>) {
 fn main() -> Result<()> {
     let args: Vec<String> = env::args().skip(1).collect();
 
-    if args.len() < 1 {
+    if args.is_empty() {
         show_help();
         return Ok(());
     }
