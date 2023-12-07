@@ -18,6 +18,9 @@ build:
     clear
     cargo build
 
+thread-map:
+    cargo run --bin thread-map
+
 async-process:
     cargo run --bin async-process
 
