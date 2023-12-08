@@ -21,6 +21,12 @@ build:
 ts2date:
     cargo run --bin ts2date
 
+socket-service:
+    cargo run --bin socket-service
+
+socket-client:
+    cargo run --bin socket-client
+
 thread-map:
     cargo run --bin thread-map
 
