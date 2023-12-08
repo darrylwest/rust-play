@@ -18,6 +18,9 @@ build:
     clear
     cargo build
 
+ssl-sockets:
+    cargo run --bin ssl-sockets
+
 thread-map:
     cargo run --bin thread-map
 

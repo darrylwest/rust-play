@@ -25,11 +25,13 @@ hashbrown = { version = "0.14.1", features = ["rayon"] }
 log = { version = "0.4.17", features = ["serde"] }
 ndarray = { version = "0.15.5", features = ["rayon", "serde"] }
 num = { version = "0.4.0", features = ["rand", "num-bigint", "serde"] }
+openssl = "0.10.61"
 rand_core = { version = "0.6.4", features = ["serde"] }
 rayon = "1.6.1"
 serde = { version = "1.0.152", features = ["derive"] }
 serde_derive = "1.0.152"
 serde_json = "1.0.91"
+socket2 = { version = "0.5.5", features = ["all"] }
 toml = "0.8.8"
 typenum = "1.16.0"
 zxcvbn = { version = "2.2.1", features = ["serde"] }
