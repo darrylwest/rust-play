@@ -5,6 +5,10 @@ use std::sync::mpsc::channel; // , Sender};
 use std::sync::{Arc, Mutex};
 use socket2::{Domain, Protocol, SockAddr, Socket, Type};
 
+//
+// THIS IS MOSTLY BROKEN
+//
+
 const MAX_CONNECTIONS: i32 = 128;
 
 fn main() -> std::io::Result<()> {
@@ -21,7 +25,7 @@ fn main() -> std::io::Result<()> {
     let (tx, rx) = channel::<String>();
     let shared_tx = Arc::new(Mutex::new(tx));
 
-    for _ in 0..4 {
+    loop {
         let shared_tx = shared_tx.clone();
         let listener = listener.try_clone()?;
         thread::spawn(move || {
@@ -39,11 +43,12 @@ fn main() -> std::io::Result<()> {
             shared_tx.lock().unwrap().send(response).unwrap();
             stream.write_all(b"HTTP/1.1 200 OK\r\n\r\n").unwrap();
         });
+
+        for response in rx.iter() {
+            println!("{}", response);
+        }
     }
 
-    for response in rx.iter() {
-        println!("{}", response);
-    }
 
     Ok(())
 }

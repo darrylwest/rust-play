@@ -2,6 +2,10 @@ use std::net::{SocketAddr, TcpStream};
 use std::io::{Read, Write};
 use socket2::{Domain, Protocol, SockAddr, Socket, Type};
 
+//
+// THIS IS MOSTLY BROKEN
+//
+
 fn main() -> std::io::Result<()> {
     let port = 8080;
     let socket = Socket::new(Domain::IPV4, Type::STREAM, Some(Protocol::TCP))?;
