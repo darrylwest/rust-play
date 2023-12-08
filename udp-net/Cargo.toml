@@ -1,11 +1,26 @@
 [package]
 name = "udp-net"
-version = "0.1.1"
+version = "0.2.1"
 edition = "2021"
+rust-version = "1.70"
+description = "A sample async udp network server and client"
+license = "MIT OR Apach-2.0"
+readme = "README.md"
+# homepage
+# repository
+exclude = [ ".github/*" ]
+publish = false
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
 anyhow = "1.0.66"
 chrono = { version = "0.4.23", features = ["serde"] }
+clap = { version = "4.4.11", features = ["derive"] }
+log = "0.4.20"
+log4rs = "1.2.0"
+serde = { version = "1.0.193", features = ["derive"] }
+serde_derive = "1.0.193"
+serde_json = "1.0.108"
+serde_toml = "0.0.1"
 tokio = { version = "1.23.0", features = ["full"] }

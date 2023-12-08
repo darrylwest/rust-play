@@ -8,4 +8,3 @@ use udp_net::server::start;
 async fn main() -> Result<()> {
     start().await
 }
-
