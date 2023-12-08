@@ -2,13 +2,11 @@
 // test withnet cat: echo "/ping" | nc -w 1 -u <ip> <port>
 //
 
+use anyhow::Result;
 use tokio::net::UdpSocket;
-use std::io;
 use std::time::{SystemTime, UNIX_EPOCH};
-// use std::borrow::Cow;
 
-#[tokio::main]
-async fn main() -> io::Result<()> {
+pub async fn start() -> Result<()> {
     let addr = "0.0.0.0:22200";
     println!("listening on: {}", addr);
 
