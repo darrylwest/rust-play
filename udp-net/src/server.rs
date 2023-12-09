@@ -3,8 +3,8 @@
 //
 
 use anyhow::Result;
-use tokio::net::UdpSocket;
 use std::time::{SystemTime, UNIX_EPOCH};
+use tokio::net::UdpSocket;
 
 pub async fn start() -> Result<()> {
     let addr = "0.0.0.0:22200";
@@ -21,27 +21,30 @@ pub async fn start() -> Result<()> {
         let msg = msg.trim();
 
         println!("recv: {} bytes from {:?}, msg: {}", len, addr, msg);
-        let response = handle_request(msg);
+        // split this into [cmd, param, param]
+        let params: Vec<&str> = msg.split(' ').collect();
+        let response = handle_request(params);
 
         // return the response
         let len = sock.send_to(response.as_bytes(), addr).await?;
         println!("returned: {:?}, size {}.", response, len);
+
     }
 }
 
 // move this to lib
 
-fn handle_request(request: &str) -> String {
+fn handle_request(request: Vec<&str>) -> String {
     // parse the message to create a response
-    match request {
+    match request[0] {
         "/now" => {
             let tm = get_now();
             tm.to_string()
-        },
+        }
         "/ms" => {
             let tm = get_now_ms();
             tm.to_string()
-        },
+        }
         "/ping" => String::from("pong\r\n"),
         _ => String::from("error\r\n"),
     }

@@ -1,4 +1,3 @@
-
 use anyhow::Result;
 use std::net::UdpSocket;
 
@@ -13,7 +12,10 @@ fn main() -> Result<()> {
 
     let mut buffer = [0; 1024];
     let (amt, _) = socket.recv_from(&mut buffer)?;
-    println!("Received message: {}", String::from_utf8_lossy(&buffer[..amt]));
+    println!(
+        "Received message: {}",
+        String::from_utf8_lossy(&buffer[..amt])
+    );
 
     Ok(())
 }
