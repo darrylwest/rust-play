@@ -1,5 +1,5 @@
 //
-// test withnet cat: echo "/ping" | nc -w 1 -u <ip> <port>
+// test with client
 //
 
 use anyhow::Result;
@@ -37,6 +37,10 @@ pub async fn start() -> Result<()> {
 fn handle_request(request: Vec<&str>) -> String {
     // parse the message to create a response
     match request[0] {
+        "/get" => {
+            let key = request[1];
+            key.to_string()
+        },
         "/now" => {
             let tm = get_now();
             tm.to_string()

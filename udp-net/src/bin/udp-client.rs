@@ -7,7 +7,7 @@ fn main() -> Result<()> {
     socket.set_read_timeout(Some(std::time::Duration::new(5, 0)))?;
 
     let server_address = "127.0.0.1:22200";
-    let message = b"/ping";
+    let message = b"/get 123456";
     socket.send_to(message, server_address)?;
 
     let mut buffer = [0; 1024];
