@@ -739,8 +739,8 @@ dependencies = [
 ]
 
 [[package]]
-name = "udp-net"
-version = "0.2.1"
+name = "udp-socket-service"
+version = "0.3.2"
 dependencies = [
  "anyhow",
  "chrono",

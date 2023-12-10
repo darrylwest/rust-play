@@ -1,9 +1,9 @@
 [package]
-name = "udp-net"
-version = "0.2.1"
+name = "udp-socket-service"
+version = "0.3.2"
 edition = "2021"
 rust-version = "1.70"
-description = "A sample async udp network server and client"
+description = "A simple udp socket server with pluggable handler and sample clients"
 license = "MIT OR Apach-2.0"
 readme = "README.md"
 # homepage

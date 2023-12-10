@@ -1,8 +1,8 @@
 //
-// test withnet cat: echo "/ping" | nc -w 1 -u <ip> <port>
+// the main driver
 //
 use anyhow::Result;
-use udp_net::server::start;
+use udp_socket_service::server::start;
 
 #[tokio::main]
 async fn main() -> Result<()> {

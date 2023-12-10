@@ -1,11 +1,12 @@
 //
-// test with client
+//
 //
 
 use anyhow::Result;
 use std::time::{SystemTime, UNIX_EPOCH};
 use tokio::net::UdpSocket;
 
+/// pull out the handler
 pub async fn start() -> Result<()> {
     let addr = "0.0.0.0:22200";
     println!("listening on: {}", addr);
@@ -28,7 +29,6 @@ pub async fn start() -> Result<()> {
         // return the response
         let len = sock.send_to(response.as_bytes(), addr).await?;
         println!("returned: {:?}, size {}.", response, len);
-
     }
 }
 
@@ -40,7 +40,7 @@ fn handle_request(request: Vec<&str>) -> String {
         "/get" => {
             let key = request[1];
             key.to_string()
-        },
+        }
         "/now" => {
             let tm = get_now();
             tm.to_string()
