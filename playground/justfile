@@ -24,6 +24,9 @@ ts2date:
 exithook:
     cargo run --bin exit-hook
 
+bin-ser-des:
+    cargo run --bin bin-ser-des
+
 socket-service:
     cargo run --bin socket-service
 
