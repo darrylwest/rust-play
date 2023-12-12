@@ -9,6 +9,10 @@ fn main() {
     let mut map: HashMap<i32, i32> = (0..8).map(|x| (x, x * 2)).collect();
     let cloned = map.clone();
 
+    for (key, value) in map.iter() {
+        println!("{} -> {}", key, value);
+    }
+
     let mut keys = map.keys().copied().collect::<Vec<_>>();
     keys.sort();
     for k in keys {

@@ -12,6 +12,7 @@ fn main() -> Result<()> {
     let mut buf = File::create(filename)?;
 
     buf.write_all(b"this is a string of bytes\nwith line-feeds\n\r")?;
+    buf.write_all(b"this is the second line")?;
 
     println!("file written to {}", filename);
 
