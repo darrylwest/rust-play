@@ -21,6 +21,9 @@ build:
 ts2date:
     cargo run --bin ts2date
 
+exithook:
+    cargo run --bin exit-hook
+
 socket-service:
     cargo run --bin socket-service
 
