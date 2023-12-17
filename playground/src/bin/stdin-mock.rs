@@ -1,38 +1,47 @@
 ///
 /// mock the standard input with a prompter mock
 /// 
+use std::io::{self, Write};
 
-fn read_stdin(prefix: &str) -> String {
-    let mut input = String::from(prefix);
-    input.push_str("from std-in");
+
+/// show the prompt then read the line from std in
+fn input_reader(prompt: &str) -> String {
+    print!("{}", prompt);
+    let _ = io::stdout().flush();
+
+    let mut input = String::new();
+    io::stdin().read_line(&mut input).expect("Failed to read stdin");
+
     input.to_string()
 }
 
-fn mock_stdin(prefix: &str) -> String {
-    prefix.to_string()
+fn mock_reader(prompt: &str) -> String {
+    prompt.to_string()
 }
 
 #[derive(Debug, Clone)]
 struct Client { 
-    prompter: fn(prefix: &str) -> String,
+    prompter: fn(prompt: &str) -> String,
 }
 
 impl Client {
     fn create() -> Client {
-        Client { prompter: read_stdin }
+        Client { prompter: input_reader }
     }
 
-    fn read_input(&self, prefix: &str) -> String {
-        (self.prompter)(prefix)
+    fn read_input(&self, prompt: &str) -> String {
+        (self.prompter)(prompt)
     }
 }
 
 fn main() {
+    // get input from the real/production source
     let client = Client::create();
-    let input = client.read_input("");
+    let input = client.read_input("enter data > ");
     println!("{}", input);
 
-    let mock = Client{ prompter: mock_stdin };
+    // get input from the mock source
+    let mock = Client{ prompter: mock_reader };
     let input = mock.read_input("set key value");
     println!("{}", input);
 
