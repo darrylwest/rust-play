@@ -18,4 +18,7 @@ fn main() {
     let sum = takes_fptr(add_five);
     assert_eq!(sum, 10);
     println!("add five to 5 = {}", sum);
+
+    let greeting = |name| println!("hello {}", name);
+    greeting("harry");
 }
