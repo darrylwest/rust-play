@@ -35,7 +35,7 @@ impl FileOpts {
             let ext = ext.unwrap();
             
             if pb.is_file() && ext == pattern {
-                println!("{:?}, ext: {:?}", &pb, pb.clone().extension());
+                println!("{:?}, {:?}, ext: {:?}", &pb, pb.clone().file_stem().unwrap(), pb.clone().extension());
                 files.push(pb.clone())
             }
         }
