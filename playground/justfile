@@ -21,6 +21,9 @@ build:
 ts2date:
     cargo run --bin ts2date
 
+stdin-mock:
+    cargo run --bin stdin-mock
+
 exithook:
     cargo run --bin exit-hook
 
