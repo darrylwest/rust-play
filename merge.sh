@@ -7,7 +7,7 @@ set -eu
 
 SS=`git status -s`
 
-if [ $SS == "" ]
+if [[ -z $SS ]]
 then
     echo "clean"
 else
