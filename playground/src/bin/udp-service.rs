@@ -2,22 +2,42 @@
 // use anyhow::Result;
 use tokio::net::UdpSocket;
 use std::io;
+use service_uptime::status::ServiceStatus;
 
 // test with echo "ping" | nc -w 1 -u 127.0.0.1 34254
 
-// replace this with a plugin handler
-async fn handle_request(msg: &str) -> String {
-    let resp = match msg {
-        "code" => "ok",
-        _ => "PONG",
-    };
+struct Handler {
+    status: ServiceStatus,
+}
 
-    resp.to_string()
+impl Handler {
+    fn create() -> Handler {
+        Handler{ status: ServiceStatus::create() }
+    }
+
+    // replace this with a plugin handler; RPC engine, etc.
+    async fn handle_request(&mut self, msg: &str) -> String {
+        self.status.access.incr();
+        let mut response = String::new();
+
+        match msg {
+            "help" => response.push_str("status, random, ping"),
+            "status" => response.push_str(&format!("{}", self.status)),
+            "random" => response.push_str(&fastrand::u64(10_000_000..100_000_000).to_string()),
+            "ping" => response.push_str("PONG"),
+            _ => {
+                self.status.errors.incr();
+                response.push_str("what")
+            }
+        };
+
+        response
+    }
 }
 
 #[tokio::main]
 async fn main() -> io::Result<()> {
-    // let client_socket = UdpSocket::bind("127.0.0.1:34255").await?;
+    let mut handler = Handler::create();
     let addr = "0.0.0.0:34254";
     let sock = UdpSocket::bind(addr).await?;
     println!("server listening on udp port: {}", addr);
@@ -43,7 +63,7 @@ async fn main() -> io::Result<()> {
                     }
 
                     // handle the message
-                    let response = handle_request(msg).await;
+                    let response = handler.handle_request(msg).await;
                     println!("{}", response);
 
                     let _sz = sock.send_to(format!("{}\r\n", response).as_bytes(), addr).await;

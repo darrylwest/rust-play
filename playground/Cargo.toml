@@ -39,3 +39,4 @@ tokio-test = "0.4.3"
 toml = "0.8.8"
 typenum = "1.16.0"
 zxcvbn = { version = "2.2.1", features = ["serde"] }
+service_uptime = { version = "0.6.1", git = "https://github.com/darrylwest/service-uptime.git" }

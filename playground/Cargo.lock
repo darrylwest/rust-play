@@ -1530,6 +1530,7 @@ dependencies = [
  "serde",
  "serde_derive",
  "serde_json",
+ "service_uptime",
  "socket2 0.5.5",
  "tokio",
  "tokio-test",
@@ -1773,6 +1774,14 @@ name = "serde_spanned"
 version = "0.6.4"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "12022b835073e5b11e90a14f86838ceb1c8fb0325b72416845c487ac0fa95e80"
+dependencies = [
+ "serde",
+]
+
+[[package]]
+name = "service_uptime"
+version = "0.6.1"
+source = "git+https://github.com/darrylwest/service-uptime.git#3f2f6dec1ddc1051b6fdec4efefdd27fa87f8b80"
 dependencies = [
  "serde",
 ]
