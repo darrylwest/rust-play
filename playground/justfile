@@ -19,7 +19,7 @@ build:
     cargo build
 
 ts2date:
-    cargo run --bin ts2date
+    cargo build --bin ts2date && date "+%s" | xargs ./target/debug/ts2date
 
 stdin-mock:
     cargo run --bin stdin-mock

@@ -2,7 +2,7 @@ use chrono::{DateTime, Utc};
 use std::env;
 
 fn unix2date(unix_timestamp: u64) -> String {
-    let dt = DateTime::<Utc>::from_utc(
+    let dt = DateTime::<Utc>::from_naive_utc_and_offset(
         chrono::NaiveDateTime::from_timestamp_opt(unix_timestamp as i64, 0).unwrap(),
         Utc,
     );
