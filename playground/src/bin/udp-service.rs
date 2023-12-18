@@ -5,29 +5,36 @@ use std::io;
 
 // test with echo "ping" | nc -w 1 -u 127.0.0.1 34254
 
+// replace this with a plugin handler
 async fn handle_request(msg: &str) -> String {
-    println!("request: {}", msg);
+    let resp = match msg {
+        "code" => "ok",
+        _ => "PONG",
+    };
 
-    "PONG".to_string()
+    resp.to_string()
 }
 
 #[tokio::main]
 async fn main() -> io::Result<()> {
     // let client_socket = UdpSocket::bind("127.0.0.1:34255").await?;
-    let addr = "127.0.0.1:34254";
-    let server_socket = UdpSocket::bind(addr).await?;
+    let addr = "0.0.0.0:34254";
+    let sock = UdpSocket::bind(addr).await?;
     println!("server listening on udp port: {}", addr);
 
     let server_task = tokio::spawn(async move {
         // Server socket code goes here
+        let mut count: usize = 0;
         loop {
             let mut buf = [0; 64];
 
-            match server_socket.recv_from(&mut buf).await {
-                Ok((len, _addr)) => {
+            match sock.recv_from(&mut buf).await {
+                Ok((len, addr)) => {
                     let msg = String::from_utf8_lossy(&buf[..len]);
                     let msg = msg.trim();
-                    println!("server recv: {}", msg);
+
+                    count += 1;
+                    print!("{} > server recv: {} -> ", count, msg);
 
                     // shutdown
                     if msg == "shutdown" {
@@ -38,6 +45,8 @@ async fn main() -> io::Result<()> {
                     // handle the message
                     let response = handle_request(msg).await;
                     println!("{}", response);
+
+                    let _sz = sock.send_to(format!("{}\r\n", response).as_bytes(), addr).await;
                 },
                 Err(e) => {
                     println!("ERROR: {}", e);
@@ -52,4 +61,3 @@ async fn main() -> io::Result<()> {
 
     Ok(())
 }
-
