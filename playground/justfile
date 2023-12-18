@@ -24,6 +24,9 @@ ts2date:
 stdin-mock:
     cargo run --bin stdin-mock
 
+udp-service:
+    cargo run --bin udp-service
+
 exithook:
     cargo run --bin exit-hook
 

@@ -1,6 +1,6 @@
 [package]
 name = "playground"
-version = "0.2.3"
+version = "0.2.4"
 edition = "2021"
 rust-version = "1.70"
 
@@ -34,6 +34,8 @@ serde = { version = "1.0.152", features = ["derive"] }
 serde_derive = "1.0.152"
 serde_json = "1.0.91"
 socket2 = { version = "0.5.5", features = ["all"] }
+tokio = { version = "1.23.0", features = ["full"] }
+tokio-test = "0.4.3"
 toml = "0.8.8"
 typenum = "1.16.0"
 zxcvbn = { version = "2.2.1", features = ["serde"] }
