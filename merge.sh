@@ -10,9 +10,10 @@ SS=`git status -s`
 if [[ -z $SS ]]
 then
     echo "clean"
+    git co main && git pull && git merge develop && git push && git co develop
 else
-    echo "not clean..."
-    exit 0
+    echo "Abort: local repo not clean..."
+    git status
 fi
 
 
