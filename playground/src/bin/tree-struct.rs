@@ -5,10 +5,21 @@
 pub struct Node<T> {
     left: Option<Box<Node<T>>>,
     right: Option<Box<Node<T>>>,
-    pub value: T,
+    value: T,
 }
 
 impl<T: Ord + Clone> Node<T> {
+    /// create a new node
+    pub fn create(value: T) -> Node<T> {
+        Node { left: None, right: None, value }
+    }
+
+    /// return this node's value
+    pub fn value(&self) -> T {
+        self.value.clone()
+    }
+
+    /// insert the value
     pub fn insert(&mut self, value: T) {
         if value < self.value {
             if let Some(left) = &mut self.left {
@@ -33,6 +44,7 @@ impl<T: Ord + Clone> Node<T> {
         }
     }
 
+    /// find the value (first occurence) and return, else return None
     pub fn find(&self, value: T) -> Option<&Node<T>> {
         if value == self.value {
             Some(self)
@@ -43,7 +55,7 @@ impl<T: Ord + Clone> Node<T> {
         }
     }
     
-    fn walk(&self) -> Vec<T> {
+    pub fn walk(&self) -> Vec<T> {
         let mut values = Vec::new();
         self.walk_recursive(&mut values);
         values
@@ -85,3 +97,56 @@ fn main() {
     
 }
 
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn build_str_tree() {
+        let mut words = vec!["my", "list", "of", "small", "words", "for", "tree"];
+        let mut root = Node::create("top");
+
+        for word in words.clone() {
+            root.insert(word);
+        }
+
+        words.push("top");
+
+        let list = root.walk();
+        println!("{:?}", list);
+        assert_eq!(list.len(), words.len());
+
+        match root.find("small") {
+            Some(v) => {
+                println!("{}", v.value());
+                assert!(true);
+            },
+            None => assert!(false, "word not found"),
+        }
+    }
+
+    #[test]
+    fn build_i32_tree() {
+        let mut nums = vec![13, 7, 3, 6, 1, 4];
+        let mut root = Node::create(5);
+
+        for n in nums.clone() {
+            root.insert(n);
+        }
+
+        nums.push(root.value());
+
+        let list = root.walk();
+        println!("{:?}", list);
+        assert_eq!(list.len(), nums.len());
+
+        match root.find(3) {
+            Some(v) => {
+                println!("{}", v.value());
+                assert!(true);
+            },
+            None => assert!(false, "number not found"),
+        }
+
+    }
+}
