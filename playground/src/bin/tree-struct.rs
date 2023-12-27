@@ -14,9 +14,30 @@ impl<T: Ord + Clone> Node<T> {
         Node { left: None, right: None, value }
     }
 
+    /// read the vector values and create/return a balanced tree
+    pub fn from(values: Vec<T>) -> Node<T> {
+        let mut list = values.clone();
+        list.sort();
+
+        let idx = list.len() / 2;
+        let value = list.remove(idx);
+        let mut root = Node::create(value);
+        while !list.is_empty() {
+            let idx = list.len() / 2;
+            root.insert(list.remove(idx));
+        }
+
+        root
+    }
+
     /// return this node's value
     pub fn value(&self) -> T {
         self.value.clone()
+    }
+
+    /// balance the tree and return a new root node
+    pub fn balance(&self) -> Node<T> {
+        Node::from(self.walk())
     }
 
     /// insert the value
@@ -95,6 +116,9 @@ fn main() {
     
     let list = root.walk();
     println!("{:?}", list);
+
+    println!("balanced:");
+    println!("{:?}", root.balance());
     
 }
 
@@ -124,6 +148,9 @@ mod tests {
             },
             None => assert!(false, "word not found"),
         }
+
+        let balanced = root.balance();
+        println!("balanced: {:?}", balanced);
     }
 
     #[test]
@@ -149,5 +176,21 @@ mod tests {
             None => assert!(false, "number not found"),
         }
 
+        let balanced = root.balance();
+        println!("balanced: {:?}", balanced);
+    }
+
+    #[test]
+    fn from_vector() {
+        let mut list = vec![13, 7, 3, 6, 1, 4, 17, 10, 2, 18, 22];
+        let root = Node::from(list.clone());
+
+        list.sort();
+        let vlist = root.walk();
+
+        println!("{:?}", list);
+        println!("{:?}", vlist);
+
+        assert_eq!(list, vlist);
     }
 }
