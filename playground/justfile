@@ -21,6 +21,9 @@ build:
 ts2date:
     cargo build --bin ts2date && date "+%s" | xargs ./target/debug/ts2date
 
+tree-struct:
+    cargo build --bin tree-struct && ./target/debug/tree-struct
+
 stdin-mock:
     cargo run --bin stdin-mock
 
