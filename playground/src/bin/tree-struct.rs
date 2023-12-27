@@ -55,6 +55,7 @@ impl<T: Ord + Clone> Node<T> {
         }
     }
     
+    /// walk all nodes in order and return the sorted vector
     pub fn walk(&self) -> Vec<T> {
         let mut values = Vec::new();
         self.walk_recursive(&mut values);
