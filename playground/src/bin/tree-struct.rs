@@ -1,5 +1,5 @@
-#![allow(unused)]
-#![allow(unused_variables)]
+
+use std::iter::repeat_with;
 
 #[derive(Debug, Clone)]
 pub struct Node<T> {
@@ -95,17 +95,8 @@ impl<T: Ord + Clone> Node<T> {
 }
 
 fn main() {
-    let root_num = 5;
-    let mut nums = vec![7, 3, 6, 1, 4];
-    let mut root = Node { left: None, right: None, value: root_num };
-    
-    for n in nums.clone() {
-        root.insert(n)
-    }
-    
-    nums.push(5);
-    
-    // println!("{:?}", root);
+    let nums: Vec<u64> = repeat_with(|| fastrand::u64(..)).take(16).collect();
+    let root = Node::from(nums.clone());
     
     for n in nums.into_iter() {
         match root.find(n) {
@@ -116,10 +107,6 @@ fn main() {
     
     let list = root.walk();
     println!("{:?}", list);
-
-    println!("balanced:");
-    println!("{:?}", root.balance());
-    
 }
 
 #[cfg(test)]
@@ -192,5 +179,14 @@ mod tests {
         println!("{:?}", vlist);
 
         assert_eq!(list, vlist);
+    }
+
+    #[test]
+    fn big_numbers() {
+        let v: Vec<u64> = repeat_with(|| fastrand::u64(..)).take(25).collect();
+        println!("{:?}", v);
+
+        let root = Node::from(v);
+        println!("{:?}", root);
     }
 }
