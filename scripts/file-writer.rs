@@ -8,7 +8,7 @@ use std::{
 };
 
 fn main() -> Result<()> {
-    let filename = "/tmp/my-foo-file.txt";
+    let filename = "tests/register.sh";
     let mut buf = File::create(filename)?;
 
     buf.write_all(b"this is a string of bytes\nwith line-feeds\n\r")?;
