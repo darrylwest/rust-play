@@ -115,18 +115,13 @@ mod tests {
 
     #[test]
     fn build_str_tree() {
-        let mut words = vec!["my", "list", "of", "small", "words", "for", "tree"];
-        let mut root = Node::create("top");
-
-        for word in words.clone() {
-            root.insert(word);
-        }
-
-        words.push("top");
+        let words = vec!["top", "my", "list", "of", "small", "words", "for", "tree"];
+        let count = words.len();
+        let root = Node::from(words);
 
         let list = root.walk();
         println!("{:?}", list);
-        assert_eq!(list.len(), words.len());
+        assert_eq!(count, list.len());
 
         match root.find("small") {
             Some(v) => {
@@ -136,8 +131,22 @@ mod tests {
             None => assert!(false, "word not found"),
         }
 
-        let balanced = root.balance();
-        println!("balanced: {:?}", balanced);
+        // walk a few nodes
+        println!("{}", root.value());
+        let mut node = root.left;
+        while node.is_some() {
+            let n = node.unwrap();
+            println!("{}, {:?}", n.value(), n.right);
+            node = n.left;
+        }
+
+        let mut node = root.right;
+        while node.is_some() {
+            let n = node.unwrap();
+            println!("{}, {:?}", n.value(), n.left);
+            node = n.right;
+        }
+
     }
 
     #[test]
