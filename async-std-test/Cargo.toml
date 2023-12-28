@@ -7,9 +7,9 @@ edition = "2021"
 
 [dependencies]
 anyhow = "1.0.68"
-async-channel = "1.8.0"
+async-channel = "2.1.1"
 async-std = { version = "1.12.0", features = ["async-attributes", "async-process", "attributes", "futures-core", "tokio1", ] }
-fastrand = "1.8.0"
+fastrand = "2.0.1"
 log = "0.4.17"
 log4rs = "1.2.0"
 serde = { version = "1.0.152", features = ["derive"] }
