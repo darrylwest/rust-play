@@ -35,6 +35,9 @@ _These utilities install with cargo install..._
 ## Playgrounds
 
 * [shared k/v map across threads](https://play.rust-lang.org/?version=stable&mode=debug&edition=2021&gist=3780b71fd0c56fb8bced9271f52ddd31)
+* [mutex lock poisoned example](https://play.rust-lang.org/?version=stable&mode=debug&edition=2021&gist=3780b71fd0c56fb8bced9271f52ddd31)
+* [multi-producer, single consumer channels](https://play.rust-lang.org/?version=stable&mode=debug&edition=2021&gist=3780b71fd0c56fb8bced9271f52ddd31)
+* [rayon factorial benchmark](https://play.rust-lang.org/?version=stable&mode=debug&edition=2021&gist=3780b71fd0c56fb8bced9271f52ddd31)
 * [map, filter, reduce, fold](https://play.rust-lang.org/?version=stable&mode=debug&edition=2021&gist=3780b71fd0c56fb8bced9271f52ddd31)
 * [box, rc, refcell](https://play.rust-lang.org/?version=stable&mode=debug&edition=2021&gist=3780b71fd0c56fb8bced9271f52ddd31)
 * [rc reference counting](https://play.rust-lang.org/?version=stable&mode=debug&edition=2021&gist=3780b71fd0c56fb8bced9271f52ddd31)
@@ -52,4 +55,4 @@ _These utilities install with cargo install..._
 * [Using Rust Cargo](https://opensource.com/article/20/3/rust-cargo)
 
 
-###### darryl.west | 2022.01.12
+###### darryl.west | 2023.12.28
