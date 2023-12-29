@@ -1,11 +1,10 @@
-<<<<<<< HEAD
-=======
-
->>>>>>> develop
 alias t := test
 alias ta := test-all
 alias b := build
 alias rel := release
+
+mkcert:
+    openssl req -x509 -newkey rsa:4096 -nodes -keyout key.pem -out cert.pem -days 365 -subj "/C=US/ST=California/L=Berkeley/O=RainCitySoftware/CN=raincitysoftware.com"
 
 # run the standard tests
 test:
@@ -17,7 +16,6 @@ test-all:
     clear
     cargo test && cargo fmt && cargo clippy
 
-<<<<<<< HEAD
 # build the debug target
 build:
     clear
@@ -39,29 +37,4 @@ release:
 # watch the current folders and run tests when a file is changed
 watch:
     watchexec -d 500 -c -e rs just test-all
-=======
-mkcert:
-    openssl req -x509 -newkey rsa:4096 -nodes -keyout key.pem -out cert.pem -days 365 -subj "/C=US/ST=California/L=Berkeley/O=RainCitySoftware/CN=raincitysoftware.com"
-
-# build the debug target
-build:
-    clear
-    just mkcert
-    cargo build
-
-# run the default bin
-run:
-    just mkcert
-    cargo run
-
-# build the release
-release:
-    openssl req -x509 -newkey rsa:4096 -nodes -keyout key.pem -out cert.pem -days 365 -subj "/C=US/ST=California/L=Berkeley/O=RainCitySoftware/CN=raincitysoftware.com"
-    cargo build --release --bins
-
-# watch the current folders and run tests when a file is changed
-watch:
-    watchexec -d 500 -c -e rs cargo test && cargo fmt && cargo clippy
-
->>>>>>> develop
 
