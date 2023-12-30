@@ -24,6 +24,9 @@ ts2date:
 tree-struct:
     cargo build --bin tree-struct && ./target/debug/tree-struct
 
+runner:
+    cargo build --bin runner && ./target/debug/runner
+
 stdin-mock:
     cargo run --bin stdin-mock
 
