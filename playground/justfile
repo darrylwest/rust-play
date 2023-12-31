@@ -24,6 +24,9 @@ ts2date:
 tree-struct:
     cargo build --bin tree-struct && ./target/debug/tree-struct
 
+linked-list:
+    cargo build --bin linked-list && ./target/debug/linked-list
+
 runner:
     cargo build --bin runner && ./target/debug/runner
 
