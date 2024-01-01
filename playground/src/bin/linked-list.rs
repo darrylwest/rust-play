@@ -1,9 +1,13 @@
-
+/// 
+/// implement as a lifo stack; A much better implementation of this would be to use a VecDeque to push_back or front
+/// and pop back or front then configure as it's created.  VecDeque also supports contains, clear, drain, range, etc.
+/// 
 type Link<T> = Option<Box<Node<T>>>;
 
 #[derive(Debug, Clone)]
 pub struct List<T> {
     pub head: Link<T>,
+    size: usize,
 }
 
 #[derive(Debug, Clone)]
@@ -15,7 +19,10 @@ pub struct Iter<'a, T> {
 
 impl<T> List<T> {
     pub fn new() -> Self {
-        List { head: None }
+        List { 
+            head: None,
+            size: 0,
+        }
     }
 
     /// push a new node to the list
@@ -25,13 +32,19 @@ impl<T> List<T> {
             next: self.head.take(),
         });
 
+        self.size += 1;
+
         self.head = Some(node);
     }
 
     /// return the top element
     pub fn pop(&mut self) -> Option<T> {
+        if self.size > 0 {
+            self.size -= 1;
+        }
         self.head.take().map(|node| {
             self.head = node.next;
+
             node.elem
         })
     }
@@ -41,6 +54,11 @@ impl<T> List<T> {
         self.head.as_ref().map(|node| {
             &node.elem
         })
+    }
+
+    /// return the list size
+    pub fn size(&self) -> usize {
+        self.size
     }
 
     /// simple iterator
@@ -109,6 +127,7 @@ mod tests {
         let mut list: List<u16> = List::new();
         assert!(list.head.is_none());
         assert_eq!(list.pop(), None);
+        assert_eq!(list.size(), 0);
     }
 
     #[test]
@@ -117,6 +136,8 @@ mod tests {
         list.push(1);
         list.push(2);
         list.push(3);
+
+        assert_eq!(list.size(), 3);
 
         let mut iter = list.iter();
         assert_eq!(iter.next(), Some(&3));
@@ -150,6 +171,7 @@ mod tests {
         assert_eq!(list.peek().unwrap(), &3);
 
         println!("{:?}", list);
+        assert_eq!(list.size(), 3);
 
         let elem = list.pop().unwrap();
         println!("{}", elem);
@@ -164,5 +186,6 @@ mod tests {
         assert_eq!(elem, 1);
 
         assert_eq!(list.pop(), None);
+        assert_eq!(list.size(), 0);
     }
 }
