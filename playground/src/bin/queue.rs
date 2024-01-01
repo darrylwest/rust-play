@@ -59,11 +59,12 @@ impl Job {
     }
 }
 
-async fn run(job: Job) -> Result<()> {
+/// runner is not an impl of Job but a stand-alone to solve ownership errors.
+async fn run(job: Job) -> Result<Job> {
     sleep(Duration::from_millis(job.delay)).await;
     println!("Job '{}' completed after {} milliseconds.", job.name, job.delay);
 
-    Ok(())
+    Ok(job.clone())
 }
 
 #[tokio::main]
@@ -76,18 +77,30 @@ async fn main() -> Result<()> {
     jobs.push(Job::create("job 5", 850));
 
     let count = jobs.len();
-    // let mut handles = vec![];
+    let mut handles = vec![];
     let now = Instant::now();
 
     loop {
         if let Some(job) = jobs.pop() {
-            run(job).await?;
+            handles.push(tokio::spawn({
+                run(job.clone())
+            }));
         } else {
             break;
         }
     }
 
-    println!("It took {:?} to complete {} jobs.", now.elapsed(), count);
+    let mut results = vec![];
+    for handle in handles {
+        results.push(handle.await?);
+    }
+
+    println!("\nIt took {:?} to complete {} jobs.", now.elapsed(), count);
+
+    println!("\nJob results, available to re-run if necessary...");
+    for job in results {
+        println!("job: {:?}", job);
+    }
 
     Ok(())
 }
