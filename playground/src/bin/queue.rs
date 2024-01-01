@@ -57,30 +57,34 @@ impl Job {
             delay,
         }
     }
+}
 
-    /// run the job...
-    pub async fn run(&self) -> Result<()> {
-        sleep(Duration::from_millis(self.delay)).await;
-        println!("Job '{}' completed after {} milliseconds.", self.name, self.delay);
+async fn run(job: Job) -> Result<()> {
+    sleep(Duration::from_millis(job.delay)).await;
+    println!("Job '{}' completed after {} milliseconds.", job.name, job.delay);
 
-        Ok(())
-    }
+    Ok(())
 }
 
 #[tokio::main]
 async fn main() -> Result<()> {
-    let jobs = vec![
-        Job::create("first job", 1_500),
-        Job::create("second job", 350),
-        Job::create("job 3", 750),
-        Job::create("job 4", 650),
-        Job::create("job 5", 850),
-    ];
+    let mut jobs = Queue::new();
+    jobs.push(Job::create("first job", 500));
+    jobs.push(Job::create("second job", 1_150));
+    jobs.push(Job::create("job 3", 750));
+    jobs.push(Job::create("job 4", 650));
+    jobs.push(Job::create("job 5", 850));
 
     let count = jobs.len();
+    // let mut handles = vec![];
     let now = Instant::now();
-    for job in jobs {
-        job.run().await?;
+
+    loop {
+        if let Some(job) = jobs.pop() {
+            run(job).await?;
+        } else {
+            break;
+        }
     }
 
     println!("It took {:?} to complete {} jobs.", now.elapsed(), count);
