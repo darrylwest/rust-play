@@ -35,6 +35,8 @@ _These utilities install with cargo install..._
 ## Playgrounds
 
 * [tokio tasks](https://play.rust-lang.org/?version=stable&mode=debug&edition=2021&gist=3e12c3acbf26a1267e39ed4818642052)
+* [tokio broadcast message channel](https://play.rust-lang.org/?version=stable&mode=debug&edition=2021&gist=b67a483276cdedfd2e6cb47c004c3f77)
+* [tokio one-shot 60 second timer](https://play.rust-lang.org/?version=stable&mode=debug&edition=2021&gist=6c41f6a60c26adce2c83f50d6c3657dc)
 * [match, enum](https://play.rust-lang.org/?version=stable&mode=debug&edition=2021&gist=3c814150602b044a57d9e715c318e65c)
 * [tree structure impl](https://play.rust-lang.org/?version=stable&mode=debug&edition=2021&gist=3780b71fd0c56fb8bced9271f52ddd31)
 * [generics, traits, Drop](https://play.rust-lang.org/?version=stable&mode=debug&edition=2021&gist=fc92502486d9de6be691fed36e6ca51b)
@@ -46,7 +48,7 @@ _These utilities install with cargo install..._
 * [multi-producer, single consumer channels]()
 * [rayon factorial benchmark]()
 * [map, filter, reduce, fold]()
-* [box, rc, refcell]()
+* [box, rc, cell, refcell]()
 * [rc reference counting]()
 
 ## References
@@ -59,4 +61,4 @@ _These utilities install with cargo install..._
 * [Rust ndarry matrix support](https://docs.rs/ndarray/0.15.6/ndarray/doc/ndarray_for_numpy_users/index.html)
 
 
-###### darryl.west | 2024.01.01
+###### darryl.west | 2024.01.02
