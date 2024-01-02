@@ -41,6 +41,7 @@ _These utilities install with cargo install..._
 * [lifetimes with generator functions](https://play.rust-lang.org/?version=stable&mode=debug&edition=2021&gist=3780b71fd0c56fb8bced9271f52ddd31)
 * [cha cha random](https://play.rust-lang.org/?version=stable&mode=debug&edition=2018&gist=e91c22fe16498afef8c8fa11f57b45a7)
 * [macro example](https://play.rust-lang.org/?version=stable&mode=debug&edition=2021&gist=3780b71fd0c56fb8bced9271f52ddd31)
+* [closure factory](https://play.rust-lang.org/?version=stable&mode=debug&edition=2021&gist=f9f4bc373ba58fe5fc0ff3feb6b2002d)
 * [shared k/v map across threads]()
 * [multi-producer, single consumer channels]()
 * [rayon factorial benchmark]()
@@ -54,6 +55,8 @@ _These utilities install with cargo install..._
 * [Programming Rust](https://learning.oreilly.com/library/view/-/9781492052586/ch02.html#rustup-and-cargo)
 * [Why Rust? Microsoft](https://opensource.com/article/19/10/choose-rust-programming-language)
 * [Using Rust Cargo](https://opensource.com/article/20/3/rust-cargo)
+* [Rust Closures/Factory](https://web.mit.edu/rust-lang_v1.25/arch/amd64_ubuntu1404/share/doc/rust/html/book/first-edition/closures.html)
+* [Rust ndarry matrix support](https://docs.rs/ndarray/0.15.6/ndarray/doc/ndarray_for_numpy_users/index.html)
 
 
-###### darryl.west | 2023.12.28
+###### darryl.west | 2024.01.01
