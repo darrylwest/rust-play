@@ -44,12 +44,12 @@ _These utilities install with cargo install..._
 * [cha cha random](https://play.rust-lang.org/?version=stable&mode=debug&edition=2018&gist=e91c22fe16498afef8c8fa11f57b45a7)
 * [macro example](https://play.rust-lang.org/?version=stable&mode=debug&edition=2021&gist=3780b71fd0c56fb8bced9271f52ddd31)
 * [closure factory](https://play.rust-lang.org/?version=stable&mode=debug&edition=2021&gist=f9f4bc373ba58fe5fc0ff3feb6b2002d)
-* [shared k/v map across threads]()
-* [multi-producer, single consumer channels]()
-* [rayon factorial benchmark]()
 * [map, filter, reduce, fold]()
+* [mpsc channels across std threads](https://play.rust-lang.org/?version=stable&mode=debug&edition=2021&gist=0eee5bfa80927aeeeb3cc9766db0e6a5)
 * [box, rc, cell, refcell]()
 * [rc reference counting]()
+* [shared k/v map across threads]()
+* [rayon factorial benchmark]()
 
 ## References
 
