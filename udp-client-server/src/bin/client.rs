@@ -2,9 +2,9 @@ use std::net::{UdpSocket, SocketAddr};
 
 fn main() {
 
-    let port = 9000;
+    let port = 9001;
     println!("starting udp client on port {}", port);
-    let server_addr = SocketAddr::from(([127, 0, 0, 1], port));
+    let server_addr = SocketAddr::from(([10, 0, 1, 237], port));
     let socket = UdpSocket::bind(SocketAddr::from(([0,0,0,0], 0))).expect("connect failed");
 
     let msg = "hello from client";

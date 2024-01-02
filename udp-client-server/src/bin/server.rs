@@ -2,7 +2,7 @@ use std::net::{UdpSocket, SocketAddr};
 // use std::io::{Error, ErrorKind};
 
 fn main() {
-    let port = 9000;
+    let port = 9001;
     println!("starting udp server on port {}", port);
 
     let server_addr = SocketAddr::from(([127, 0, 0, 1], port));
