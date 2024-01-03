@@ -5,7 +5,7 @@ fn main() {
     let port = 9001;
     println!("starting udp server on port {}", port);
 
-    let server_addr = SocketAddr::from(([10, 0, 1, 237], port));
+    let server_addr = SocketAddr::from(([0, 0, 0, 0], port));
     let socket = UdpSocket::bind(server_addr).expect("failed to connect");
 
     let mut buf = [0; 1024];
