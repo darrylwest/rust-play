@@ -1,6 +1,7 @@
 
 
 use std::io;
+use std::io::Write;
 use std::time::Duration;
 use std::env;
 
@@ -17,6 +18,16 @@ fn main() {
     }
 }
 
+fn prompt(prefix: &str) -> String {
+    let mut line = String::new();
+
+    print!("{}", prefix);
+    io::stdout().flush().unwrap();
+    io::stdin().read_line(&mut line).expect("error: bad line");
+
+    line.to_string()
+}
+
 
 fn interact<T: SerialPort>(port: &mut T) -> io::Result<()> {
     port.reconfigure(&|settings| {
@@ -31,21 +42,27 @@ fn interact<T: SerialPort>(port: &mut T) -> io::Result<()> {
     port.set_timeout(Duration::from_millis(1000))?;
 
     // prompt for an input
-    let sin = String::from("I command you!\n");
-    let buf = sin.as_bytes();
-    port.write(&buf[..])?;
-
-
-    let bufsize = 512;
     loop {
-        let mut sbuf: Vec<u8> = vec![0; bufsize];
-        let n = port.read(&mut sbuf)?;
-
-        let s = String::from_utf8(sbuf).unwrap();
-        print!("{}", s);
-
-        if n < bufsize {
+    
+        let sin = prompt("> ");
+        if sin.starts_with("quit") {
             break;
+        }
+
+        let buf = sin.as_bytes();
+        port.write(&buf[..])?;
+
+        let bufsize = 512;
+        loop {
+            let mut sbuf: Vec<u8> = vec![0; bufsize];
+            let n = port.read(&mut sbuf)?;
+
+            let s = String::from_utf8(sbuf).unwrap();
+            print!("{}", s);
+
+            if n < bufsize {
+                break;
+            }
         }
     }
 
