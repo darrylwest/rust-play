@@ -17,6 +17,7 @@ fn main() {
     }
 }
 
+
 fn interact<T: SerialPort>(port: &mut T) -> io::Result<()> {
     port.reconfigure(&|settings| {
         settings.set_baud_rate(serial::Baud19200)?;
@@ -30,7 +31,8 @@ fn interact<T: SerialPort>(port: &mut T) -> io::Result<()> {
     port.set_timeout(Duration::from_millis(1000))?;
 
     // prompt for an input
-    let buf: Vec<u8> = b"I command you!\n".to_vec();
+    let sin = String::from("I command you!\n");
+    let buf = sin.as_bytes();
     port.write(&buf[..])?;
 
 
