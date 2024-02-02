@@ -6,6 +6,11 @@
 * src/bin/server.r - a tcp server with mini-redis lib attached
 * src/bin/client.rs - a tcp streamer to send messages to the server
 
+### Project
+
+* create tcp-socket-service
+* mini-redis?
+
 ### Server updates
 
 * config for host / port
