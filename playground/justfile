@@ -18,6 +18,9 @@ build:
     clear
     cargo build
 
+urequest:
+    cargo run --bin urequest
+
 ts2date:
     cargo build --bin ts2date && date "+%s" | xargs ./target/debug/ts2date
 
