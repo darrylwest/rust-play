@@ -42,14 +42,12 @@ fn main() -> std::io::Result<()> {
             let response = format!("Received request from {:?}: {:?}", addr, data);
             shared_tx.lock().unwrap().send(response).unwrap();
             stream.write_all(b"HTTP/1.1 200 OK\r\n\r\n").unwrap();
+
         });
 
         for response in rx.iter() {
             println!("{}", response);
         }
     }
-
-
-    Ok(())
 }
 
