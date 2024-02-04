@@ -2,6 +2,7 @@
 use anyhow::Result;
 use ureq::{Agent, AgentBuilder};
 use std::time::Duration;
+use std::thread;
 
 fn get_readings(url: &str) -> Result<Vec<String>> {
     let agent: Agent = AgentBuilder::new()
@@ -22,11 +23,19 @@ fn get_readings(url: &str) -> Result<Vec<String>> {
 fn main() -> Result<()> {
     println!("Version 1.0.0");
     let urls = vec![ "http://10.0.1.115:2020", "http://10.0.1.177:2020", "http://10.0.1.197:2020" ];
+    let mut handles = Vec::new();
     for url in urls {
-        let url = format!("{}/readings", url);
-        let lines = get_readings(url.as_str());
+        let handle = thread::spawn(move || {
+            let url = format!("{}/readings", url);
+            let lines = get_readings(url.as_str());
+            println!("{:?}", lines);
+        });
 
-        println!("{:?}", lines);
+        handles.push(handle);
+    }
+
+    for handle in handles {
+        handle.join().unwrap();
     }
 
     Ok(())
