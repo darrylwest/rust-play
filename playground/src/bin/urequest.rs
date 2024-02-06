@@ -1,8 +1,28 @@
 
 use anyhow::Result;
+use clap::Parser;
 use ureq::{Agent, AgentBuilder};
 use std::time::Duration;
 use std::thread;
+
+
+fn get_server_list() -> Vec<String> {
+    vec![ "http://10.0.1.115:2020".to_string(), "http://10.0.1.177:2020".to_string(), "http://10.0.1.197:2020".to_string() ]
+}
+
+#[derive(Debug, Default, Clone, Parser)]
+#[command(
+    name="urequest",
+    author,
+    version = "0.9.1",
+    about,
+    long_about = None
+)]
+struct Cli {
+    /// list of server ips
+    #[clap(short, long)]
+    server: Option<String>,
+}
 
 fn get_readings(url: &str) -> Result<Vec<String>> {
     let agent: Agent = AgentBuilder::new()
@@ -21,10 +41,17 @@ fn get_readings(url: &str) -> Result<Vec<String>> {
 }
 
 fn main() -> Result<()> {
-    println!("Version 1.0.0");
-    let urls = vec![ "http://10.0.1.115:2020", "http://10.0.1.177:2020", "http://10.0.1.197:2020" ];
+    let cli = Cli::parse();
+    let servers = match cli.server {
+        Some(list) => vec![ list ],
+        None => get_server_list(),
+    };
+
+    println!("{:?}", servers);
+
+
     let mut handles = Vec::new();
-    for url in urls {
+    for url in servers {
         let handle = thread::spawn(move || {
             let url = format!("{}/readings", url);
             let lines = get_readings(url.as_str());
