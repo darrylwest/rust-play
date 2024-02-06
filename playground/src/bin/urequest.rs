@@ -14,12 +14,12 @@ fn get_server_list() -> Vec<String> {
 #[command(
     name="urequest",
     author,
-    version = "0.9.1",
+    version = "0.9.2",
     about,
     long_about = None
 )]
 struct Cli {
-    /// list of server ips
+    /// query a single server by url
     #[clap(short, long)]
     server: Option<String>,
 }
@@ -46,9 +46,6 @@ fn main() -> Result<()> {
         Some(list) => vec![ list ],
         None => get_server_list(),
     };
-
-    println!("{:?}", servers);
-
 
     let mut handles = Vec::new();
     for url in servers {
