@@ -14,7 +14,7 @@ fn get_server_list() -> Vec<String> {
 #[command(
     name="urequest",
     author,
-    version = "0.9.2",
+    version = "0.9.1",
     about,
     long_about = None
 )]
@@ -26,8 +26,8 @@ struct Cli {
 
 fn get_readings(url: &str) -> Result<Vec<String>> {
     let agent: Agent = AgentBuilder::new()
-        .timeout_read(Duration::from_secs(2))
-        .timeout_write(Duration::from_secs(2))
+        .timeout_read(Duration::from_secs(1))
+        .timeout_write(Duration::from_secs(1))
         .build();
 
     let body: String = agent.get(url)
