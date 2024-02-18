@@ -1,27 +1,28 @@
 // from https://www.youtube.com/watch?v=CHRNj5oubwc
+//
+// dynamic dispatch: pointer to vtable (dyn) when you have lots of types
+// static displatch: with generics (impl) fewer types
 
-struct Sedan;
+struct Sedan; 
 
-impl Sedan {
-    fn drive(&self) -> String {
-        String::from("Sedan is driving")
-    }
-}
+impl LandCapable for Sedan { }
 
 struct SUV;
 
-impl SUV {
+impl LandCapable for SUV {
     fn drive(&self) -> String {
         String::from("SUV is driving")
     }
 }
 
-fn road_trip(vehicle: &Sedan) {
+fn road_trip(vehicle: &impl LandCapable) {
     println!("{}", vehicle.drive());
 }
 
-fn suv_trip(vehicle: &SUV) {
-    println!("{}", vehicle.drive());
+trait LandCapable {
+    fn drive(&self) -> String {
+        String::from("LandCapable vehicle is driving")
+    }
 }
 
 fn main() {
@@ -29,5 +30,5 @@ fn main() {
     road_trip(&car);
 
     let suv = SUV;
-    suv_trip(&suv);
+    road_trip(&suv);
 }
