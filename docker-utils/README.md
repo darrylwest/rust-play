@@ -6,10 +6,12 @@
 * [github](https://github.com/dpouris/rs-docker)
 * [rs-docker docs](https://docs.rs/rs-docker/latest/rs_docker/)
 
-
 ## To Do
 
-* add CLI
+* [ ] create a full project for this
+* [x] consider re-write in c++ (no)
+* [ ] add CLI
+* [ ] add Config to specify which containers should be queried
 
 ## Notes:
 
